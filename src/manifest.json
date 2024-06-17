@@ -4,7 +4,8 @@
     "version": "0.2.0",
     "description": "In kintone's settings screen, '⇩download' saves settings as JSON, while '⇧upload' loads them back.",
     "permissions": [
-        "storage"
+        "storage",
+        "activeTab"
     ],
     "action": {
         "default_popup": "src/popup.html",
