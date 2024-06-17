@@ -5,7 +5,7 @@
     "description": "In kintone's settings screen, '⇩download' saves settings as JSON, while '⇧upload' loads them back.",
     "permissions": [],
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "src/popup.html",
         "default_icon": {
             "48": "images/icon48.png"
         }
