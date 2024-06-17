@@ -3,7 +3,9 @@
     "name": "kintonePluginMigrator",
     "version": "0.2.0",
     "description": "In kintone's settings screen, '⇩download' saves settings as JSON, while '⇧upload' loads them back.",
-    "permissions": [],
+    "permissions": [
+        "storage"
+    ],
     "action": {
         "default_popup": "src/popup.html",
         "default_icon": {
@@ -37,5 +39,8 @@
                 "https://*.cybozu.com/*"
             ]
         }
-    ]
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
 }

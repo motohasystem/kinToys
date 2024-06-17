@@ -23,7 +23,7 @@
 
             // インポートボタンの設置
             const import_button = make_import_button("⇧ upload");
-            if(import_button){
+            if (import_button) {
                 document.body.appendChild(import_button);
             }
         }
@@ -45,7 +45,7 @@
             td.addEventListener("click", () => {
                 // クリップボードにコピーする
                 const text = td.textContent;
-                if(text === null) return;
+                if (text === null) return;
                 navigator.clipboard
                     .writeText(text)
                     .then(() => {
@@ -70,7 +70,7 @@
         button.className = "custom-export-label";
         button.onclick = function () {
             const url = location.href;
-            if(url === null) return;
+            if (url === null) return;
             const matches = url.match(/pluginId=([a-zA-Z0-9]+)/);
             if (!matches) {
                 console.error("pluginId not found.");
@@ -138,7 +138,7 @@
 
         // ファイルが選択されたときの処理
         fileInput.onchange = function (event: Event) {
-            if(!event.target) return;
+            if (!event.target) return;
 
             // @ts-ignore
             var file = event.target.files[0];
@@ -182,4 +182,43 @@
     }
 
     insertScriptButtons();
+
+    // ポップアップ開いた時にテキストフィールドの中身を復帰する
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('popup opened')
+        // ChromeストレージAPIから値を取得
+        chrome.storage.sync.get('textValue', (data) => {
+            // 値があれば、テキストフィールドに設定
+            if (data.textValue) {
+                // テキストフィールドの参照を取得
+                const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
+                textField.value = data.textValue;
+            }
+        });
+    });
+
+    // ボタン押下時の処理を追加
+    function saveTemplateField() {
+        // テキストフィールドの参照を取得
+        const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
+        // ボタンの参照を取得 
+        const saveButton = document.getElementById('popup_button_run');
+
+        console.log({ textField })
+        console.log({ saveButton })
+
+        // ボタンクリックイベントのリスナーを設定
+        if (saveButton && textField) {
+
+            saveButton.addEventListener('click', () => {
+                console.log('saveTemplateField')
+                // テキストフィールドの値を取得
+                const value = textField.value;
+                // ChromeストレージAPIを使って値を保存
+                chrome.storage.sync.set({ 'textValue': value });
+            });
+        }
+    }
+
+    saveTemplateField()
 })();

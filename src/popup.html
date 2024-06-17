@@ -10,6 +10,7 @@
             padding: 10px;
             color: #333;
             background-color: #f9f9f9;
+            width: 1200px;
         }
         .header {
             text-align: center;
@@ -45,20 +46,32 @@
             margin-top: 20px;
             color: #777;
         }
+        .textarea_template {
+            width: 100%;
+            font-size: 14px;
+        }
     </style>
+    <script src="popup.js" type="module"></script>
 </head>
 <body>
     <div class="header">
         <img src="../images/icon128.png" alt="Logo" class="logo">
-        <h1>ぷら☆aaaaaまい kintonePluginMigrator</h1>
-        <h3>Download and upload plugin configuration</h3>
+        <h1>ぷらまい kintonePluginMigrator</h1>
+        <!-- <h3>Download and upload plugin configuration</h3> -->
     </div>
-    <div class="description">
+    <!-- <div class="description">
         When you display the plugin setting screen of kintone, you will see '⇩download' and '⇧upload' buttons. download button downloads the plugin setting as json. upload button loads the downloaded json as a plugin setting. The upload button loads the downloaded json as a plugin configuration.
+    </div> -->
+    <div class="textarea_template">
+        <textarea id="popup_template" rows="10" cols="100"></textarea>
     </div>
-    <div class="links">
+    </div>
+    <div class="button">
+        <button id="popup_button_run">run</button>
+    </div>
+    <!-- <div class="links">
         <a href="https://www.monosus.co.jp/service/kintanlab/" class="link" target="_blank">キン担ラボ</a>
-    </div>
+    </div> -->
     <div class="footer">
         <p>Developer: <a href="https://motohasystem.kamiyama.club/" target="_blank">Daisuke Motohashi</a></p>
         <p>version: 0.2.0</p>
