@@ -7,9 +7,6 @@ import Utils from "./utils.js";
     document.addEventListener("DOMContentLoaded", function () {
         // 保存された値を読み込む
         chrome.storage.sync.get(null, (options) => {
-            // const textarea = document.getElementById(CONST.id_fillin_template);
-            // const stored = options[CONST.id_fillin_template];
-            // textarea.value = stored == undefined ? "" : stored;
             console.log({ options });
 
             Utils.loadOption(options, Utils.CONST.id_fillin_template);

@@ -62,6 +62,15 @@ class Utils {
 
         throw new Error("Invalid argument");
     }
+
+    static fillTemplate(template, record) {
+        let filledTemplate = template;
+        for (const key in record) {
+            const value = record[key].value;
+            filledTemplate = filledTemplate.replace(`%${key}%`, value);
+        }
+        return filledTemplate;
+    }
 }
 
 export default Utils;

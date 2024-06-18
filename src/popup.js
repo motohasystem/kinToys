@@ -34,6 +34,19 @@ import Utils from "./utils.js";
     console.log("popup.js");
     const port = chrome.runtime.connect({ name: "popup" });
 
+    const templateCopyButton = document.getElementById("button_template_copy");
+    if (templateCopyButton) {
+        chrome.storage.sync.get(null, (options) => {
+            const template = options[Const.id_fillin_template];
+            // kintone apiを呼び出して現在表示しているレコードのデータを取得
+            const record = kintone.app.record.get();
+            console.log({ record });
+            // テンプレートにデータを埋め込む
+            const filledTemplate = Utils.fillTemplate(template, record);
+            console.log({ filledTemplate });
+        });
+    }
+
     const saveButton = document.getElementById("popup_button_run");
     if (saveButton) {
         saveButton.addEventListener("click", () => {
