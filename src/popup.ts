@@ -1,4 +1,4 @@
-import Utils from "./utils.js";
+import Utils from "./utils";
 
 (() => {
     const Const = Utils.CONST;
@@ -21,7 +21,7 @@ import Utils from "./utils.js";
         Const.id_radio_data_template,
     ].forEach((name) => {
         Array.from(document.getElementsByName(name)).forEach((elm) => {
-            elm.addEventListener("change", (el) => {
+            elm.addEventListener("change", (_el) => {
                 let options = {};
                 options = Utils.saveOption(options, null, name);
                 chrome.storage.session.set(options);
