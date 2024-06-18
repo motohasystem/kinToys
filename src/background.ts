@@ -1,7 +1,11 @@
 (() => {
     let connection: chrome.runtime.Port | null = null;
 
-    // background.js
+    chrome.runtime.onInstalled.addListener(() => {
+        console.log('拡張がインストールされました');
+    });
+
+    // 接続成立時
     chrome.runtime.onConnect.addListener((port) => {
         connection = port;
 
@@ -10,19 +14,7 @@
         if (port.name === 'popup') {
             console.log('popup connected.')
 
-            // port.onMessage.addListener((msg) => {
-            //     console.log("Received: ", msg);
-            //     console.log({ msg })
-
-            //     setTimeout(() => {
-            //         port.postMessage("Hello, Popup.");
-            //     }, 1000);
-
-            //     return true;
-            // });
-
             port.onDisconnect.addListener(() => {
-                // alert('popup disconnected.') // エラーになる
                 console.log("Popup closed");
             });
         }
@@ -30,6 +22,7 @@
         return true;
     });
 
+    // メッセージ受信時
     chrome.runtime.onMessage.addListener((message) => {
         console.log({ port: message })
         console.log({ name: message.name })
@@ -50,8 +43,5 @@
         return true;
     });
 
-    chrome.runtime.onInstalled.addListener(() => {
-        console.log('拡張がインストールされました');
-    });
 
 })();

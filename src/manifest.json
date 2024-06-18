@@ -7,10 +7,20 @@
         "storage",
         "activeTab"
     ],
+    "options_page": "src/options.html",
     "action": {
         "default_popup": "src/popup.html",
         "default_icon": {
             "48": "images/icon48.png"
+        }
+    },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+E",
+                "mac": "MacCtrl+Shift+E"
+            },
+            "description": "Run extension."
         }
     },
     "icons": {

@@ -19,6 +19,7 @@ export default defineConfig({
                 background: path.resolve(__dirname, "src/background.ts"),
                 // popup: path.resolve(__dirname, "src/popup.js"),
                 popup: path.resolve(__dirname, "src/popup.html"),
+                options: path.resolve(__dirname, "src/options.html"),
             },
             output: {
                 entryFileNames: "[name].js",
@@ -26,6 +27,7 @@ export default defineConfig({
                 assetFileNames: "[name].[ext]",
             },
         },
+        sourcemap: true, // sourcemapを有効にする
     },
     resolve: {
         alias: {

@@ -1,4 +1,11 @@
 (() => {
+    // オプションを読み込む
+    function onRun() {
+        chrome.storage.sync.get(null, (options) => {
+            document.body.style.backgroundColor = options.colorValue;
+        });
+    }
+
     // popup.js
     console.log("popup.js");
     const port = chrome.runtime.connect({ name: "popup" });
