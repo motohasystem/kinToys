@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <!-- エンコーディングの指定 -->
+        <meta charset="UTF-8">
+    </head>
 <style>
 .color {
   width: 4rem;
@@ -18,9 +22,21 @@
   </div>
   <div id="msg"></div>
   <script src="options.js" type="module"></script>
+
+  <h3>帳票テンプレート</h3>
   <div>
     <textarea id="textarea_fillin_template" class="textarea_template" rows="10" cols="20" placeholder="fill in template for kintone record."></textarea>
   </div>
+
+  <h3>csv / tsv</h3>
+  <div>
+    <input type="radio" id="radio_csv" name="radio_csv_tsv" value="csv" checked>
+    <label for="radio_csv">csv</label>
+    <input type="radio" id="radio_tsv" name="radio_csv_tsv" value="tsv">
+    <label for="radio_tsv">tsv</label>
+
+  </div>
+
 
   <div>
     <button id="button_save_options" class="link">save</button>
