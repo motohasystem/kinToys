@@ -1,10 +1,34 @@
+import Utils from "./utils.js";
+
 (() => {
+    const Const = Utils.CONST;
+
     // オプションを読み込む
-    function onRun() {
-        chrome.storage.sync.get(null, (options) => {
-            document.body.style.backgroundColor = options.colorValue;
+    document.addEventListener("DOMContentLoaded", function () {
+        chrome.storage.session.get(null, (options) => {
+            console.log({ options });
+
+            Utils.loadOption(options, null, Const.id_radio_csv_tsv);
+            Utils.loadOption(options, null, Const.id_radio_cell_record);
+            Utils.loadOption(options, null, Const.id_radio_data_template);
         });
-    }
+    });
+
+    // ラジオボタンの編集イベントにあわせてオプションを保存
+    [
+        Const.id_radio_csv_tsv,
+        Const.id_radio_cell_record,
+        Const.id_radio_data_template,
+    ].forEach((name) => {
+        Array.from(document.getElementsByName(name)).forEach((elm) => {
+            elm.addEventListener("change", (el) => {
+                let options = {};
+                options = Utils.saveOption(options, null, name);
+                chrome.storage.session.set(options);
+                console.log({ options });
+            });
+        });
+    });
 
     // popup.js
     console.log("popup.js");

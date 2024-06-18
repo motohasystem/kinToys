@@ -10,7 +10,7 @@
             padding: 10px;
             color: #333;
             background-color: #f9f9f9;
-            width: 1200px;
+            /* width: 1200px; */
         }
         .header {
             text-align: center;
@@ -51,28 +51,52 @@
             font-size: 14px;
         }
     </style>
+    <script src="utils.js" type="module"></script>
     <script src="popup.js" type="module"></script>
 </head>
 <body>
-    <div class="header">
+    <div>
         <img src="../images/icon128.png" alt="Logo" class="logo">
-        <h1>ぷらまい kintonePluginMigrator</h1>
+        <h1>マウス強化人間 - Mouse Augmented Person</h1>
         <!-- <h3>Download and upload plugin configuration</h3> -->
     </div>
     <!-- <div class="description">
         When you display the plugin setting screen of kintone, you will see '⇩download' and '⇧upload' buttons. download button downloads the plugin setting as json. upload button loads the downloaded json as a plugin setting. The upload button loads the downloaded json as a plugin configuration.
     </div> -->
+    <div>
+        <h3>table copy style:</h3>
+        <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
+        <label for="radio_tablecopy_csv">csv</label>
+        <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
+        <label for="radio_tablecopy_tsv">tsv</label>
+    </div>
+    <div>
+        <h3>table copy mode:</h3>
+        <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
+        <label for="radio_tablecopy_cell">cell</label>
+        <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
+        <label for="radio_tablecopy_record">record</label>
+    </div>
+    <div>
+        <h3>record copy style:</h3>
+        <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data" checked>
+        <label for="radio_recordcopy_data">data</label>
+        <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template">
+        <label for="radio_recordcopy_template">template</label>
+    </div>
+
+    <div>
+        <input type="button" id="button_table_copy" value="abstruct tables">
+        <input type="button" id="button_template_copy" value="template copy">
+    </div>
+
     <div class="textarea_template">
         <textarea id="popup_template" rows="10" cols="100"></textarea>
-    </div>
-    </div>
-    <div class="button">
-        <button id="popup_button_run">run</button>
     </div>
     <!-- <div class="links">
         <a href="https://www.monosus.co.jp/service/kintanlab/" class="link" target="_blank">キン担ラボ</a>
     </div> -->
-    <div class="footer">
+    <div>
         <p>Developer: <a href="https://motohasystem.kamiyama.club/" target="_blank">Daisuke Motohashi</a></p>
         <p>version: 0.2.0</p>
     </div>

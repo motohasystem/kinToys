@@ -17,7 +17,6 @@ export default defineConfig({
                     "src/content_script.ts"
                 ),
                 background: path.resolve(__dirname, "src/background.ts"),
-                // popup: path.resolve(__dirname, "src/popup.js"),
                 popup: path.resolve(__dirname, "src/popup.html"),
                 options: path.resolve(__dirname, "src/options.html"),
             },
