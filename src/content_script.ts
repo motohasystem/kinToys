@@ -8,8 +8,10 @@ import { TablePicker } from "./lib/table_picker";
         console.log({ sender })
         if (request.name === "tableCopyButtonClicked") {
             console.log("tableCopyButtonClickedメッセージを受信しました", request);
+
+            const mode = request.mode;
             // テーブルデータを取得してCSV化する
-            const picker = new TablePicker('csv')
+            const picker = new TablePicker(mode)
             const tableData = picker.getTableData();
             console.log({ tableData });
             sendResponse({ action: "tableCopyButtonClicked", data: tableData });

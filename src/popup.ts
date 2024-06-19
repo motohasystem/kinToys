@@ -2,11 +2,14 @@ import Utils from "./utils";
 
 (() => {
     const Const = Utils.CONST;
+    let delimiter = 'csv'
 
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
         chrome.storage.session.get(null, (options) => {
             console.log({ options });
+
+            delimiter = options[Const.id_radio_csv_tsv];
 
             Utils.loadOption(options, null, Const.id_radio_csv_tsv);
             Utils.loadOption(options, null, Const.id_radio_cell_record);
@@ -44,7 +47,7 @@ import Utils from "./utils";
                 if (tab == undefined || tab.id == undefined) {
                     return;
                 }
-                chrome.tabs.sendMessage(tab.id, { name: "tableCopyButtonClicked" }, (response) => {
+                chrome.tabs.sendMessage(tab.id, { name: "tableCopyButtonClicked", mode: delimiter }, (response) => {
                     console.log("コンテントスクリプトからの応答", response);
                     const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
                     if (response == undefined) {
@@ -52,6 +55,7 @@ import Utils from "./utils";
                     }
                     else {
                         textarea.value = response.data;
+                        Utils.copyToClipboard(response.data)
                     }
                 })
             });
