@@ -34,17 +34,55 @@ import Utils from "./utils";
     console.log("popup.js");
     const port = chrome.runtime.connect({ name: "popup" });
 
+    // テーブルコピーボタンの動作
+    const tableCopyButton = document.getElementById("button_table_copy");
+    if (tableCopyButton) {
+        tableCopyButton.addEventListener("click", () => {
+            // コンテントスクリプトにテーブルデータ取得メッセージを送る
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                const tab = tabs[0];
+                if (tab == undefined || tab.id == undefined) {
+                    return;
+                }
+                chrome.tabs.sendMessage(tab.id, { name: "tableCopyButtonClicked" }, (response) => {
+                    console.log("コンテントスクリプトからの応答", response);
+                    const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                    if (response == undefined) {
+                        textarea.value = "テーブル要素が見つかりませんでした。"
+                    }
+                    else {
+                        textarea.value = response.data;
+                    }
+                })
+            });
+
+        });
+    }
+
+    // テーブルデータ取得メッセージの受信
+    port.onMessage.addListener((response) => {
+        console.log({ response })
+        if (response.action === "tableCopyButtonClicked") {
+            console.log("バックグラウンドスクリプトからの応答", response);
+            return true;
+        }
+        return false;
+    });
+
+
+
+    // テンプレートコピーボタンの動作
     const templateCopyButton = document.getElementById("button_template_copy");
     if (templateCopyButton) {
-        chrome.storage.sync.get(null, (options) => {
-            const template = options[Const.id_fillin_template];
-            // kintone apiを呼び出して現在表示しているレコードのデータを取得
-            const record = kintone.app.record.get();
-            console.log({ record });
-            // テンプレートにデータを埋め込む
-            const filledTemplate = Utils.fillTemplate(template, record);
-            console.log({ filledTemplate });
-        });
+        // chrome.storage.sync.get(null, (options) => {
+        //     const template = options[Const.id_fillin_template];
+        //     // kintone apiを呼び出して現在表示しているレコードのデータを取得
+        //     const record = kintone.app.record.get();
+        //     console.log({ record });
+        //     // テンプレートにデータを埋め込む
+        //     const filledTemplate = Utils.fillTemplate(template, record);
+        //     console.log({ filledTemplate });
+        // });
     }
 
     const saveButton = document.getElementById("popup_button_run");
@@ -53,7 +91,7 @@ import Utils from "./utils";
             chrome.runtime
                 .sendMessage({
                     name: "popup_button_run",
-                    message: "popup_button_runがクリックされました",
+                    message: "popup_button_runがクリックされましたaaa",
                 })
                 .catch((error) => {
                     console.error("エラーが発生しました", error);

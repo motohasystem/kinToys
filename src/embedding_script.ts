@@ -1,4 +1,15 @@
+
 (() => {
+
+    // ここに乗せたい機能
+    // - 画面のhtmlからテーブルを取り出してcsv化して取得する
+    // - storageのテンプレートと、詳細画面のレコード情報を合成したテキストを取得する
+    // 
+
+    //
+    // ここから下はプラグイン画面用のスクリプト
+    //
+
     function insertScriptButtons() {
         // 一覧画面
         // kintone.events.on とは別のタイミングで実行しておく必要がある
@@ -183,42 +194,44 @@
 
     insertScriptButtons();
 
-    // ポップアップ開いた時にテキストフィールドの中身を復帰する
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('popup opened')
-        // ChromeストレージAPIから値を取得
-        chrome.storage.sync.get('textValue', (data) => {
-            // 値があれば、テキストフィールドに設定
-            if (data.textValue) {
-                // テキストフィールドの参照を取得
-                const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
-                textField.value = data.textValue;
-            }
-        });
-    });
+    // // ポップアップ開いた時にテキストフィールドの中身を復帰する
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     // console.log('popup opened')
+    //     // ChromeストレージAPIから値を取得
+    //     chrome.storage.sync.get('textValue', (data) => {
+    //         // 値があれば、テキストフィールドに設定
+    //         if (data.textValue) {
+    //             // テキストフィールドの参照を取得
+    //             const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
+    //             textField.value = data.textValue;
+    //         }
+    //     });
+    // });
 
-    // ボタン押下時の処理を追加
-    function saveTemplateField() {
-        // テキストフィールドの参照を取得
-        const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
-        // ボタンの参照を取得 
-        const saveButton = document.getElementById('popup_button_run');
+    // // ボタン押下時の処理を追加
+    // function saveTemplateField() {
+    //     // テキストフィールドの参照を取得
+    //     const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
+    //     // ボタンの参照を取得 
+    //     const saveButton = document.getElementById('popup_button_run');
 
-        console.log({ textField })
-        console.log({ saveButton })
+    //     console.log({ textField })
+    //     console.log({ saveButton })
 
-        // ボタンクリックイベントのリスナーを設定
-        if (saveButton && textField) {
+    //     // ボタンクリックイベントのリスナーを設定
+    //     if (saveButton && textField) {
 
-            saveButton.addEventListener('click', () => {
-                console.log('saveTemplateField')
-                // テキストフィールドの値を取得
-                const value = textField.value;
-                // ChromeストレージAPIを使って値を保存
-                chrome.storage.sync.set({ 'textValue': value });
-            });
-        }
-    }
+    //         saveButton.addEventListener('click', () => {
+    //             console.log('saveTemplateField')
+    //             // テキストフィールドの値を取得
+    //             const value = textField.value;
+    //             // ChromeストレージAPIを使って値を保存
+    //             chrome.storage.sync.set({ 'textValue': value });
+    //         });
+    //     }
+    // }
 
-    saveTemplateField()
+    // saveTemplateField()
+
+
 })();

@@ -49,12 +49,9 @@ export default defineConfig({
         }),
         liveReload(["src/**/*.html"]), // 監視対象のHTMLファイルを指定
     ],
-    vite: {
-        server: {
-            watch: {
-                usePolling: true,
-                interval: 1000,
-            },
+    server: {
+        watch: {
+            usePolling: true,
         },
     },
 });
