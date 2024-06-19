@@ -1,19 +1,18 @@
-import Utils from "./utils";
+import { Utils } from "./utils";
 
 (() => {
     const Const = Utils.CONST;
-    let delimiter = 'csv'
+    let radioStatus: { [key: string]: any } = {};
 
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
         chrome.storage.session.get(null, (options) => {
             console.log({ options });
-
-            delimiter = options[Const.id_radio_csv_tsv];
+            radioStatus = options
 
             Utils.loadOption(options, null, Const.id_radio_csv_tsv);
-            Utils.loadOption(options, null, Const.id_radio_cell_record);
             Utils.loadOption(options, null, Const.id_radio_data_template);
+            Utils.loadOption(options, null, Const.id_radio_cell_record);
         });
     });
 
@@ -24,11 +23,16 @@ import Utils from "./utils";
         Const.id_radio_data_template,
     ].forEach((name) => {
         Array.from(document.getElementsByName(name)).forEach((elm) => {
-            elm.addEventListener("change", (_el) => {
+            elm.addEventListener("change", (el) => {
+                console.log({ el })
                 let options = {};
                 options = Utils.saveOption(options, null, name);
                 chrome.storage.session.set(options);
                 console.log({ options });
+                if (el.target) {
+                    // @ts-ignore
+                    radioStatus[name] = el.target.value
+                }
             });
         });
     });
@@ -47,10 +51,10 @@ import Utils from "./utils";
                 if (tab == undefined || tab.id == undefined) {
                     return;
                 }
-                chrome.tabs.sendMessage(tab.id, { name: "tableCopyButtonClicked", mode: delimiter }, (response) => {
-                    console.log("コンテントスクリプトからの応答", response);
+                const delimiter = radioStatus[Const.id_radio_csv_tsv]
+                chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
                     const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
-                    if (response == undefined) {
+                    if (response == undefined || response.data == "") {
                         textarea.value = "テーブル要素が見つかりませんでした。"
                     }
                     else {
@@ -63,31 +67,51 @@ import Utils from "./utils";
         });
     }
 
+    // テンプレート埋め込みコピーボタンの動作
+    const templateCopyButton = document.getElementById("button_template_copy");
+    if (templateCopyButton) {
+        templateCopyButton.addEventListener("click", () => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                const tab = tabs[0];
+                if (tab == undefined || tab.id == undefined) {
+                    return;
+                }
+
+                const tab_id = tab.id
+                chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
+                    console.log({ options });
+
+                    const template = options[Const.id_fillin_template]
+                    console.log({ template })
+                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template }, (response) => {
+                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                        if (response == undefined) {
+                            textarea.value = "テンプレートが見つかりませんでした。"
+                        }
+                        else if (response.data == "") {
+                            textarea.value = "レコードが見つかりませんでした。"
+                        }
+                        else {
+                            textarea.value = response.data;
+                            Utils.copyToClipboard(response.data)
+                        }
+                    });
+                });
+
+            });
+        });
+    }
+
     // テーブルデータ取得メッセージの受信
     port.onMessage.addListener((response) => {
         console.log({ response })
-        if (response.action === "tableCopyButtonClicked") {
+        if (response.action === Const.table_copy_button_clicked) {
             console.log("バックグラウンドスクリプトからの応答", response);
             return true;
         }
         return false;
     });
 
-
-
-    // テンプレートコピーボタンの動作
-    const templateCopyButton = document.getElementById("button_template_copy");
-    if (templateCopyButton) {
-        // chrome.storage.sync.get(null, (options) => {
-        //     const template = options[Const.id_fillin_template];
-        //     // kintone apiを呼び出して現在表示しているレコードのデータを取得
-        //     const record = kintone.app.record.get();
-        //     console.log({ record });
-        //     // テンプレートにデータを埋め込む
-        //     const filledTemplate = Utils.fillTemplate(template, record);
-        //     console.log({ filledTemplate });
-        // });
-    }
 
     const saveButton = document.getElementById("popup_button_run");
     if (saveButton) {

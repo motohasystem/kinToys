@@ -1,10 +1,27 @@
+import { TemplateEmbedder } from "./lib/template_embedder";
 
 (() => {
 
-    // ここに乗せたい機能
-    // - 画面のhtmlからテーブルを取り出してcsv化して取得する
-    // - storageのテンプレートと、詳細画面のレコード情報を合成したテキストを取得する
-    // 
+    // kintoneレコード情報の埋め込みリクエストを受信する
+    window.addEventListener("message", (event) => {
+        console.log({ event })
+        // メッセージが正しいかチェック
+        if (event.source !== window) return;
+        if (event.data.type !== "templateCopyButtonClicked") return;
+
+        // テンプレートに対してプレースホルダを置換する
+        const template = event.data.data;
+        const embedder = new TemplateEmbedder(template);
+
+        const record = kintone.app.record.get()
+        console.log({ record })
+        let response = ""
+        if (record != null) {
+            response = embedder.embed(template, record.record)
+        }
+        console.log({ response })
+        window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
+    });
 
     //
     // ここから下はプラグイン画面用のスクリプト

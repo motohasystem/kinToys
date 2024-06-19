@@ -42,22 +42,6 @@
 
         }
 
-        // if (message.name === "tableCopyButtonClicked") {
-        //     console.log("tableCopyButtonClickedメッセージを受信しました", message);
-        //     // テーブルデータを取得してCSV化する
-        //     // const picker = new TablePicker('csv')
-        //     const tableData = {} //picker.getTableData();
-        //     console.log({ tableData });
-        //     // sendResponse({ action: "tableCopyButtonClicked", data: tableData });
-
-
-        //     setTimeout(() => {
-        //         if (connection) {
-        //             connection.postMessage(tableData);
-        //         }
-        //     }, 1000);
-        // }
-
         return true;
     });
 

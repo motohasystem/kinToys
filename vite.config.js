@@ -21,6 +21,7 @@ export default defineConfig({
                 options: path.resolve(__dirname, "src/options.html"),
             },
             output: {
+                format: "es",
                 entryFileNames: "[name].js",
                 chunkFileNames: "[name].js",
                 assetFileNames: "[name].[ext]",
@@ -52,6 +53,7 @@ export default defineConfig({
     server: {
         watch: {
             usePolling: true,
+            interval: 1000,
         },
     },
 });

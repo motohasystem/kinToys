@@ -1,10 +1,13 @@
-class Utils {
+export class Utils {
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
         id_radio_csv_tsv: "radio_csv_tsv",
         id_radio_cell_record: "radio_cell_record",
         id_radio_data_template: "radio_data_template",
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+
+        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
     };
 
     static loadOption(options: { [key: string]: string }, key: string | null, name: string | null) {
@@ -90,4 +93,4 @@ class Utils {
     }
 }
 
-export default Utils;
+// export default Utils;
