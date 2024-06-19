@@ -34,6 +34,7 @@ import { TablePicker } from "./lib/table_picker";
         // kintoneレコードを取得してテンプレートに埋め込む
         else if (request.name === CONST.template_copy_button_clicked) {
             const template = request.template
+            const alignment = request.alignment
             console.log({ template })
             // const embedder = new TemplateEmbedder(template)
 
@@ -42,11 +43,11 @@ import { TablePicker } from "./lib/table_picker";
                 if (event.source !== window) return;
                 if (event.data.type !== "kintoneRecordInfoEmbedded") return;
                 const embedded = event.data.data;
-                sendResponse({ action: CONST.template_copy_button_clicked, data: embedded });
+                sendResponse({ action: CONST.template_copy_button_clicked, data: embedded, alignment: alignment });
             });
 
             // 埋め込みリクエストを embedding_scripts.ts に送信する
-            window.postMessage({ type: CONST.template_copy_button_clicked, data: template }, "*")
+            window.postMessage({ type: CONST.template_copy_button_clicked, data: template, alignment: alignment }, "*")
         }
 
         return true

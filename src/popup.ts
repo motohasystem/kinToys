@@ -41,7 +41,7 @@ import { Utils } from "./utils";
     console.log("popup.js");
     const port = chrome.runtime.connect({ name: "popup" });
 
-    // テーブルコピーボタンの動作
+    // テーブル抽出ボタンの動作
     const tableCopyButton = document.getElementById("button_table_copy");
     if (tableCopyButton) {
         tableCopyButton.addEventListener("click", () => {
@@ -67,7 +67,7 @@ import { Utils } from "./utils";
         });
     }
 
-    // テンプレート埋め込みコピーボタンの動作
+    // レコード抽出ボタンの動作
     const templateCopyButton = document.getElementById("button_template_copy");
     if (templateCopyButton) {
         templateCopyButton.addEventListener("click", () => {
@@ -81,9 +81,15 @@ import { Utils } from "./utils";
                 chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
                     console.log({ options });
 
+                    const csv_or_tsv = radioStatus[Const.id_radio_csv_tsv] == undefined ? options[Const.id_radio_csv_tsv] : radioStatus[Const.id_radio_csv_tsv]
+                    const data_or_template = radioStatus[Const.id_radio_data_template]
+
+                    // template / csv / tsv のいずれかを返す
+                    const alignment = data_or_template == 'template' ? 'template' : csv_or_tsv
+
                     const template = options[Const.id_fillin_template]
                     console.log({ template })
-                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template }, (response) => {
+                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
                         const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
                             textarea.value = "テンプレートが見つかりませんでした。"

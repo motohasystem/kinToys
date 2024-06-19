@@ -12,12 +12,20 @@ import { TemplateEmbedder } from "./lib/template_embedder";
         // テンプレートに対してプレースホルダを置換する
         const template = event.data.data;
         const embedder = new TemplateEmbedder(template);
+        const alignment = event.data.alignment  // データの形状(csv, tsv またはテンプレート)
 
         const record = kintone.app.record.get()
         console.log({ record })
         let response = ""
         if (record != null) {
-            response = embedder.embed(template, record.record)
+            if (alignment == 'csv' || alignment == 'tsv') {
+                response = embedder.alignment(record.record, alignment)
+            } else if (alignment == 'template') {
+                response = embedder.embed(template, record.record)
+            }
+            else {
+                throw new Error(`Invalid shape: ${alignment}`)
+            }
         }
         console.log({ response })
         window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")

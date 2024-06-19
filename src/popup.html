@@ -64,31 +64,37 @@
         When you display the plugin setting screen of kintone, you will see '⇩download' and '⇧upload' buttons. download button downloads the plugin setting as json. upload button loads the downloaded json as a plugin setting. The upload button loads the downloaded json as a plugin configuration.
     </div> -->
     <div>
-        <h3>table copy style:</h3>
-        <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
-        <label for="radio_tablecopy_csv">csv</label>
-        <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
-        <label for="radio_tablecopy_tsv">tsv</label>
+        <h3>データ区切り:</h3>
+        <div class="radio_set">
+            <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
+            <label for="radio_tablecopy_csv">csv</label>
+            <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
+            <label for="radio_tablecopy_tsv">tsv</label>
+        </div>
     </div>
     <div>
-        <h3>table copy mode:</h3>
-        <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
-        <label for="radio_tablecopy_cell">cell</label>
-        <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
-        <label for="radio_tablecopy_record">record</label>
+        <h3>テーブル抽出方式:</h3>
+        <div class="radio_set">
+            <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
+            <label for="radio_tablecopy_cell">cell</label>
+            <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
+            <label for="radio_tablecopy_record">record</label>
+        </div>
     </div>
     <div>
-        <h3>record copy style:</h3>
-        <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data" checked>
-        <label for="radio_recordcopy_data">data</label>
-        <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template">
-        <label for="radio_recordcopy_template">template</label>
+        <h3>レコード抽出方式:</h3>
+        <div class="radio_set">
+            <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
+            <label for="radio_recordcopy_template">template</label>
+            <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
+            <label for="radio_recordcopy_data">data</label>
+        </div>
     </div>
 
     <!-- ボタン配置 -->
     <div>
-        <input type="button" id="button_table_copy" value="abstruct tables">
-        <input type="button" id="button_template_copy" value="template copy">
+        <input type="button" id="button_table_copy" value="テーブル抽出">
+        <input type="button" id="button_template_copy" value="レコード抽出">
     </div>
 
     <div class="textarea_template">
