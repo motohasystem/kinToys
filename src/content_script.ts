@@ -20,14 +20,21 @@ import { TablePicker } from "./lib/table_picker";
     chrome.storage.sync.get(null, (options) => {
         console.log({ 'chrome.storage.sync.get': options });
 
+        // 埋め込みリクエストの受信を先に登録
+        window.addEventListener("message", (event) => {
+            if (event.source !== window) return;
+            if (event.data.type !== "requestPopupOptions") return;
+            // const embedded = event.data.data;
+
+            window.postMessage({
+                type: "loadPopupOptions", data: options
+            }, "*")
+        });
+
         insertScript("./embedding_script.js");
         insertStyleSheet("./embedding.css");
 
         console.log('scripts inserted')
-        window.postMessage({
-            type: "loadPopupOptions", data: options
-        }, "*")
-
     });
 
     // ポップアップ側でオプションを変更したイベントを受け取ってembedの動作を変更する
@@ -42,7 +49,7 @@ import { TablePicker } from "./lib/table_picker";
                 const change = changes[key];
                 console.log({ change });
                 if (key === CONST.id_radio_cell_record) {
-                    console.log("テンプレートが変更されました");
+                    console.log("セル/レコードコピーの範囲が変更されました");
                     radio_cell_record = change.newValue
                 }
                 else if (key === CONST.id_radio_csv_tsv) {

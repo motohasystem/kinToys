@@ -7,15 +7,14 @@ import { Utils } from "./utils";
     const eventDealer = new ClickEventDealer()
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
-    eventDealer.deal();
+    window.postMessage({ type: "requestPopupOptions" }, "*")
 
     // kintoneの一覧画面表示のタイミングで実行する
     kintone.events.on("app.record.index.show", function (_event) {
         // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
-        eventDealer.deal();
+        // eventDealer.deal();
+        window.postMessage({ type: "requestPopupOptions" }, "*")
     });
-
-
 
     window.addEventListener("message", (event) => {
         console.log({ event })
