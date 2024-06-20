@@ -1,3 +1,10 @@
+export enum PageCategory {
+    index = "index",
+    detail = "detail",
+    report = "report",
+    excluded = "excluded",
+}
+
 export class Utils {
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
@@ -90,6 +97,36 @@ export class Utils {
             .catch((error) => {
                 console.error('Failed to copy text to clipboard', error);
             });
+    }
+
+    // 渡したURLが、kintoneの一覧画面なのか詳細画面なのか判定する
+    static whereAmI(url: string) {
+        const urlObj = new URL(url);
+
+        // ホスト名が *.cybozu.com であるかどうか
+        const body = urlObj.hostname;
+        if (!body.endsWith(".cybozu.com")) {
+            return PageCategory.excluded;   // 対象外のページ
+        }
+
+        // パスが /k/ で始まるかどうか
+        const path = urlObj.pathname;
+        if (!path.startsWith("/k/")) {
+            return PageCategory.excluded;   // 対象外のページ
+        }
+
+        // パスが /k/{appId}/show であるかどうか
+        if (path.endsWith("/show")) {
+            return PageCategory.detail;
+        }
+
+        // パスが /k/{appId}/report であるかどうか
+        if (path.endsWith("/report")) {
+            return PageCategory.report;
+        }
+
+        // それ以外は一覧画面
+        return PageCategory.index;
     }
 }
 
