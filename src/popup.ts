@@ -1,4 +1,4 @@
-import { PageCategory, Utils } from "./utils";
+import { Utils } from "./utils";
 
 (() => {
     const Const = Utils.CONST;
@@ -6,7 +6,8 @@ import { PageCategory, Utils } from "./utils";
 
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
-        chrome.storage.session.get(null, (options) => {
+        console.log('DOMContentLoaded')
+        chrome.storage.sync.get(null, (options) => {
             console.log({ options });
             radioStatus = options
 
@@ -27,7 +28,7 @@ import { PageCategory, Utils } from "./utils";
                 console.log({ el })
                 let options = {};
                 options = Utils.saveOption(options, null, name);
-                chrome.storage.session.set(options);
+                chrome.storage.sync.set(options);
                 console.log({ options });
                 if (el.target) {
                     // @ts-ignore
@@ -55,7 +56,7 @@ import { PageCategory, Utils } from "./utils";
 
                 // 一覧画面または集計画面の判定
                 const pageCategory = Utils.whereAmI(tab.url)
-                if (pageCategory === PageCategory.index || pageCategory === PageCategory.report) {
+                if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
 
                     // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
                     chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
@@ -73,7 +74,7 @@ import { PageCategory, Utils } from "./utils";
                     })
                 }
                 // 障害画面の判定
-                else if (pageCategory === PageCategory.detail) {
+                else if (pageCategory === Utils.PageCategory.detail) {
                     const tab_id = tab.id
                     chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
                         console.log({ options });

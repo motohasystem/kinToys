@@ -1,11 +1,11 @@
-export enum PageCategory {
-    index = "index",
-    detail = "detail",
-    report = "report",
-    excluded = "excluded",
-}
-
 export class Utils {
+    static PageCategory = {
+        index: "index",
+        detail: "detail",
+        report: "report",
+        excluded: "excluded"
+    }
+
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
         id_radio_csv_tsv: "radio_csv_tsv",
@@ -14,8 +14,9 @@ export class Utils {
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
-    };
+        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+    }
+
 
     static loadOption(options: { [key: string]: string }, key: string | null, name: string | null) {
         key = key == undefined ? null : key;
@@ -106,28 +107,26 @@ export class Utils {
         // ホスト名が *.cybozu.com であるかどうか
         const body = urlObj.hostname;
         if (!body.endsWith(".cybozu.com")) {
-            return PageCategory.excluded;   // 対象外のページ
+            return Utils.PageCategory.excluded;   // 対象外のページ
         }
 
         // パスが /k/ で始まるかどうか
         const path = urlObj.pathname;
         if (!path.startsWith("/k/")) {
-            return PageCategory.excluded;   // 対象外のページ
+            return Utils.PageCategory.excluded;   // 対象外のページ
         }
 
         // パスが /k/{appId}/show であるかどうか
         if (path.endsWith("/show")) {
-            return PageCategory.detail;
+            return Utils.PageCategory.detail;
         }
 
         // パスが /k/{appId}/report であるかどうか
         if (path.endsWith("/report")) {
-            return PageCategory.report;
+            return Utils.PageCategory.report;
         }
 
         // それ以外は一覧画面
-        return PageCategory.index;
+        return Utils.PageCategory.index;
     }
 }
-
-// export default Utils;

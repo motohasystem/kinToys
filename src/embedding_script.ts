@@ -1,34 +1,58 @@
+import { ClickEventDealer } from "./lib/clickevent_dealer";
 import { TemplateEmbedder } from "./lib/template_embedder";
+import { Utils } from "./utils";
 
 (() => {
+    // 各所のDOMにクリックイベントを配布する
+    const eventDealer = new ClickEventDealer()
 
-    // kintoneレコード情報の埋め込みリクエストを受信する
+    // kintone.events.on とは別のタイミングで実行しておく必要がある
+    eventDealer.deal();
+
+    // kintoneの一覧画面表示のタイミングで実行する
+    kintone.events.on("app.record.index.show", function (_event) {
+        // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
+        eventDealer.deal();
+    });
+
+
+
     window.addEventListener("message", (event) => {
         console.log({ event })
         // メッセージが正しいかチェック
         if (event.source !== window) return;
-        if (event.data.type !== "templateCopyButtonClicked") return;
 
-        // テンプレートに対してプレースホルダを置換する
-        const template = event.data.data;
-        const embedder = new TemplateEmbedder(template);
-        const alignment = event.data.alignment  // データの形状(csv, tsv またはテンプレート)
 
-        const record = kintone.app.record.get()
-        console.log({ record })
-        let response = ""
-        if (record != null) {
-            if (alignment == 'csv' || alignment == 'tsv') {
-                response = embedder.alignment(record.record, alignment)
-            } else if (alignment == 'template') {
-                response = embedder.embed(template, record.record)
+        // kintoneレコード情報の埋め込みリクエストを受信した
+        if (event.data.type === Utils.CONST.template_copy_button_clicked) {
+            // テンプレートに対してプレースホルダを置換する
+            const template = event.data.data;
+            const embedder = new TemplateEmbedder(template);
+            const alignment = event.data.alignment  // データの形状(csv, tsv またはテンプレート)
+
+            const record = kintone.app.record.get()
+            console.log({ record })
+            let response = ""
+            if (record != null) {
+                if (alignment == 'csv' || alignment == 'tsv') {
+                    response = embedder.alignment(record.record, alignment)
+                } else if (alignment == 'template') {
+                    response = embedder.embed(template, record.record)
+                }
+                else {
+                    throw new Error(`Invalid shape: ${alignment}`)
+                }
             }
-            else {
-                throw new Error(`Invalid shape: ${alignment}`)
-            }
+            console.log({ response })
+            window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
         }
-        console.log({ response })
-        window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
+        else if (event.data.type === "changePopupOptions" || event.data.type === "loadPopupOptions") {
+            console.log("changePopupOptions")
+            const options = event.data.data;
+            console.log({ changePopupOptions: options })
+            eventDealer.deal(options)
+        }
+
     });
 
     //
@@ -37,14 +61,6 @@ import { TemplateEmbedder } from "./lib/template_embedder";
 
     function insertScriptButtons() {
         // 一覧画面
-        // kintone.events.on とは別のタイミングで実行しておく必要がある
-        dealClicknCopyFunction();
-
-        // kintoneの一覧画面表示のタイミングで実行する
-        kintone.events.on("app.record.index.show", function (_event) {
-            // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
-            dealClicknCopyFunction();
-        });
 
         // プラグイン設定画面
         if (
@@ -71,34 +87,7 @@ import { TemplateEmbedder } from "./lib/template_embedder";
         return new RegExp(regex).test(location.href);
     }
 
-    // すべてのtdセルにクリックするとコピーする機能を追加する
-    function dealClicknCopyFunction() {
-        // すべてのtdセルを取得
-        const tdList = document.querySelectorAll("td");
 
-        // すべてのtdセルにクリックするとコピーする機能を追加する
-        tdList.forEach((td) => {
-            td.addEventListener("click", () => {
-                // クリップボードにコピーする
-                const text = td.textContent;
-                if (text === null) return;
-                navigator.clipboard
-                    .writeText(text)
-                    .then(() => {
-                        // 背景セルを一瞬緑色にする
-                        td.style.backgroundColor = "lightgreen";
-
-                        setTimeout(() => {
-                            td.style.backgroundColor = "";
-                        }, 1000);
-                        console.log(`Copied! [${text}]`);
-                    })
-                    .catch((err) => {
-                        console.error("Failed to copy: ", err);
-                    });
-            });
-        });
-    }
 
     function make_export_button(textContent: string) {
         const button = document.createElement("button");
@@ -218,45 +207,6 @@ import { TemplateEmbedder } from "./lib/template_embedder";
     }
 
     insertScriptButtons();
-
-    // // ポップアップ開いた時にテキストフィールドの中身を復帰する
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     // console.log('popup opened')
-    //     // ChromeストレージAPIから値を取得
-    //     chrome.storage.sync.get('textValue', (data) => {
-    //         // 値があれば、テキストフィールドに設定
-    //         if (data.textValue) {
-    //             // テキストフィールドの参照を取得
-    //             const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
-    //             textField.value = data.textValue;
-    //         }
-    //     });
-    // });
-
-    // // ボタン押下時の処理を追加
-    // function saveTemplateField() {
-    //     // テキストフィールドの参照を取得
-    //     const textField = document.getElementById('popup_template') as HTMLTextAreaElement;
-    //     // ボタンの参照を取得 
-    //     const saveButton = document.getElementById('popup_button_run');
-
-    //     console.log({ textField })
-    //     console.log({ saveButton })
-
-    //     // ボタンクリックイベントのリスナーを設定
-    //     if (saveButton && textField) {
-
-    //         saveButton.addEventListener('click', () => {
-    //             console.log('saveTemplateField')
-    //             // テキストフィールドの値を取得
-    //             const value = textField.value;
-    //             // ChromeストレージAPIを使って値を保存
-    //             chrome.storage.sync.set({ 'textValue': value });
-    //         });
-    //     }
-    // }
-
-    // saveTemplateField()
 
 
 })();

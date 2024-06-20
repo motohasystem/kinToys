@@ -1,10 +1,10 @@
 
-import { TablePicker } from "./lib/table_picker";
-// import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Utils } from "./utils";
+import { TablePicker } from "./lib/table_picker";
 
 (() => {
     // const CONST = Utils.CONST
+
     // 通らないので一旦直接置く
     const CONST = {
         id_fillin_template: "textarea_fillin_template",
@@ -17,10 +17,58 @@ import { TablePicker } from "./lib/table_picker";
         template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
     };
 
-    // tableCopyButtonClickedメッセージを受信したら、テーブルデータを取得してCSV化する
+    chrome.storage.sync.get(null, (options) => {
+        console.log({ 'chrome.storage.sync.get': options });
+
+        insertScript("./embedding_script.js");
+        insertStyleSheet("./embedding.css");
+
+        console.log('scripts inserted')
+        window.postMessage({
+            type: "loadPopupOptions", data: options
+        }, "*")
+
+    });
+
+    // ポップアップ側でオプションを変更したイベントを受け取ってembedの動作を変更する
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+        console.log({ changes, areaName });
+        if (areaName === "sync") {
+            let radio_csv_tsv = null;
+            let radio_data_template = null;
+            let radio_cell_record = null;
+
+            for (const key in changes) {
+                const change = changes[key];
+                console.log({ change });
+                if (key === CONST.id_radio_cell_record) {
+                    console.log("テンプレートが変更されました");
+                    radio_cell_record = change.newValue
+                }
+                else if (key === CONST.id_radio_csv_tsv) {
+                    console.log("csv/tsvの選択が変更されました");
+                    radio_csv_tsv = change.newValue
+                }
+                else if (key === CONST.id_radio_data_template) {
+                    console.log("データ/テンプレートの選択が変更されました");
+                    radio_data_template = change.newValue
+                }
+            }
+
+            window.postMessage({
+                type: "changePopupOptions", data: {
+                    radio_csv_tsv,
+                    radio_data_template,
+                    radio_cell_record
+                }
+            }, "*")
+        }
+    });
+
+    // ポップアップの「クリップボードにコピーする」ボタンのメッセージを受信した処理
     console.log('content_script.ts')
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        console.log(`${request.name}メッセージを受信しました。`, request)
+        console.log(`${request.name} メッセージを受信しました。`, request)
         console.log({ sender })
 
         // テーブルデータを取得してCSV化する
@@ -53,14 +101,13 @@ import { TablePicker } from "./lib/table_picker";
         return true
     });
 
-
-
     function insertScript(file: string) {
         const url = (window as any).chrome.runtime.getURL(file);
 
         const $$script = document.createElement("script");
         $$script.src = url;
-        $$script.type = "text/javascript";
+        // $$script.type = "text/javascript";
+        $$script.type = "module";
         document.body.appendChild($$script);
     }
 
@@ -72,8 +119,5 @@ import { TablePicker } from "./lib/table_picker";
         $$style.rel = "stylesheet";
         document.body.appendChild($$style);
     }
-
-    insertScript("./embedding_script.js");
-    insertStyleSheet("./embedding.css");
 
 })();

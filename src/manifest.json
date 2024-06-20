@@ -35,7 +35,8 @@
         {
             "resources": [
                 "embedding_script.js",
-                "embedding.css"
+                "embedding.css",
+                "utils.js"
             ],
             "matches": [
                 "https://*.cybozu.com/*"
