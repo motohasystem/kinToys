@@ -102,9 +102,17 @@ export class ClickEventDealer {
                 // 背景セルを一瞬緑色にする
                 td.style.backgroundColor = "lightgreen";
 
-                setTimeout(() => {
-                    td.style.backgroundColor = "";
-                }, 1000);
+                // 背景色をフェードアウトで消していく
+                let opacity = 1;
+                const fadeOut = setInterval(() => {
+                    if (opacity <= 0) {
+                        clearInterval(fadeOut);
+                        td.style.backgroundColor = "";
+                    } else {
+                        opacity -= 0.1;
+                        td.style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                    }
+                }, 100);
                 console.log(`Copied! [${text}]`);
             })
             .catch((err) => {
@@ -138,13 +146,21 @@ export class ClickEventDealer {
                     }
                 });
 
-                setTimeout(() => {
-                    Array.from(tr.children).forEach((td, index) => {
-                        if (index !== 0 && index !== length - 1) {
-                            (td as HTMLTableCellElement).style.backgroundColor = "";
-                        }
-                    });
-                }, 1000);
+                // 背景色をフェードアウトで消していく
+                Array.from(tr.children).forEach((td, index) => {
+                    if (index !== 0 && index !== length - 1) {
+                        let opacity = 1;
+                        const fadeOut = setInterval(() => {
+                            if (opacity <= 0) {
+                                clearInterval(fadeOut);
+                                (td as HTMLTableCellElement).style.backgroundColor = "";
+                            } else {
+                                opacity -= 0.1;
+                                (td as HTMLTableCellElement).style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                            }
+                        }, 100);
+                    }
+                });
                 console.log(`Copied! [${text}]`);
             })
             .catch((err) => {
