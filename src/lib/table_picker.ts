@@ -52,7 +52,12 @@ export class TablePicker {
             const headerCols = headers.querySelectorAll("th");
             const headerRowData: string[] = [];
 
-            headerCols.forEach(function (col) {
+            headerCols.forEach(function (col, index) {
+                // 最後の1列は無視する
+                if (index === headerCols.length - 1) {
+                    return
+                }
+
                 const text = col.textContent
                 if (text) {
                     headerRowData.push(text);
@@ -66,7 +71,12 @@ export class TablePicker {
             const cols = row.querySelectorAll("td, th");
             const csvRow: string[] = [];
 
-            cols.forEach(function (col) {
+            cols.forEach(function (col, index) {
+                // 最後の1列は無視する
+                if (index === cols.length - 1) {
+                    return
+                }
+
                 const text = col.textContent
                 if (text) {
                     csvRow.push(text);
