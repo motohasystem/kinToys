@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "vite-watch": "./node_modules/.bin/vite build --watch",
+        "vite-watch": "vite build --watch",
         "tsc-watch": "tsc --watch",
         "watch": "npm-run-all --parallel vite-watch tsc-watch",
         "dev": ""
