@@ -7,14 +7,21 @@
 <style>
 </style>
 <body>
-  <img src="../images/icon128.png" alt="Logo" class="logo">
+  <img src="../images/icon48.png" alt="Logo" class="logo">
   <h1>マウス強化人間</h1>
 
   <div id="msg"></div>
-  <script src="utils.ts" type="module"></script>
+  <!-- <script src="utils.ts" type="module"></script> -->
   <script src="options.ts" type="module"></script>
 
   <h3>帳票テンプレート</h3>
+  <div>
+    <input type="text" id="input_template_name" placeholder="template name" style="width: 200px; margin-right: 10px;"/>
+    <!-- 過去に使用した帳票テンプレートの履歴を一覧したドロップダウンリスト -->
+    <select id="select_template_history" style="width: 200px; margin-right: 10px;">
+      <option value="">-- select template --</option>
+    </select>
+  </div>
   <div>
     <textarea id="textarea_fillin_template" class="textarea_template" rows="20" cols="40" placeholder="fill in template for kintone record."></textarea>
   </div>

@@ -14,7 +14,12 @@ export class Utils {
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+
+        id_input_template_name: "input_template_name",
+        id_select_template_history: "select_template_history",
+        key_template_history: "template_history",
+
     }
 
 
@@ -107,26 +112,26 @@ export class Utils {
         // ホスト名が *.cybozu.com であるかどうか
         const body = urlObj.hostname;
         if (!body.endsWith(".cybozu.com")) {
-            return Utils.PageCategory.excluded;   // 対象外のページ
+            return this.PageCategory.excluded;   // 対象外のページ
         }
 
         // パスが /k/ で始まるかどうか
         const path = urlObj.pathname;
         if (!path.startsWith("/k/")) {
-            return Utils.PageCategory.excluded;   // 対象外のページ
+            return this.PageCategory.excluded;   // 対象外のページ
         }
 
         // パスが /k/{appId}/show であるかどうか
         if (path.endsWith("/show")) {
-            return Utils.PageCategory.detail;
+            return this.PageCategory.detail;
         }
 
         // パスが /k/{appId}/report であるかどうか
         if (path.endsWith("/report")) {
-            return Utils.PageCategory.report;
+            return this.PageCategory.report;
         }
 
         // それ以外は一覧画面
-        return Utils.PageCategory.index;
+        return this.PageCategory.index;
     }
 }
