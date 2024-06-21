@@ -5,6 +5,8 @@ import { Utils } from "./utils";
 (() => {
     // 各所のDOMにクリックイベントを配布する
     const eventDealer = new ClickEventDealer()
+    const embedder = new TemplateEmbedder("")
+    eventDealer.setTemplateEmbedder(embedder)
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: "requestPopupOptions" }, "*")
@@ -36,7 +38,7 @@ import { Utils } from "./utils";
                 if (alignment == 'csv' || alignment == 'tsv') {
                     response = embedder.alignment(record.record, alignment)
                 } else if (alignment == 'template') {
-                    response = embedder.embed(template, record.record)
+                    response = embedder.embed(record.record, template)
                 }
                 else {
                     throw new Error(`Invalid shape: ${alignment}`)
@@ -46,10 +48,18 @@ import { Utils } from "./utils";
             window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
         }
         else if (event.data.type === "changePopupOptions" || event.data.type === "loadPopupOptions") {
-            console.log("changePopupOptions")
+            console.log(`window message event: ${event.data.type}`)
+
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
+
+            const template = options.textarea_fillin_template
+            if (template != null) {
+                const embedder = new TemplateEmbedder(template)
+                console.log({ 'set template by message': template })
+                eventDealer.setTemplateEmbedder(embedder)
+            }
         }
 
     });

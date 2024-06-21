@@ -45,68 +45,7 @@ import { Utils } from "./utils";
     // テーブル抽出ボタンの動作
     const tableCopyButton = document.getElementById("button_table_copy");
     if (tableCopyButton) {
-        tableCopyButton.addEventListener("click", () => {
-            // アクティブタグを取得する
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                const tab = tabs[0];
-                if (tab == undefined || tab.id == undefined || tab.url == undefined) {
-                    return;
-                }
-                const delimiter = radioStatus[Const.id_radio_csv_tsv]
-
-                // 一覧画面または集計画面の判定
-                const pageCategory = Utils.whereAmI(tab.url)
-                if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
-
-                    // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
-                    chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
-                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
-                        if (response == undefined) {
-                            textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
-                        }
-                        else if (response == undefined || response.data == "") {
-                            textarea.value = "テーブル要素が見つかりませんでした。\n一覧画面、または集計画面で実行してください。"
-                        }
-                        else {
-                            textarea.value = response.data;
-                            Utils.copyToClipboard(response.data)
-                        }
-                    })
-                }
-                // 障害画面の判定
-                else if (pageCategory === Utils.PageCategory.detail) {
-                    const tab_id = tab.id
-                    chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
-                        console.log({ options });
-
-                        const csv_or_tsv = radioStatus[Const.id_radio_csv_tsv] == undefined ? options[Const.id_radio_csv_tsv] : radioStatus[Const.id_radio_csv_tsv]
-                        const data_or_template = radioStatus[Const.id_radio_data_template]
-
-                        // template / csv / tsv のいずれかを返す
-                        const alignment = data_or_template == 'template' ? 'template' : csv_or_tsv
-                        const template = options[Const.id_fillin_template]
-                        console.log({ template })
-
-                        // コンテントスクリプト content_script.ts にレコードデータ取得メッセージを送る
-                        chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
-                            const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
-                            if (response == undefined) {
-                                textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
-                            }
-                            else if (response.action === Const.template_copy_button_clicked && response.data == "") {
-                                textarea.value = "レコードが見つかりませんでした。\nレコード詳細画面で実行してください。"
-                            }
-                            else {
-                                textarea.value = response.data;
-                                Utils.copyToClipboard(response.data)
-                            }
-                        });
-                    });
-
-                }
-            });
-
-        });
+        tableCopyButton.addEventListener("click", contentAbstractionButtonClicked);
     }
 
     // テーブルデータ取得メッセージの受信
@@ -150,5 +89,72 @@ import { Utils } from "./utils";
 
             return true;
         });
+    }
+
+
+    // コンテンツ抽出ボタンの動作
+    function contentAbstractionButtonClicked() {
+        console.log("contentAbsctactionButtonClicked");
+
+        // アクティブタグを取得する
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const tab = tabs[0];
+            if (tab == undefined || tab.id == undefined || tab.url == undefined) {
+                return;
+            }
+            const delimiter = radioStatus[Const.id_radio_csv_tsv]
+
+            // 一覧画面または集計画面の判定
+            const pageCategory = Utils.whereAmI(tab.url)
+            if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
+
+                // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
+                chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
+                    const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                    if (response == undefined) {
+                        textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                    }
+                    else if (response == undefined || response.data == "") {
+                        textarea.value = "テーブル要素が見つかりませんでした。\n一覧画面、または集計画面で実行してください。"
+                    }
+                    else {
+                        textarea.value = response.data;
+                        Utils.copyToClipboard(response.data)
+                    }
+                })
+            }
+            // 障害画面の判定
+            else if (pageCategory === Utils.PageCategory.detail) {
+                const tab_id = tab.id
+                chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
+                    console.log({ options });
+
+                    const csv_or_tsv = radioStatus[Const.id_radio_csv_tsv] == undefined ? options[Const.id_radio_csv_tsv] : radioStatus[Const.id_radio_csv_tsv]
+                    const data_or_template = radioStatus[Const.id_radio_data_template]
+
+                    // template / csv / tsv のいずれかを返す
+                    const alignment = data_or_template == 'template' ? 'template' : csv_or_tsv
+                    const template = options[Const.id_fillin_template]
+                    console.log({ template })
+
+                    // コンテントスクリプト content_script.ts にレコードデータ取得メッセージを送る
+                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
+                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                        if (response == undefined) {
+                            textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                        }
+                        else if (response.action === Const.template_copy_button_clicked && response.data == "") {
+                            textarea.value = "レコードが見つかりませんでした。\nレコード詳細画面で実行してください。"
+                        }
+                        else {
+                            textarea.value = response.data;
+                            Utils.copyToClipboard(response.data)
+                        }
+                    });
+                });
+
+            }
+        });
+
     }
 })();
