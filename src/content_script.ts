@@ -49,7 +49,7 @@ import { TablePicker } from "./lib/table_picker";
                 const change = changes[key];
                 console.log({ change });
                 if (key === CONST.id_radio_cell_record) {
-                    console.log("セル/レコードコピーの範囲が変更されました");
+                    console.log("セル/行/レコードコピーの範囲が変更されました");
                     radio_cell_record = change.newValue
                 }
                 else if (key === CONST.id_radio_csv_tsv) {

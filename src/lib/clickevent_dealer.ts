@@ -4,7 +4,7 @@ export class ClickEventDealer {
     options: { [key: string]: string; } | undefined;
     previousFunction: ((this: HTMLTableCellElement, ev: MouseEvent) => any) | undefined;
 
-    radio_cell_record: "cell" | "record" = "record";
+    radio_cell_record: "cell" | "row" | "record" = "record";
     radio_csv_tsv: "csv" | "tsv" = "csv";
     radio_data_template: "data" | "template" = "data";
 
@@ -26,7 +26,7 @@ export class ClickEventDealer {
         if (opt == undefined) return;
 
         if ('radio_cell_record' in opt) {
-            this.radio_cell_record = opt['radio_cell_record'] as "cell" | "record";
+            this.radio_cell_record = opt['radio_cell_record'] as "cell" | "row" | "record";
             this.copyTarget = this.radio_cell_record;
         }
 
@@ -42,6 +42,9 @@ export class ClickEventDealer {
 
     // すべてのtdセルにクリックするとコピーする機能を追加する
     dealClicknCopyFunction() {
+        if (this.copyTarget == null) {
+            return;
+        }
 
         // すべてのtdセルを取得
         const tdList = document.querySelectorAll("td");
@@ -54,15 +57,16 @@ export class ClickEventDealer {
         });
 
         const copyClickTarget = ((target: string) => {
+
             if (target == "cell") {
                 return this._copyClickedCell;
-            } else if (target == "record") {
+            } else if (target == "row") {
                 return this._copyClickedRecord;
-            } else if (target == "template") {
+            } else if (target == "record") {
                 return this._copyClickedTemplate;
             }
 
-            throw new Error("Invalid argument");
+            throw new Error(`Invalid argument: ${target}`);
 
         })(this.copyTarget)
 
@@ -109,10 +113,21 @@ export class ClickEventDealer {
             .writeText(text)
             .then(() => {
                 // 背景セルを一瞬緑色にする
-                tr.style.backgroundColor = "lightgreen";
+                // tr.style.backgroundColor = "lightgreen";
+                // trの子のtdの背景色を変える
+                const length = tr.children.length;
+                Array.from(tr.children).forEach((td, index) => {
+                    if (index !== 0 && index !== length - 1) {
+                        (td as HTMLTableCellElement).style.backgroundColor = "lightgreen";
+                    }
+                });
 
                 setTimeout(() => {
-                    tr.style.backgroundColor = "";
+                    Array.from(tr.children).forEach((td, index) => {
+                        if (index !== 0 && index !== length - 1) {
+                            (td as HTMLTableCellElement).style.backgroundColor = "";
+                        }
+                    });
                 }, 1000);
                 console.log(`Copied! [${text}]`);
             })
@@ -133,11 +148,12 @@ export class ClickEventDealer {
         navigator.clipboard
             .writeText(text)
             .then(() => {
-                // 背景セルを一瞬緑色にする
-                tr.style.backgroundColor = "lightgreen";
+                // 背景セルを一瞬緑色のストライプにする
+                tr.classList.add("stripe-background")
 
                 setTimeout(() => {
-                    tr.style.backgroundColor = "";
+                    // tr.style.backgroundColor = "";
+                    tr.classList.remove("stripe-background")
                 }, 1000);
                 console.log(`Copied! [${text}]`);
             })

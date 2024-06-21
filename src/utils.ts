@@ -77,7 +77,7 @@ export class Utils {
             return option;
         }
 
-        throw new Error("Invalid argument");
+        throw new Error(`Invalid argument: key: ${key} / name: ${name}`);
     }
 
     static fillTemplate(template: string, record: { [key: string]: { value: string } }) {
