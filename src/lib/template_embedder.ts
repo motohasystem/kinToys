@@ -10,14 +10,16 @@ export class TemplateEmbedder {
         if (template == undefined) {
             template = this.template;
         }
+        console.log(`embed!: ${template} / ${record}`)
 
-        console.log({ template })
         let filledTemplate = template;
         for (const key in record) {
             const value = record[key].value;
             console.log({ key, value })
             filledTemplate = filledTemplate.replace(`%${key}%`, value);
         }
+
+        console.log({ filledTemplate })
         return filledTemplate;
     }
 

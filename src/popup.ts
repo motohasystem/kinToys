@@ -123,17 +123,27 @@ import { Utils } from "./utils";
                     }
                 })
             }
-            // 障害画面の判定
+            // 詳細画面の判定
             else if (pageCategory === Utils.PageCategory.detail) {
                 const tab_id = tab.id
                 chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
                     console.log({ options });
 
                     const csv_or_tsv = radioStatus[Const.id_radio_csv_tsv] == undefined ? options[Const.id_radio_csv_tsv] : radioStatus[Const.id_radio_csv_tsv]
-                    const data_or_template = radioStatus[Const.id_radio_data_template]
+                    const data_or_template = radioStatus[Const.id_radio_data_template]  // template , data(csv/tsv), json
 
-                    // template / csv / tsv のいずれかを返す
-                    const alignment = data_or_template == 'template' ? 'template' : csv_or_tsv
+                    // template / csv / tsv / json のいずれかを返す
+                    const alignment = ((d_or_t) => {
+                        if (d_or_t === 'template') {
+                            return 'template'
+                        }
+                        else if (d_or_t === 'data') {
+                            return csv_or_tsv
+                        }
+                        else {
+                            return 'json'
+                        }
+                    })(data_or_template)
                     const template = options[Const.id_fillin_template]
                     console.log({ template })
 

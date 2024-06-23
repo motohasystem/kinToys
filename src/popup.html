@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>kintonePluginMigrator Popup</title>
+    <title>kinToys Popup</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,7 +57,7 @@
 <body>
     <div>
         <img src="../images/icon128.png" alt="Logo" class="logo">
-        <h1>マウス強化人間 - Mouse Augmented Person</h1>
+        <h1>kinToys - A Slide Rule for kintone users</h1>
         <!-- <h3>Download and upload plugin configuration</h3> -->
     </div>
     <!-- <div class="description">
@@ -81,6 +81,8 @@
             <label for="radio_tablecopy_row">row</label>
             <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
             <label for="radio_tablecopy_record">record</label>
+            <input type="radio" id="radio_tablecopy_link" name="radio_cell_record" value="link">
+            <label for="radio_tablecopy_link">link</label>
         </div>
     </div>
     <div>
@@ -89,7 +91,9 @@
             <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
             <label for="radio_recordcopy_template">template</label>
             <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
-            <label for="radio_recordcopy_data">data</label>
+            <label for="radio_recordcopy_data">csv/tsv</label>
+            <input type="radio" id="radio_recordcopy_json" name="radio_data_template" value="json">
+            <label for="radio_recordcopy_json">json</label>
         </div>
     </div>
 

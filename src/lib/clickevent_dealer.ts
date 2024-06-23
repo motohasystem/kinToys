@@ -6,9 +6,9 @@ export class ClickEventDealer {
     options: { [key: string]: string; } | undefined;
     previousFunction: ((this: HTMLTableCellElement, ev: MouseEvent) => any) | undefined;
 
-    radio_cell_record: "cell" | "row" | "record" = "record";
+    radio_cell_record: "cell" | "row" | "record" | "link" = "record";
     radio_csv_tsv: "csv" | "tsv" = "csv";
-    radio_data_template: "data" | "template" = "data";
+    radio_data_template: "data" | "template" | "json" = "data";
     embedder: TemplateEmbedder | undefined;
 
     // クリックイベントを配布する対象の要素を指定してインスタンスを生成
@@ -35,7 +35,7 @@ export class ClickEventDealer {
         console.log({ setOptions: opt })
 
         if ('radio_cell_record' in opt && opt['radio_cell_record'] != null) {
-            this.radio_cell_record = opt['radio_cell_record'] as "cell" | "row" | "record";
+            this.radio_cell_record = opt['radio_cell_record'] as "cell" | "row" | "record" | "link";
             this.copyTarget = this.radio_cell_record;
         }
 
@@ -44,7 +44,7 @@ export class ClickEventDealer {
         }
 
         if ('radio_data_template' in opt && opt['radio_data_template'] != null) {
-            this.radio_data_template = opt['radio_data_template'] as "data" | "template";
+            this.radio_data_template = opt['radio_data_template'] as "data" | "template" | "json";
         }
 
         console.log({ radio_cell_record: this.radio_cell_record, radio_csv_tsv: this.radio_csv_tsv, radio_data_template: this.radio_data_template })
@@ -74,6 +74,8 @@ export class ClickEventDealer {
                 return this._copyClickedRow.bind(this);
             } else if (target == "record") {
                 return this._copyClickedRecord;
+            } else if (target == "link") {
+                return this._copyClickedRecordLink;
             }
 
             throw new Error(`Invalid argument: ${target}`);
@@ -176,7 +178,6 @@ export class ClickEventDealer {
         const tr = td.parentElement as HTMLTableRowElement;
         if (tr === null) return;
         this._makeRecordTextFromTrElement(tr)
-
     }
 
     // TR要素からレコードテキストを生成する
@@ -219,7 +220,10 @@ export class ClickEventDealer {
                     text = this.embedder.alignment(record, this.radio_csv_tsv);
                 } else if (this.radio_data_template == "template") {
                     text = this.embedder.embed(record);
+                } else if (this.radio_data_template == "json") {
+                    text = JSON.stringify(record, null, 2);
                 }
+                console.log({ text })
 
                 // クリップボードにコピーする
                 navigator.clipboard
@@ -242,5 +246,58 @@ export class ClickEventDealer {
                 console.error({ 'kintone rest api error': error })
             }
         );
+    }
+
+
+    // クリックした行に対応するレコードのURLをコピーする
+    _copyClickedRecordLink = (event: Event) => {
+        console.log({ event })
+        const td = event.currentTarget as HTMLTableCellElement;
+        // クリップボードにコピーする
+        const tr = td.parentElement as HTMLTableRowElement;
+        if (tr === null) return;
+
+        // 子のtd要素のうち先頭に含まれるanchorからhrefを取得する
+        const anchor = tr.querySelector("td a");
+        const href = anchor ? anchor.getAttribute("href") : "";
+
+        // https://monosus-dev.cybozu.com/k/479/show#record=8&l.sort_0=f2178&l.order_0=asc&l.qs=1&l.view=2189&l.q&l.next=7&l.prev=0
+
+        // hrefからrecord=\d+を取得する
+        const recordId = href ? href.match(/record=(\d+)/) : null;
+
+        // レコードIDが取得できなかった場合は空文字を返す
+        if (recordId == null) {
+            return "";
+        }
+
+        // アプリID
+        const appid = kintone.app.getId()
+
+        // https://monosus-dev.cybozu.com/k/479/show#record=8 を構築する
+        const url = `https://${location.hostname}/k/${appid}/show#record=${recordId[1]}`
+        console.log({ url })
+
+        // クリップボードにコピーする
+        navigator.clipboard
+            .writeText(url)
+            .then(() => {
+                // 業の文字色を一瞬青色にしてアンダーラインをいれる
+                tr.style.color = "blue";
+                tr.style.textDecoration = "underline";
+
+                // 1秒で元に戻す
+                setTimeout(() => {
+                    tr.style.color = "";
+                    tr.style.textDecoration = "";
+                }, 1000);
+
+
+                console.log(`Copied![${url}]`);
+            })
+            .catch((err) => {
+                console.error("Failed to copy: ", err);
+            });
+
     }
 }

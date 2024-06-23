@@ -39,6 +39,8 @@ import { Utils } from "./utils";
                     response = embedder.alignment(record.record, alignment)
                 } else if (alignment == 'template') {
                     response = embedder.embed(record.record, template)
+                } else if (alignment == 'json') {
+                    response = JSON.stringify(record.record, null, 2)
                 }
                 else {
                     throw new Error(`Invalid shape: ${alignment}`)
