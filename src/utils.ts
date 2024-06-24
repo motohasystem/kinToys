@@ -3,7 +3,8 @@ export class Utils {
         index: "index",
         detail: "detail",
         report: "report",
-        excluded: "excluded"
+        excluded: "excluded",
+        customize: "customize",
     }
 
     static CONST = {
@@ -113,6 +114,11 @@ export class Utils {
         const body = urlObj.hostname;
         if (!body.endsWith(".cybozu.com")) {
             return this.PageCategory.excluded;   // 対象外のページ
+        }
+
+        // /k/admin/app/flow から始まっていればカスタマイズ画面
+        if (urlObj.pathname.startsWith("/k/admin/app/flow")) {
+            return this.PageCategory.customize;
         }
 
         // パスが /k/ で始まるかどうか

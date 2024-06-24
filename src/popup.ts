@@ -164,6 +164,16 @@ import { Utils } from "./utils";
                 });
 
             }
+            // ひとまずカスタマイズ画面は対象外とします。あとでフィールド設定JSONを取得するようにしたい。
+            else if (pageCategory === Utils.PageCategory.customize) {
+                const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                textarea.value = "カスタマイズ画面では実行できません。"
+            }
+            else {
+                const msg = `未実装の画面が検出されました。(${pageCategory})`
+                console.error(msg);
+                throw new Error(msg)
+            }
         });
 
     }
