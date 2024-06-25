@@ -102,13 +102,19 @@ import { Utils } from "./utils";
             if (tab == undefined || tab.id == undefined || tab.url == undefined) {
                 return;
             }
-            const delimiter = radioStatus[Const.id_radio_csv_tsv]
+            const delimiter = ((style: 'csv' | 'tsv' | 'json') => {
+                if (radioStatus[Const.id_radio_data_template] == 'json') {
+                    return 'json'
+                }
+                return style
+            })(radioStatus[Const.id_radio_csv_tsv])
 
             // 一覧画面または集計画面の判定
             const pageCategory = Utils.whereAmI(tab.url)
             if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
 
                 // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
+                console.log({ mode: delimiter })
                 chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
                     const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
                     if (response == undefined) {

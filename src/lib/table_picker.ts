@@ -2,7 +2,7 @@ export class TablePicker {
     // private tableData: string[][] | undefined;
     outputMode: string;
 
-    constructor(output: 'csv' | 'tsv' = 'csv') {
+    constructor(output: 'csv' | 'tsv' | 'json' = 'csv') {
         this.outputMode = output;
         // this.tableData = undefined;
     }
@@ -18,6 +18,14 @@ export class TablePicker {
         const arrayedTables: string[] = Array.from(tables).map((table) => {
             return this.table_to_array(table)
         }).map((table) => {
+            console.log({ mode: this.outputMode })
+
+            // テーブル表示の内容をJSONで取得する
+            if (this.outputMode === 'json') {
+                return this.convertToJson(table)
+            }
+
+            // 2次元配列をテキストに変換する
             return this.convert(table, this.outputMode)
         });
 
@@ -39,6 +47,28 @@ export class TablePicker {
 
         return textvalue
     }
+
+    // テーブル表示の内容をJSONで取得する
+    convertToJson(table: string[][]): string {
+        console.log('convertToJson')
+        if (table.length === 0) {
+            return ''
+        }
+
+        const header = table[0]
+        const body = table.slice(1)
+
+        const json = body.map((row) => {
+            const obj: { [key: string]: string } = {}
+            row.forEach((value, index) => {
+                obj[header[index]] = value
+            })
+            return obj
+        })
+
+        return JSON.stringify(json, null, 2)
+    }
+
 
     // テーブルを配列に変換する
     table_to_array(table: HTMLTableElement): string[][] {
