@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "kintonePluginMigrator",
+    "name": "kinToys - A Petari-Hand for kintone users",
     "version": "0.2.0",
-    "description": "In kintone's settings screen, '⇩download' saves settings as JSON, while '⇧upload' loads them back.",
+    "description": "Introducing the fun and playful clipboard assistant for kintone! It extracts data from any angles with a touch of joy and excitement!",
     "permissions": [
         "storage",
         "tabs",

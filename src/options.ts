@@ -51,15 +51,19 @@ import { Utils } from "./utils";
             document
                 .getElementById(CONST.id_select_template_history)
                 ?.addEventListener("change", (_el: Event) => {
+                    console.log({ _el })
                     const select = document.getElementById(CONST.id_select_template_history) as HTMLSelectElement;
-                    const input = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
+                    const textarea = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
+                    const input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
 
-                    console.log({ select: select.value })
+                    console.log({ select: select })
                     console.log({ templateHistory })
+                    select.selectedIndex;
 
                     if (select.value !== undefined && select.value !== null) {
-                        const template = select.value;
-                        input.value = template;
+                        // input.valueに選択されたテンプレート名をセット
+                        input.value = select.options[select.selectedIndex].text
+                        textarea.value = select.value;
                     }
                 });
 
