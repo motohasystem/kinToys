@@ -14,7 +14,12 @@ export class TemplateEmbedder {
 
         let filledTemplate = template;
         for (const key in record) {
-            const value = record[key].value;
+            let value = record[key].value;
+            // valueが改行を含む場合は\nにエスケープする
+            if (typeof value === 'string') {
+                value = value.replace(/\n/g, '\\n');
+            }
+
             console.log({ key, value })
             filledTemplate = filledTemplate.replace(`%${key}%`, value);
         }
