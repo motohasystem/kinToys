@@ -170,9 +170,10 @@ import { Utils } from "./utils";
                 textarea.value = "カスタマイズ画面では実行できません。"
             }
             else {
-                const msg = `未実装の画面が検出されました。(${pageCategory})`
+                const msg = `未対応の画面で実行されました。(${pageCategory} / ${tab.url})`
                 console.error(msg);
-                throw new Error(msg)
+                const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                textarea.value = msg
             }
         });
 
