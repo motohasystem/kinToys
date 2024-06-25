@@ -17,14 +17,18 @@ export class Utils {
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
         template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
 
+        // オプション画面
         id_input_template_name: "input_template_name",
         id_select_template_history: "select_template_history",
         key_template_history: "template_history",
+        key_default_option: "-- Select Template --",
+        key_export_options: "-- Load Settings --",
+        key_export_label: "-- オプション設定（saveで反映できます） --"
 
     }
 
 
-    static loadOption(options: { [key: string]: string }, key: string | null, name: string | null) {
+    static loadOption(options: { [key: string]: string | {} }, key: string | null, name: string | null) {
         key = key == undefined ? null : key;
         name = name == undefined ? null : name;
 
@@ -37,7 +41,7 @@ export class Utils {
 
             const elm = document.getElementById(key) as HTMLInputElement
             if (elm != null) {
-                elm.value = value;
+                elm.value = value as string;
             }
         }
         // keyを指定してnameがnullの場合はradioボタン
@@ -57,7 +61,7 @@ export class Utils {
         }
     }
 
-    static saveOption(option: { [key: string]: string }, key: string | null, name: string | null) {
+    static saveOption(option: { [key: string]: string | {} }, key: string | null, name: string | null) {
         if (option == undefined) {
             option = {};
         }
