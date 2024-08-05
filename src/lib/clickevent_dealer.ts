@@ -77,9 +77,9 @@ export class ClickEventDealer {
         })(this.copyTarget);
 
         const clicknCopyEvent = (event: any) => {
-            console.log(JSON.stringify(event))
+            // console.log(JSON.stringify(event))
             let target = event.target as HTMLElement | null;
-            console.log({ target })
+            // console.log({ target })
 
             // クリックされた要素から親要素に遡る
             while (target) {
@@ -87,15 +87,10 @@ export class ClickEventDealer {
                 if (target.tagName.toLowerCase() === "td") {
                     if (target.textContent !== "" || this.copyTarget !== "cell") {
                         copyClickTarget(target);
-                        console.log('deligated')
                     }
                     break;
                 }
                 target = target.parentElement;
-            }
-
-            if (!target) {
-                console.log('not deligated')
             }
 
         };
