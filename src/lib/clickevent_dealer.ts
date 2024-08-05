@@ -80,13 +80,25 @@ export class ClickEventDealer {
             // console.log(JSON.stringify(event))
             let target = event.target as HTMLElement | null;
             // console.log({ target })
+            if (target == null) return;
+
+            // カーソル形状を取得する
+            var computedStyle = window.getComputedStyle(target);
+            var cursorStyle = computedStyle.getPropertyValue('cursor');
 
             // クリックされた要素から親要素に遡る
             while (target) {
+
                 // tdタグが見つかった場合
                 if (target.tagName.toLowerCase() === "td") {
+
+                    console.log('クリック時のカーソル形状:', cursorStyle);
+
                     if (target.textContent !== "" || this.copyTarget !== "cell") {
-                        copyClickTarget(target);
+                        // カーソルがpointerのときはリンクをクリックしていると推測されるため、コピーしない
+                        if (cursorStyle !== "pointer") {
+                            copyClickTarget(target);
+                        }
                     }
                     break;
                 }
