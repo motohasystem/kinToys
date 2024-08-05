@@ -4,12 +4,13 @@ import { TemplateEmbedder } from "./template_embedder";
 export class ClickEventDealer {
     copyTarget: string;
     options: { [key: string]: string; } | undefined;
-    previousFunction: ((this: HTMLTableCellElement, ev: MouseEvent) => any) | undefined;
+    // previousFunction: EventListener | undefined;
 
     radio_cell_record: "cell" | "row" | "record" | "link" = "record";
     radio_csv_tsv: "csv" | "tsv" = "csv";
     radio_data_template: "data" | "template" | "json" = "data";
     embedder: TemplateEmbedder | undefined;
+    previousFunction: ((event: HTMLElement) => void) | undefined;
 
     // クリックイベントを配布する対象の要素を指定してインスタンスを生成
     constructor(copyTarget: "cell" | "record" | "template" = "record") {
@@ -56,18 +57,13 @@ export class ClickEventDealer {
             return;
         }
 
-        // すべてのtdセルを取得
-        const tdList = document.querySelectorAll("td");
-        console.log({ prev: this.previousFunction })
-
-        tdList.forEach((td) => {
-            if (this.previousFunction !== undefined) {
-                td.removeEventListener("click", this.previousFunction)
-            }
-        });
+        const table = document.querySelector("table");
+        if (!table) return;
+        if (this.previousFunction !== undefined) {
+            table.removeEventListener("click", this.previousFunction as unknown as EventListener);
+        }
 
         const copyClickTarget = ((target: string) => {
-
             if (target == "cell") {
                 return this._copyClickedCell;
             } else if (target == "row") {
@@ -77,24 +73,40 @@ export class ClickEventDealer {
             } else if (target == "link") {
                 return this._copyClickedRecordLink;
             }
-
             throw new Error(`Invalid argument: ${target}`);
+        })(this.copyTarget);
 
-        })(this.copyTarget)
+        const clicknCopyEvent = (event: any) => {
+            console.log(JSON.stringify(event))
+            let target = event.target as HTMLElement | null;
+            console.log({ target })
 
-        // すべてのtdセルにクリックするとコピーする機能を追加する
-        tdList.forEach((td) => {
-            // クリップボードを空にしないため、テキストが空欄のセルは対象外
-            if (td.textContent === "") return;
-            td.addEventListener("click", copyClickTarget);
-        });
-        this.previousFunction = copyClickTarget
-        console.log({ prev: this.previousFunction })
+            // クリックされた要素から親要素に遡る
+            while (target) {
+                // tdタグが見つかった場合
+                if (target.tagName.toLowerCase() === "td") {
+                    if (target.textContent !== "" || this.copyTarget !== "cell") {
+                        copyClickTarget(target);
+                        console.log('deligated')
+                    }
+                    break;
+                }
+                target = target.parentElement;
+            }
 
+            if (!target) {
+                console.log('not deligated')
+            }
+
+        };
+        table.addEventListener("click", clicknCopyEvent);
+
+        this.previousFunction = clicknCopyEvent;
+        console.log({ prev: this.previousFunction });
     }
 
-    _copyClickedCell = (event: Event) => {
-        const td = event.currentTarget as HTMLTableCellElement;
+    _copyClickedCell = (td: HTMLElement) => {
+        // const td = event.currentTarget as HTMLTableCellElement;
         // クリップボードにコピーする
         const text = td.textContent;
         if (text === null) return;
@@ -123,11 +135,11 @@ export class ClickEventDealer {
     }
 
     // クリックしたtdセルの行の一覧画面上のデータをコピーする
-    _copyClickedRow(event: Event) {
+    _copyClickedRow(td: HTMLElement) {
         console.log({ 'this.radio_csv_tsv': this.radio_csv_tsv })
         const delimiter = this.radio_csv_tsv == "csv" ? "," : "\t";
 
-        const td = event.currentTarget as HTMLTableCellElement;
+        // const td = td.currentTarget as HTMLTableCellElement;
         // クリップボードにコピーする
         const tr = td.parentElement;
         if (tr === null) return;
@@ -171,9 +183,9 @@ export class ClickEventDealer {
     }
 
     // クリックしたtdセルに対応するレコードをテンプレートまたはデータでコピーする
-    _copyClickedRecord = (event: Event) => {
-        console.log({ event })
-        const td = event.currentTarget as HTMLTableCellElement;
+    _copyClickedRecord = (td: HTMLElement) => {
+        console.log({ event: td })
+        // const td = td.currentTarget as HTMLTableCellElement;
         // クリップボードにコピーする
         const tr = td.parentElement as HTMLTableRowElement;
         if (tr === null) return;
@@ -250,9 +262,9 @@ export class ClickEventDealer {
 
 
     // クリックした行に対応するレコードのURLをコピーする
-    _copyClickedRecordLink = (event: Event) => {
-        console.log({ event })
-        const td = event.currentTarget as HTMLTableCellElement;
+    _copyClickedRecordLink = (td: HTMLElement) => {
+        console.log({ event: td })
+        // const td = td.currentTarget as HTMLTableCellElement;
         // クリップボードにコピーする
         const tr = td.parentElement as HTMLTableRowElement;
         if (tr === null) return;

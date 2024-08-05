@@ -46,7 +46,6 @@
     "content_scripts": [
         {
             "matches": [
-                "https://*.cybozu.com/k/admin/app/*/plugin/config?pluginId=*",
                 "https://*.cybozu.com/k/*"
             ],
             "js": [
