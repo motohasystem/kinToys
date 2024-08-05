@@ -9,9 +9,9 @@ export class Utils {
 
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",
-        id_radio_cell_record: "radio_cell_record",
-        id_radio_data_template: "radio_data_template",
+        id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID
+        id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
+        id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン

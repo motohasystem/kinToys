@@ -4,6 +4,9 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import liveReload from "vite-plugin-live-reload";
 
 export default defineConfig({
+    esbuild: {
+        // drop: ["console", "debugger"],
+    },
     build: {
         outDir: path.resolve(__dirname, "dist"),
         rollupOptions: {

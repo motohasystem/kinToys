@@ -111,10 +111,35 @@ import { Utils } from "./utils";
 
             // 一覧画面または集計画面の判定
             const pageCategory = Utils.whereAmI(tab.url)
-            if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
+            if (pageCategory === Utils.PageCategory.index && radioStatus[Const.id_radio_data_template] === 'template') {
+                // 一覧画面かつテンプレート形式コピーの場合
+                const tab_id = tab.id
+                chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
+                    console.log({ options });
+                    const template = options[Const.id_fillin_template]
+
+                    // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
+                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: 'template' }, (response) => {
+                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                        if (response == undefined) {
+                            textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                        }
+                        else if (response.action === Const.template_copy_button_clicked && response.data == "") {
+                            textarea.value = "レコードが見つかりませんでした。\nレコード一覧画面で実行してください。"
+                        }
+                        else {
+                            textarea.value = response.data;
+                            Utils.copyToClipboard(response.data)
+                        }
+                    })
+                })
+
+            } else if (pageCategory === Utils.PageCategory.index || pageCategory === Utils.PageCategory.report) {
 
                 // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
                 console.log({ mode: delimiter })
+
+                // 一覧画面でテンプレート以外、または集計画面の場合
                 chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
                     const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
                     if (response == undefined) {

@@ -80,6 +80,7 @@ import { TablePicker } from "./lib/table_picker";
 
         // テーブルデータを取得してCSV化する
         if (request.name === CONST.table_copy_button_clicked) {
+            console.log('テーブルデータを取得してCSV化する')
             const mode = request.mode;
             const picker = new TablePicker(mode)
             const tableData = picker.getTableData();
@@ -88,10 +89,14 @@ import { TablePicker } from "./lib/table_picker";
         }
         // kintoneレコードを取得してテンプレートに埋め込む
         else if (request.name === CONST.template_copy_button_clicked) {
+            console.log('kintoneレコードを取得してテンプレートに埋め込む')
             const template = request.template
             const alignment = request.alignment
             console.log({ template })
+            console.log({ alignment })
+
             // const embedder = new TemplateEmbedder(template)
+            // 
 
             // 埋め込みリクエストの受信を先に登録
             window.addEventListener("message", (event) => {
@@ -103,6 +108,9 @@ import { TablePicker } from "./lib/table_picker";
 
             // 埋め込みリクエストを embedding_scripts.ts に送信する
             window.postMessage({ type: CONST.template_copy_button_clicked, data: template, alignment: alignment }, "*")
+        }
+        else {
+            console.warn("未知のメッセージを受信しました", request)
         }
 
         return true

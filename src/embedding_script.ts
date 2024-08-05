@@ -31,23 +31,48 @@ import { Utils } from "./utils";
             const embedder = new TemplateEmbedder(template);
             const alignment = event.data.alignment  // データの形状(csv, tsv またはテンプレート)
 
-            const record = kintone.app.record.get()
-            console.log({ record })
-            let response = ""
-            if (record != null) {
-                if (alignment == 'csv' || alignment == 'tsv') {
-                    response = embedder.alignment(record.record, alignment)
-                } else if (alignment == 'template') {
-                    response = embedder.embed(record.record, template)
-                } else if (alignment == 'json') {
-                    response = JSON.stringify(record.record, null, 2)
+            const pageCategory = Utils.whereAmI(location.href)
+            if (pageCategory !== Utils.PageCategory.detail) {
+                // 一覧画面では、表示している一覧のすべてのレコード情報をテンプレート化して返す
+                const query = kintone.app.getQuery()
+                const url = kintone.api.url('/k/v1/records.json')
+                const params = {
+                    app: kintone.app.getId(),
+                    query: query
                 }
-                else {
-                    throw new Error(`Invalid shape: ${alignment}`)
-                }
+                kintone.api(url, 'GET', params,
+                    (resp) => {
+                        console.log({ resp })
+                        const records = resp.records
+                        const response = embedder.embedRecords(records, template).join('\n')
+                        console.log({ response })
+                        window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
+                    },
+                    (error) => {
+                        console.error({ error })
+                    }
+                )
             }
-            console.log({ response })
-            window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
+            else {
+                // 詳細画面で表示しているレコード単体情報を取得する
+                const record = kintone.app.record.get()
+                console.log({ record })
+                let response = ""
+                if (record != null) {
+                    if (alignment == 'csv' || alignment == 'tsv') {
+                        response = embedder.alignment(record.record, alignment)
+                    } else if (alignment == 'template') {
+                        response = embedder.embed(record.record, template)
+                    } else if (alignment == 'json') {
+                        response = JSON.stringify(record.record, null, 2)
+                    }
+                    else {
+                        throw new Error(`Invalid shape: ${alignment}`)
+                    }
+                }
+                console.log({ response })
+                window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
+            }
         }
         else if (event.data.type === "changePopupOptions" || event.data.type === "loadPopupOptions") {
             console.log(`window message event: ${event.data.type}`)

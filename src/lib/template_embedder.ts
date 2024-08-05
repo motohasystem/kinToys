@@ -6,6 +6,20 @@ export class TemplateEmbedder {
         this.template = template;
     }
 
+    embedRecords(records: { [key: string]: { value: string } }[], template: string | undefined = undefined) {
+        if (template == undefined) {
+            template = this.template;
+        }
+
+        const embeds = records.map((record) => {
+            const embedded = this.embed(record, template);
+            console.log({ embedded })
+            return embedded
+        });
+
+        return embeds;
+    }
+
     embed(record: { [key: string]: { value: string } }, template: string | undefined = undefined) {
         if (template == undefined) {
             template = this.template;
