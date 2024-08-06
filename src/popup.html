@@ -10,24 +10,39 @@
             padding: 10px;
             color: #333;
             background-color: #f9f9f9;
-            /* width: 1200px; */
         }
+        h1 {
+            margin-block-start: 1em;
+            margin-block-end: 0.6em;
+        }
+
+        h3 {
+            margin-block-start: 0em;
+            margin-block-end: 0em;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
+            padding: 0px 25px;
+            text-align: left;
         }
+
         .logo {
-            width: 100px; /* ロゴのサイズに応じて調整 */
+            width: 100px;
             height: auto;
         }
+
         .description {
             font-size: 14px;
             margin-bottom: 15px;
         }
+
         .links {
             text-align: center;
             margin-bottom: 10px;
         }
+
         .link {
             margin: 5px;
             padding: 10px 15px;
@@ -37,74 +52,160 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
         .link:hover {
             background-color: #45a049;
         }
+
         .footer {
             font-size: 12px;
             text-align: center;
             margin-top: 20px;
             color: #777;
         }
+
         .textarea_template {
             width: 100%;
             font-size: 14px;
+        }
+
+        .icon {
+            float: left;
+            padding: 0px 20px;
+            margin-bottom: 0px;
+        }
+
+        .body {
+            clear: both;
+            margin: 0px 20px;
+        }
+
+        .radio_set {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .radio_set input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #F09200;
+            display: none;
+        }
+
+        .radio_set label {
+            display: block;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            font-size: medium;
+        }
+
+        .unit input[type="radio"]:checked + label {
+            background-color: #cce5ff;
+            border-color: #004085;
+        }
+
+        .copy_button {
+            display: inline-block;
+            padding: 5px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: #F09200;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .copy_button:hover {
+            background-color: #d87c00;
+            transform: scale(1.05);
+        }
+
+        .copy_button:active {
+            background-color: #b56500;
+            transform: scale(0.95);
         }
     </style>
     <script src="utils.ts" type="module"></script>
     <script src="popup.ts" type="module"></script>
 </head>
 <body>
-    <div>
+    <div class="icon">
         <img src="../images/icon128.png" alt="Logo" class="logo">
-        <h1>kinToys - A Petari-Hand for kintone users</h1>
-        <!-- <h3>Download and upload plugin configuration</h3> -->
     </div>
-    <div class="description">
+    
+    <div class="header">
+        <h1>kinToys - Keep Integrating New Toys</h1>
         <a href="chrome-extension://okfnaohcjgbnhdkflcogfpfdphmonhpc/src/options.html" target="_blank">options</a>
     </div>
-    <div>
+    <!-- <div class="description">
+    </div> -->
+    <div class="body">
         <h3>[共通] 区切り文字:</h3>
         <div class="radio_set">
-            <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
-            <label for="radio_tablecopy_csv">csv</label>
-            <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
-            <label for="radio_tablecopy_tsv">tsv</label>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
+                <label for="radio_tablecopy_csv">csv</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
+                <label for="radio_tablecopy_tsv">tsv</label>
+            </span>
         </div>
     </div>
-    <div>
+    <div class="body">
         <h3>[一覧画面] テーブルクリックの抽出範囲:</h3>
         <div class="radio_set">
-            <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
-            <label for="radio_tablecopy_cell">cell</label>
-            <input type="radio" id="radio_tablecopy_row" name="radio_cell_record" value="row">
-            <label for="radio_tablecopy_row">row</label>
-            <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
-            <label for="radio_tablecopy_record">record</label>
-            <input type="radio" id="radio_tablecopy_link" name="radio_cell_record" value="link">
-            <label for="radio_tablecopy_link">link</label>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
+                <label for="radio_tablecopy_cell">cell</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_row" name="radio_cell_record" value="row">
+                <label for="radio_tablecopy_row">row</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
+                <label for="radio_tablecopy_record">record</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_tablecopy_link" name="radio_cell_record" value="link">
+                <label for="radio_tablecopy_link">link</label>
+            </span>
         </div>
     </div>
-    <div>
+    <div class="body">
         <h3>[一覧画面/詳細画面] レコード単位の書式:</h3>
         <div class="radio_set">
-            <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
-            <label for="radio_recordcopy_template">template</label>
-            <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
-            <label for="radio_recordcopy_data">csv/tsv</label>
-            <input type="radio" id="radio_recordcopy_json" name="radio_data_template" value="json">
-            <label for="radio_recordcopy_json">json</label>
+            <span class="unit">
+                <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
+                <label for="radio_recordcopy_data">csv/tsv</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_recordcopy_json" name="radio_data_template" value="json">
+                <label for="radio_recordcopy_json">json</label>
+            </span>
+            <span class="unit">
+                <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
+                <label for="radio_recordcopy_template">template</label>
+            </span>
         </div>
-    </div>
+    </div> 
 
     <!-- ボタン配置 -->
-    <div>
-        <input type="button" id="button_table_copy" value="クリップボードにコピーする">
-        <!-- <input type="button" id="button_template_copy" value="レコード抽出"> -->
-    </div>
-
-    <div class="textarea_template">
-        <textarea id="textarea_clipboard_preview" rows="10" cols="100"></textarea>
+    <div class="body">
+        <input type="button" id="button_table_copy" class="copy_button" value="クリップボードにコピーする">
+        
+        <div class="textarea_template">
+            <textarea id="textarea_clipboard_preview" rows="10" cols="100"></textarea>
+        </div>
     </div>
     <!-- <div class="links">
         <a href="https://www.monosus.co.jp/service/kintanlab/" class="link" target="_blank">キン担ラボ</a>
