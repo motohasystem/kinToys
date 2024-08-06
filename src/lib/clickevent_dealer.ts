@@ -6,6 +6,8 @@ export class ClickEventDealer {
     copyTarget: string;
     options: { [key: string]: string; } | undefined;
     // previousFunction: EventListener | undefined;
+    prevInterval: number | undefined;
+    prevTd: HTMLElement | undefined;
 
     radio_cell_record: "cell" | "row" | "record" | "link" = "record";
     radio_csv_tsv: "csv" | "tsv" = "csv";
@@ -124,11 +126,24 @@ export class ClickEventDealer {
                 // 背景セルを一瞬緑色にする
                 td.style.backgroundColor = "lightgreen";
 
+                // すでにインターバルタイマーがセットされていれば削除する
+                if (this.prevInterval !== undefined) {
+                    clearInterval(this.prevInterval);
+                    this.prevInterval = undefined;
+                }
+
+                if (this.prevTd !== undefined) {
+                    this.prevTd.style.backgroundColor = "";
+                    this.prevTd = undefined;
+                }
+
                 // 背景色をフェードアウトで消していく
                 let opacity = 1;
-                const fadeOut = setInterval(() => {
+                this.prevTd = td;
+                this.prevInterval = setInterval(() => {
                     if (opacity <= 0) {
-                        clearInterval(fadeOut);
+                        clearInterval(this.prevInterval);
+                        this.prevInterval = undefined;
                         td.style.backgroundColor = "";
                     } else {
                         opacity -= 0.1;
