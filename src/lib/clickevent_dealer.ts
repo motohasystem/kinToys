@@ -1,3 +1,4 @@
+import { Utils } from "../utils";
 import { TemplateEmbedder } from "./template_embedder";
 
 // 画面内のDOMにクリックイベントを配布するクラス
@@ -150,8 +151,21 @@ export class ClickEventDealer {
         // クリップボードにコピーする
         const tr = td.parentElement;
         if (tr === null) return;
+
+        // 現在のページ種類
+        const currentPage = Utils.whereAmI(location.href);
+
+        const isCopyTarget = (tr: HTMLElement, index: number) => {
+            switch (currentPage) {
+                case Utils.PageCategory.report:
+                    return index !== tr.children.length - 1
+                default:
+                    return index !== 0 && index !== tr.children.length - 1
+            }
+        }
+
         const text = Array.from(tr.children)
-            .filter((_td, index) => index !== 0 && index !== tr.children.length - 1)    // 先頭のレコードアイコンと、末尾の編集・削除アイコンを除く
+            .filter((_td, index) => isCopyTarget(tr, index))    // 先頭のレコードアイコンと、末尾の編集・削除アイコンを除く
             .map((td) => td.textContent)
             .join(delimiter);
         navigator.clipboard
@@ -160,16 +174,16 @@ export class ClickEventDealer {
                 // 背景セルを一瞬緑色にする
                 // tr.style.backgroundColor = "lightgreen";
                 // trの子のtdの背景色を変える
-                const length = tr.children.length;
+                // const length = tr.children.length;
                 Array.from(tr.children).forEach((td, index) => {
-                    if (index !== 0 && index !== length - 1) {
+                    if (isCopyTarget(tr, index)) {
                         (td as HTMLTableCellElement).style.backgroundColor = "lightgreen";
                     }
                 });
 
                 // 背景色をフェードアウトで消していく
                 Array.from(tr.children).forEach((td, index) => {
-                    if (index !== 0 && index !== length - 1) {
+                    if (isCopyTarget(tr, index)) {
                         let opacity = 1;
                         const fadeOut = setInterval(() => {
                             if (opacity <= 0) {
