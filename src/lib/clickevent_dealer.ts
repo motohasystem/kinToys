@@ -208,7 +208,7 @@ export class ClickEventDealer {
                                 opacity -= 0.1;
                                 (td as HTMLTableCellElement).style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
                             }
-                        }, 100);
+                        }, 50);
                     }
                 });
                 console.log(`Copied! [${text}]`);
