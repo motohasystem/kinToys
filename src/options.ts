@@ -1,5 +1,7 @@
 import { Utils } from "./utils";
 
+type Options = { [key: string]: string | {} };
+
 (() => {
     const CONST = Utils.CONST;
     let templateHistory: { [key: string]: string } = {};
@@ -24,7 +26,7 @@ import { Utils } from "./utils";
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
         // 保存された値を読み込む
-        chrome.storage.sync.get(null, (options: { [key: string]: string | {} }) => {
+        chrome.storage.sync.get(null, (options: Options) => {
             console.log({ options });
 
             Utils.loadOption(options, Utils.CONST.id_fillin_template, null);
@@ -61,6 +63,9 @@ import { Utils } from "./utils";
                 .getElementById(CONST.id_select_template_history)
                 ?.addEventListener("change", (_el: Event) => {
                     console.log({ _el })
+
+                    disable_export_button();
+
                     const select = document.getElementById(CONST.id_select_template_history) as HTMLSelectElement;
                     const textarea = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
                     const input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
@@ -77,6 +82,7 @@ import { Utils } from "./utils";
                         console.log({ options })
                         textarea.value = JSON.stringify(options, null, 2);
                         input.value = Utils.CONST.key_export_label;
+                        enable_export_button(options);
                     }
                     else if (selected_value == "") {
                         input.value = "";
@@ -99,6 +105,9 @@ import { Utils } from "./utils";
                     //     console.error('Async: Could not copy text: ', err);
                     // });
                 });
+
+
+
 
         });
     });
@@ -140,5 +149,33 @@ import { Utils } from "./utils";
             alert('オプション設定を保存しました。')
         });
 
+    function disable_export_button() {
+        const btn_export = document.getElementById("button_export_options")
+        if (btn_export) {
+            btn_export.style.display = "none";
+        }
+    }
+
+    function enable_export_button(options: Options) {
+        // exportボタンをクリックすると現在の全オプションをjsonファイルにエクスポートする
+        const export_function = (options: Options) => {
+            // options.json としてダウンロードする
+            const str_options = JSON.stringify(options, null, 2);
+            const blob = new Blob([str_options], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.download = "options.json";
+            a.href = url;
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+        const btn_export = document.getElementById("button_export_options")
+        if (btn_export) {
+            btn_export.addEventListener("click", export_function.bind(null, options));
+            btn_export.style.display = "block";
+        }
+    }
 
 })();

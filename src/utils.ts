@@ -22,7 +22,7 @@ export class Utils {
         id_select_template_history: "select_template_history",
         key_template_history: "template_history",
         key_default_option: "-- Select Template --",
-        key_export_options: "-- Load Settings --",
+        key_export_options: "-- Export Settings --",
         key_export_label: "-- オプション設定（saveで反映できます） --"
 
     }
