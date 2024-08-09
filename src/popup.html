@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>kinToys Popup</title>
     <style>
+        html {
+            font-size: 16px;
+            width: 640px;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -73,6 +77,18 @@
             width: 100%;
             font-size: 14px;
         }
+        
+        #textarea_clipboard_preview{
+            width: 100%;
+            height:100%;
+            font-size: 14px;
+            overflow-x: auto;
+            min-height:300px;
+            white-space: nowrap; /* 改行せずに横にテキストを並べる */
+            background-color: #f0f0f0; /* 背景色を変えて編集不可を示す */
+            cursor: not-allowed; /* カーソルを変更 */
+            color: #666; /* テキストの色を変更 */
+        }
 
         .icon {
             float: left;
@@ -137,6 +153,24 @@
             background-color: #b56500;
             transform: scale(0.95);
         }
+
+        .columns {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            width: 100%;
+            gap: 10px; /* 列間のギャップを指定 */
+        }
+
+        .left_column {
+            grid-column: 1;
+        }
+
+        .right_column {
+            grid-column: 2;
+        }
+        .footer{
+            clear: both;
+        }
     </style>
     <script src="utils.ts" type="module"></script>
     <script src="popup.ts" type="module"></script>
@@ -152,71 +186,80 @@
     </div>
     <!-- <div class="description">
     </div> -->
-    <div class="body">
-        <h3>[共通] 区切り文字:</h3>
-        <div class="radio_set">
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
-                <label for="radio_tablecopy_csv">csv</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
-                <label for="radio_tablecopy_tsv">tsv</label>
-            </span>
-        </div>
-    </div>
-    <div class="body">
-        <h3>[一覧画面] テーブルクリックの抽出範囲:</h3>
-        <div class="radio_set">
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
-                <label for="radio_tablecopy_cell">cell</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_row" name="radio_cell_record" value="row">
-                <label for="radio_tablecopy_row">row</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
-                <label for="radio_tablecopy_record">record</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_tablecopy_link" name="radio_cell_record" value="link">
-                <label for="radio_tablecopy_link">link</label>
-            </span>
-        </div>
-    </div>
-    <div class="body">
-        <h3>[一覧画面/詳細画面] レコード単位の書式:</h3>
-        <div class="radio_set">
-            <span class="unit">
-                <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
-                <label for="radio_recordcopy_data">csv/tsv</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_recordcopy_json" name="radio_data_template" value="json">
-                <label for="radio_recordcopy_json">json</label>
-            </span>
-            <span class="unit">
-                <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
-                <label for="radio_recordcopy_template">template</label>
-            </span>
-        </div>
-    </div> 
+    <div class="columns">
+        <div class="left_column">
+            <div class="body">
+                <h3>[共通] 区切り文字:</h3>
+                <div class="radio_set">
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
+                        <label for="radio_tablecopy_csv">csv</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_tsv" name="radio_csv_tsv" value="tsv">
+                        <label for="radio_tablecopy_tsv">tsv</label>
+                    </span>
+                </div>
+            </div>
+            <div class="body">
+                <h3>[一覧画面] テーブルクリックの抽出範囲:</h3>
+                <div class="radio_set">
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
+                        <label for="radio_tablecopy_cell">cell</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_row" name="radio_cell_record" value="row">
+                        <label for="radio_tablecopy_row">row</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_record" name="radio_cell_record" value="record">
+                        <label for="radio_tablecopy_record">record</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_tablecopy_link" name="radio_cell_record" value="link">
+                        <label for="radio_tablecopy_link">link</label>
+                    </span>
+                </div>
+            </div>
+            <div class="body">
+                <h3>[一覧画面/詳細画面] レコード単位の書式:</h3>
+                <div class="radio_set">
+                    <span class="unit">
+                        <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
+                        <label for="radio_recordcopy_data">csv/tsv</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_recordcopy_json" name="radio_data_template" value="json">
+                        <label for="radio_recordcopy_json">json</label>
+                    </span>
+                    <span class="unit">
+                        <input type="radio" id="radio_recordcopy_template" name="radio_data_template" value="template" checked>
+                        <label for="radio_recordcopy_template">template</label>
+                    </span>
+                </div>
+            </div> 
+            <div class="body">
+                <input type="button" id="button_table_copy" class="copy_button" value="クリップボードにコピーする">
+            </div>
 
-    <!-- ボタン配置 -->
-    <div class="body">
-        <input type="button" id="button_table_copy" class="copy_button" value="クリップボードにコピーする">
-        
-        <div class="textarea_template">
-            <textarea id="textarea_clipboard_preview" rows="10" cols="100"></textarea>
+        </div>
+
+        <div class="right_column">
+            <div class="body">
+                <h3>Clipboard Preview</h3>
+                <div class="textarea_template">
+                    <textarea id="textarea_clipboard_preview"></textarea>
+                </div>
+            </div>
         </div>
     </div>
+    
     <!-- <div class="links">
         <a href="https://www.monosus.co.jp/service/kintanlab/" class="link" target="_blank">キン担ラボ</a>
     </div> -->
-    <hr/>
-    <div>
+    <div class="footer">
+        <hr/>
         <p>Developer: <a href="https://motohasystem.kamiyama.club/" target="_blank">Daisuke Motohashi</a></p>
         <p>version: 0.2.0</p>
     </div>
