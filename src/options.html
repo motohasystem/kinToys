@@ -4,17 +4,14 @@
         <!-- エンコーディングの指定 -->
         <meta charset="UTF-8">
         <link rel="stylesheet" href="options.css">
+        <script src="options.ts" type="module"></script>
     </head>
 <body>
     <div class="header">
         <img src="../images/icon48.png" alt="Logo" class="logo">
-        <h1>kinToys - Keep Integrating New Toys</h1>
-        <a href="chrome-extension://okfnaohcjgbnhdkflcogfpfdphmonhpc/src/options.html" target="_blank">options</a>
+        <h1>kinToys<span class="tagline"> - Keep Integrating New Toys</span></h1>
     </div>
 
-  <div id="msg"></div>
-  <!-- <script src="utils.ts" type="module"></script> -->
-  <script src="options.ts" type="module"></script>
 
     <div class="template_block">
         <h3>レコード用テンプレート</h3>
@@ -28,12 +25,12 @@
             <textarea id="textarea_fillin_template" class="textarea_template" rows="20" cols="40" placeholder="fill in template for kintone record."></textarea>
         </div>
 
-        <div class="part_block">
+        <div class="part_block link_buttons">
             <button id="button_save_options" class="link">import</button>
-        </div>
-        <div class="part_block">
             <button id="button_export_options" class="link" style="display:none;">export</button>
         </div>
     </div>
+
+    <div id="message"></div>
 </body>
 </html>

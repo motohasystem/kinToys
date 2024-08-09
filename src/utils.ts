@@ -23,11 +23,21 @@ export class Utils {
         key_template_history: "template_history",
         key_default_option: "-- Select Template --",
         key_export_options: "-- Export Settings --",
-        key_export_label: "-- オプション設定（saveで反映できます） --"
+        key_export_label: "-- オプション設定（saveで反映できます） --",
+
+        msg_default: "[import] テキストエリアのテンプレートを保存して使用します。",
+        msg_export_options: "[import] テキストエリアをオプション設定として読み込みます。/ [export] JSONとしてダウンロードします。",
 
     }
 
 
+    /**
+     * オプション設定を読み込み、指定されたキーまたは名前に対応する要素に値を設定します。
+     * 
+     * @param options - オプション設定のオブジェクト
+     * @param key - 設定する要素のID（通常のinput要素の場合）
+     * @param name - 設定する要素の名前（radioボタンの場合）
+     */
     static loadOption(options: { [key: string]: string | {} }, key: string | null, name: string | null) {
         key = key == undefined ? null : key;
         name = name == undefined ? null : name;
