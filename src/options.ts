@@ -7,24 +7,8 @@ type Options = { [key: string]: string | {} };
     let templateHistory: { [key: string]: string } = {};
 
     console.log("options.js");
+    updateButtonLabel()
 
-    // input_template_name が空欄でなければ、textarea_fillin_template の値とセットでオプションとして保存する
-    function makeHistory(): { [key: string]: string } {
-        const el_input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
-        const el_template = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
-
-        if (el_input && el_template) {
-            const name = el_input.value;
-            console.log({ name })
-            if (name !== undefined && name !== null && name !== "") {
-                return {
-                    [name]: el_template.value
-                }
-            }
-        }
-
-        return {};
-    }
 
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
@@ -79,13 +63,55 @@ type Options = { [key: string]: string | {} };
         });
     });
 
+    // ボタンラベルの書き換え
+    function updateButtonLabel(label: string | undefined = undefined) {
+        const btn_save = document.getElementById("button_save_options") as HTMLButtonElement;
+        if (btn_save) {
+            let innerText
+            if (label == Utils.CONST.key_default_option || label == undefined) {
+                innerText = Utils.CONST.label_default_button;
+            }
+            else {
+                innerText = Utils.CONST.label_import_button;
+            }
+            btn_save.innerText = innerText
+        }
+
+        const btn_export = document.getElementById("button_export_options") as HTMLButtonElement;
+        if (btn_export) {
+            btn_export.innerText = Utils.CONST.label_export_button;
+        }
+    }
+
+    // input_template_name が空欄でなければ、textarea_fillin_template の値とセットでオプションとして保存する
+    function makeHistory(): { [key: string]: string } {
+        const el_input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+        const el_template = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
+
+        if (el_input && el_template) {
+            const name = el_input.value;
+            console.log({ name })
+            if (name !== undefined && name !== null && name !== "") {
+                return {
+                    [name]: el_template.value
+                }
+            }
+        }
+
+        return {};
+    }
+
     // 保存ボタンのクリックイベント
     function saveTemplate(options: Options) {
         console.log('clicked save button')
         // 見出しのインプット要素
-        const input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+        const template_name = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
 
-        if (input.value == Utils.CONST.key_export_label) {
+        if (template_name.value === "") {
+            alert('テンプレート名を入力してから保存ボタンを押してください。')
+            return;
+        }
+        else if (template_name.value == Utils.CONST.key_export_label) {
             // エクスポートラベルが選択されている場合は値をそのままoptionとして保存する
             const textarea = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
 
@@ -103,6 +129,7 @@ type Options = { [key: string]: string | {} };
             return;
         }
         else {
+            // 
             // let options: { [key: string]: string | {} } = {};
             console.log({ options })
             options = Utils.saveOption(options, CONST.id_fillin_template, null); // idを指定
@@ -141,6 +168,7 @@ type Options = { [key: string]: string | {} };
         console.log({ templateHistory })
 
         update_message(selected_label)
+        updateButtonLabel(selected_label)
         if (selected_label == Utils.CONST.key_export_options) {
             // オプションをエクスポート
             console.log("export options")
@@ -148,6 +176,10 @@ type Options = { [key: string]: string | {} };
             textarea.value = JSON.stringify(options, null, 2);
             input.value = Utils.CONST.key_export_label;
             enable_export_button(options);
+        }
+        else if (selected_label === Utils.CONST.key_default_option) {
+            input.value = "";
+            textarea.value = options.textarea_fillin_template as string;
         }
         else if (selected_value == "") {
             input.value = "";
@@ -191,10 +223,10 @@ type Options = { [key: string]: string | {} };
     }
 
     function update_message(selected_label: string | undefined = undefined) {
-        let msg = Utils.CONST.msg_default;
+        let msg = Utils.MSG.msg_default;
         switch (selected_label) {
             case Utils.CONST.key_export_options:
-                msg = Utils.CONST.msg_export_options;
+                msg = Utils.MSG.msg_export_options;
                 break;
             default:
                 break;

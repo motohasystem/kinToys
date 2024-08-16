@@ -18,15 +18,20 @@ export class Utils {
         template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
 
         // オプション画面
+        label_default_button: 'save',   // 初期表示、 -- Select Template -- の場合のボタンラベル
+        label_import_button: 'apply',
+        label_export_button: 'download',
         id_input_template_name: "input_template_name",
         id_select_template_history: "select_template_history",
         key_template_history: "template_history",
         key_default_option: "-- Select Template --",
         key_export_options: "-- Export Settings --",
-        key_export_label: "-- オプション設定（saveで反映できます） --",
+        key_export_label: "-- 保存用 --",
+    }
 
-        msg_default: "[import] テキストエリアのテンプレートを保存して使用します。",
-        msg_export_options: "[import] テキストエリアをオプション設定として読み込みます。/ [export] JSONとしてダウンロードします。",
+    static MSG = {
+        msg_default: `[${Utils.CONST.label_import_button}] テキストエリアのテンプレートを保存して使用します。`,
+        msg_export_options: `[${Utils.CONST.label_import_button}] テキストエリアをオプション設定として読み込みます。/ [${Utils.CONST.label_export_button}] JSONとしてダウンロードします。`,
 
     }
 
