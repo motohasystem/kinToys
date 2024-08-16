@@ -39,10 +39,10 @@ export class TemplateEmbedder {
             }
             // valueが改行を含む場合は\nにエスケープする
             else if (typeof value === 'string') {
-                value = value.replace(/\n/g, '\\n');
+                // value = value.replace(/\n/g, '\\n');
 
                 // 通常は %PLACEHOLDER% という改行を含まないプレースホルダを置換する
-                filledTemplate = filledTemplate.replace(`%${key}%`, value);
+                filledTemplate = filledTemplate.replace(new RegExp(`%${key}%`, 'g'), value);
             }
 
             // console.log({ key, value })
@@ -69,6 +69,8 @@ export class TemplateEmbedder {
         const prefix = template.slice(0, startIndex);
         const suffix = template.slice(endIndex + end.length);
         const subtable_placeholder = template.slice(startIndex + start.length, endIndex);
+
+        console.log({ subtable_placeholder })
 
         console.log({ subRows: subRows })
         const filledTemplate = subRows.map((subRow) => {
