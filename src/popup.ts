@@ -65,7 +65,7 @@ import { Utils } from "./utils";
             chrome.runtime
                 .sendMessage({
                     name: "popup_button_run",
-                    message: "popup_button_runがクリックされましたaaa",
+                    message: "popup_button_runがクリックされました",
                 })
                 .catch((error) => {
                     console.error("エラーが発生しました", error);

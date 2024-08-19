@@ -159,4 +159,9 @@ export class Utils {
         // それ以外は一覧画面
         return this.PageCategory.index;
     }
+
+    // 渡した文字列を二重引用符で囲む
+    static quote(text: string | null) {
+        return `"${text}"`;
+    }
 }

@@ -1,3 +1,5 @@
+// import { Utils } from "../utils";
+
 export class TablePicker {
     // private tableData: string[][] | undefined;
     outputMode: string;
@@ -40,9 +42,10 @@ export class TablePicker {
         }
 
         const delimiter = mode === 'csv' ? ',' : '\t';
+        const quote = (str: string) => `"${str}"`;
 
         const textvalue = table.map((row) => {
-            return row.join(delimiter)
+            return row.map(cell => quote(cell)).join(delimiter)
         }).join('\n')
 
         return textvalue
