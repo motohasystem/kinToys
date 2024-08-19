@@ -181,7 +181,7 @@ export class ClickEventDealer {
 
         const text = Array.from(tr.children)
             .filter((_td, index) => isCopyTarget(tr, index))    // 先頭のレコードアイコンと、末尾の編集・削除アイコンを除く
-            .map((td) => td.textContent)
+            .map((td) => Utils.quote(td.textContent))
             .join(delimiter);
         navigator.clipboard
             .writeText(text)

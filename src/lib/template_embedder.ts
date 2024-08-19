@@ -1,5 +1,7 @@
 // kintoneのフィールドコードをプレースホルダとして埋め込んだテンプレートにデータを埋め込む
 
+import { Utils } from "../utils";
+
 export type Record = { [key: string]: { value: string } };
 
 export class TemplateEmbedder {
@@ -92,14 +94,13 @@ export class TemplateEmbedder {
         const delimtier = mode == 'csv' ? ',' : '\t';
 
         // レコードのキーをカンマ区切りまたはタブ区切りにする
-        const header = Object.keys(record).join(delimtier);
-
+        const header = Object.keys(record).map(head => Utils.quote(head)).join(delimtier);
 
         // レコードの値をカンマ区切りまたはタブ区切りにする
         let row = [];
         for (const key in record) {
             const value = record[key].value;
-            row.push(value);
+            row.push(Utils.quote(value));
         }
 
         const result = header + '\n' + row.join(delimtier);
