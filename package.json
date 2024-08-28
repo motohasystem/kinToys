@@ -4,20 +4,22 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "build": "tsc && vite build",
+        "dev": "tsc && vite build --mode development",
+        "build": "tsc && vite build --mode production",
         "preview": "vite preview",
         "vite-watch": "vite build --watch",
         "tsc-watch": "tsc --watch",
-        "watch": "npm-run-all --parallel vite-watch tsc-watch",
-        "dev": ""
+        "watch": "npm-run-all --parallel vite-watch tsc-watch"
     },
     "devDependencies": {
         "@kintone/dts-gen": "^8.0.12",
         "@shin-chan/kypes": "^0.0.7",
         "@types/chrome": "^0.0.268",
+        "cross-env": "^7.0.3",
         "npm-run-all": "^4.1.5",
         "typescript": "^5.2.2",
         "vite": "^5.2.0",
+        "vite-plugin-env-compatible": "^2.0.1",
         "vite-plugin-live-reload": "^3.0.3",
         "vite-plugin-static-copy": "^1.0.5"
     }
