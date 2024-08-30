@@ -1,14 +1,24 @@
-## Changelog
+# Changelog
 
-### [1.0.0] - 
-- plugin migratorから分岐してクリップボード連携に集中していく
+## [0.3.1] - 2024-08-30
+### Fixed
+- ポップアップのコピーボタンラベルを変更
+- ポップアップのオプション画面へのリンクを修正
 
-### [0.2.0] - 2024-05-31
+## [0.3.0] - 2024-08-28
+- Chrome Web Storeに公開
+
+## [0.2.0] - 2024-05-31
 - opensource version (MIT License)
 - change social account
 
-### [0.1.0] - 2023-11-18
+## [0.1.0] - 2023-11-18
 - Initial release
     - https://chromewebstore.google.com/detail/kintonepluginmigrator/pndmdhhanlckeimjahjfijelpkbgoeac
-
-
+  
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
