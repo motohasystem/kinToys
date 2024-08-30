@@ -43,9 +43,11 @@ import { Utils } from "./utils";
     const port = chrome.runtime.connect({ name: "popup" });
 
     // テーブル抽出ボタンの動作
-    const tableCopyButton = document.getElementById("button_table_copy");
+    const tableCopyButton = document.getElementById("button_table_copy") as HTMLButtonElement
     if (tableCopyButton) {
         tableCopyButton.addEventListener("click", contentAbstractionButtonClicked);
+        // ラベルを label_table_copy_button に変更
+        tableCopyButton.value = Const.label_table_copy_button;
     }
 
     // テーブルデータ取得メッセージの受信

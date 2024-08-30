@@ -27,6 +27,9 @@ export class Utils {
         key_default_option: "-- Select Template --",
         key_export_options: "-- Export Settings --",
         key_export_label: "-- 保存用 --",
+
+        // ポップアップウィンドウ
+        label_table_copy_button: 'Grab & Copy',  // #button_table_copy ボタンのラベル
     }
 
     static MSG = {
