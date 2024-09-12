@@ -17,10 +17,13 @@ export class TablePicker {
             return [];
         }
 
+        console.log({ tables })
+
         const arrayedTables: string[] = Array.from(tables).map((table) => {
             return this.table_to_array(table)
         }).map((table) => {
             console.log({ mode: this.outputMode })
+            console.log({ table })
 
             // テーブル表示の内容をJSONで取得する
             if (this.outputMode === 'json') {
@@ -85,6 +88,8 @@ export class TablePicker {
             const headerCols = headers.querySelectorAll("th");
             const headerRowData: string[] = [];
 
+            console.log({ headerCols })
+
             headerCols.forEach(function (col, index) {
                 // 最後の1列は無視する
                 if (index === headerCols.length - 1) {
@@ -99,10 +104,16 @@ export class TablePicker {
             tableData.push(headerRowData);
         }
 
+        console.log({ tableData_table_to_array: tableData })
+
+        console.log({ rows: table.rows })
+
         // 続いて本体
         Array.from(table.rows).forEach(function (row) {
             const cols = row.querySelectorAll("td, th");
             const csvRow: string[] = [];
+
+            console.log({ cols })
 
             cols.forEach(function (col, index) {
                 // 最後の1列は無視する
@@ -114,10 +125,15 @@ export class TablePicker {
                 if (text) {
                     csvRow.push(text);
                 }
+                else {
+                    csvRow.push('');  // 空セルの場合は空文字を入れる
+                }
             });
 
             tableData.push(csvRow);
         });
+
+        console.log({ tableData_table_to_array_2: tableData })
 
         // ヘッダ行のみの場合は空にする
         if (tableData.length < 2) {

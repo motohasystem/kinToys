@@ -94,7 +94,7 @@ import { Utils } from "./utils";
     }
 
 
-    // コンテンツ抽出ボタンの動作
+    // コンテンツ抽出ボタンの動作 / グラブコピー
     function contentAbstractionButtonClicked() {
         console.log("contentAbsctactionButtonClicked");
 
@@ -122,6 +122,7 @@ import { Utils } from "./utils";
 
                     // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
                     chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: 'template' }, (response) => {
+                        // console.log({ response })
                         const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
                             textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
