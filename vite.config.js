@@ -6,14 +6,16 @@ import liveReload from "vite-plugin-live-reload";
 export default defineConfig(({command, mode}) => {
     console.log({command, mode});
     let bool_sourcemap = true;
+    let es_drop = [];
 
     if (mode === 'production') {
         console.log('Production build');
         bool_sourcemap = false;
+        es_drop = ["console", "debugger"];
     }    
     return {
         esbuild: {
-            // drop: ["console", "debugger"],
+            drop: es_drop,
         },
         build: {
             outDir: path.resolve(__dirname, "dist"),
