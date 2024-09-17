@@ -12,6 +12,8 @@ export class ClickEventDealer {
     radio_cell_record: "cell" | "row" | "record" | "link" = "record";
     radio_csv_tsv: "csv" | "tsv" = "csv";
     radio_data_template: "data" | "template" | "json" = "data";
+    checkbox_on_off: "enabled" | "disabled" = "enabled";
+
     embedder: TemplateEmbedder | undefined;
     previousFunction: ((event: HTMLElement) => void) | undefined;
 
@@ -51,6 +53,11 @@ export class ClickEventDealer {
             this.radio_data_template = opt['radio_data_template'] as "data" | "template" | "json";
         }
 
+        // 機能有効化チェックボックスの状態を設定する
+        if ('checkbox_on_off' in opt && opt['checkbox_on_off'] != null) {
+            this.checkbox_on_off = opt['checkbox_on_off'] as "enabled" | "disabled";
+        }
+
         console.log({ radio_cell_record: this.radio_cell_record, radio_csv_tsv: this.radio_csv_tsv, radio_data_template: this.radio_data_template })
     }
 
@@ -62,8 +69,15 @@ export class ClickEventDealer {
 
         const table = document.querySelector("table");
         if (!table) return;
+
+        // すでにイベントリスナーが設定されている場合は削除する
         if (this.previousFunction !== undefined) {
             table.removeEventListener("click", this.previousFunction as unknown as EventListener);
+        }
+
+        // 機能オンオフチェックボックスがオフの場合はクリックイベントを配布せずに終了する
+        if (this.checkbox_on_off == "disabled") {
+            return;
         }
 
         const copyClickTarget = ((target: string) => {
