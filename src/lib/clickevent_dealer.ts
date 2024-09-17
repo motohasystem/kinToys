@@ -17,6 +17,8 @@ export class ClickEventDealer {
     embedder: TemplateEmbedder | undefined;
     previousFunction: ((event: HTMLElement) => void) | undefined;
 
+    clickTimer: number | null = null;
+
     // クリックイベントを配布する対象の要素を指定してインスタンスを生成
     constructor(copyTarget: "cell" | "record" | "template" = "record") {
         this.copyTarget = copyTarget;
@@ -93,6 +95,7 @@ export class ClickEventDealer {
             throw new Error(`Invalid argument: ${target}`);
         })(this.copyTarget);
 
+        // クリックイベントを定義する
         const clicknCopyEvent = (event: any) => {
             // console.log(JSON.stringify(event))
             let target = event.target as HTMLElement | null;
@@ -111,12 +114,28 @@ export class ClickEventDealer {
 
                     console.log('クリック時のカーソル形状:', cursorStyle);
 
-                    if (target.textContent !== "" || this.copyTarget !== "cell") {
-                        // カーソルがpointerのときはリンクをクリックしていると推測されるため、コピーしない
-                        if (cursorStyle !== "pointer") {
-                            copyClickTarget(target);
-                        }
+                    // kintoneの一覧画面上のダブルクリックと共存させる
+                    if (this.clickTimer === null) {
+                        const click_target = target as HTMLElement;
+                        this.clickTimer = setTimeout(() => {
+                            // シングルクリックの処理
+                            console.log('シングルクリック');
+                            if (click_target.textContent !== "" || this.copyTarget !== "cell") {
+                                // カーソルがpointerのときはリンクをクリックしていると推測されるため、コピーしない
+                                if (cursorStyle !== "pointer") {
+                                    copyClickTarget(click_target);
+                                }
+                            }
+
+                            this.clickTimer = null;
+                        }, 300);
+                    } else {
+                        clearTimeout(this.clickTimer);
+                        this.clickTimer = null;
+                        console.log('ダブルクリック');
                     }
+
+
                     break;
                 }
                 target = target.parentElement;
