@@ -30,6 +30,10 @@ export class Utils {
 
         // ポップアップウィンドウ
         label_table_copy_button: 'Grab & Copy',  // #button_table_copy ボタンのラベル
+
+        // 有効無効チェックボックスのID
+        id_checkbox_on_off: "checkbox_on_off",
+        class_control_parts_block: "control_parts", // コントロールパーツのブロックが持つクラス
     }
 
     static MSG = {

@@ -50,6 +50,21 @@ import { Utils } from "./utils";
         tableCopyButton.value = Const.label_table_copy_button;
     }
 
+    // 機能の有効無効チェックボックスの動作
+    const enableCheckbox = document.getElementById(Const.id_checkbox_on_off) as HTMLInputElement;
+    if (enableCheckbox) {
+        enableCheckbox.addEventListener("change", (event) => {
+            const checked = (event.target as HTMLInputElement).checked;
+            console.log({ checked });
+
+            changeEnadbleDisableCheckbox(checked)
+
+            // バックグラウンドスクリプトにメッセージを送信
+            // const options = { [Const.id_checkbox_on_off]: checked };
+            // chrome.storage.sync.set(options);
+        });
+    }
+
     // テーブルデータ取得メッセージの受信
     port.onMessage.addListener((response) => {
         console.log({ response })
@@ -210,6 +225,23 @@ import { Utils } from "./utils";
                 textarea.value = msg
             }
         });
+    }
+
+    function changeEnadbleDisableCheckbox(checked: boolean) {
+        const options = { [Const.id_checkbox_on_off]: checked };
+        chrome.storage.sync.set(options);
+
+
+        // class_control_parts_block クラスにグレーのレイヤーを被せるスタイルをもたせる
+        const control_parts = document.getElementsByClassName(Const.class_control_parts_block)
+        Array.from(control_parts).forEach((elm) => {
+            if (checked) {
+                elm.classList.remove('controlpanel_disabled')
+            } else {
+                elm.classList.add('controlpanel_disabled')
+            }
+        });
+
 
     }
 })();
