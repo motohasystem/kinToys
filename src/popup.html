@@ -104,6 +104,18 @@
             margin-bottom: 0px;
         }
 
+        .grid_container {
+            display: grid;
+            grid-template-columns: 2fr 6fr 1fr;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .top_grid_1, .top_grid_2, .top_grid_3 {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
         .body {
             clear: both;
             margin: 0px 20px;
@@ -129,6 +141,7 @@
             position: relative;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin: auto;
         }
 
         .toggle_on_off label::after {
@@ -144,7 +157,7 @@
         }
 
         .toggle_on_off input[type="checkbox"]:checked+label {
-            background-color: #4CAF50;
+            background-color: #F09200;
         }
 
         .toggle_on_off input[type="checkbox"]:checked+label::after {
@@ -264,21 +277,21 @@
 </head>
 
 <body>
-    <div class="icon">
-        <img src="../images/icon128.png" alt="Logo" class="logo">
-    </div>
+    <div class="grid_container">
+        <div class="icon top_grid_1">
+            <img src="../images/icon128.png" alt="Logo" class="logo">
+        </div>
 
-    <div class="header">
-        <h1>kinToys<span class="tagline"> - Keep Integrating New Toys</tagline>
-        </h1>
-        <a href="chrome-extension://okfnaohcjgbnhdkflcogfpfdphmonhpc/src/options.html" target="_blank">options</a>
-    </div>
+        <div class="header top_grid_2">
+            <h1>kinToys<span class="tagline"> - Keep Integrating New Toys</tagline>
+            </h1>
+            <a href="chrome-extension://okfnaohcjgbnhdkflcogfpfdphmonhpc/src/options.html" target="_blank">options</a>
+        </div>
 
-    <div class="toggle_on_off">
-        <input type="checkbox" id="checkbox_on_off" name="checkbox_on_off" value="enabled"  checked>
-        <label for="checkbox_on_off"></label>
-    </div>
-
+        <div class="toggle_on_off top_grid_3">
+            <input type="checkbox" id="checkbox_on_off" name="checkbox_on_off" value="enabled"  checked>
+            <label for="checkbox_on_off"></label>
+        </div>
     </div>
     <!-- <div class="description">
     </div> -->
