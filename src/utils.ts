@@ -73,14 +73,41 @@ export class Utils {
                 return "";
             }
 
-            const elm = document.getElementsByName(name) as NodeListOf<HTMLInputElement>;
-            if (elm != null) {
-                const radioElement = Array.from(elm).find((e) => e.value == value);
+            const elements = document.getElementsByName(name) as NodeListOf<HTMLInputElement>;
+            console.log({ elements });
+            if (elements != null) {
+                // ラジオボタン要素の場合
+                const radioElement = Array.from(elements).find((e) => e.value == value);
+                console.log({ radioElement });
                 if (radioElement) {
                     radioElement.checked = true;
                 }
+
+                // チェックボックス要素の場合
+                const cbElement = Array.from(elements).find((e) => e.type == "checkbox") as HTMLInputElement;
+                console.log({ cbElement });
+                if (cbElement) {
+                    options[name] == "enabled" ? cbElement.checked = true : cbElement.checked = false;
+                    // cbElement.checked = cbElement.value == "enabled" ? true : false;
+                    Utils.changeEnadbleDisableCheckbox(cbElement.checked);
+                }
+
             }
         }
+    }
+
+    // 有効無効チェックボックスの動作
+    // ここではポップアップ画面のコントロールパネルにグレーのレイヤーをかぶせて操作できないようにする
+    static changeEnadbleDisableCheckbox(checked: boolean) {
+        // class_control_parts_block クラスにグレーのレイヤーを被せるスタイルをもたせる
+        const control_parts = document.getElementsByClassName(Utils.CONST.class_control_parts_block)
+        Array.from(control_parts).forEach((elm) => {
+            if (checked) {
+                elm.classList.remove('controlpanel_disabled')
+            } else {
+                elm.classList.add('controlpanel_disabled')
+            }
+        });
     }
 
     /**

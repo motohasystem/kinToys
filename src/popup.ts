@@ -14,6 +14,7 @@ import { Utils } from "./utils";
             Utils.loadOption(options, null, Const.id_radio_csv_tsv);
             Utils.loadOption(options, null, Const.id_radio_data_template);
             Utils.loadOption(options, null, Const.id_radio_cell_record);
+            Utils.loadOption(options, null, Const.id_checkbox_on_off);
         });
     });
 
@@ -68,12 +69,7 @@ import { Utils } from "./utils";
         enableCheckbox.addEventListener("change", (event) => {
             const checked = (event.target as HTMLInputElement).checked;
             console.log({ checked });
-
-            changeEnadbleDisableCheckbox(checked)
-
-            // バックグラウンドスクリプトにメッセージを送信
-            // const options = { [Const.id_checkbox_on_off]: checked };
-            // chrome.storage.sync.set(options);
+            Utils.changeEnadbleDisableCheckbox(checked)
         });
     }
 
@@ -239,19 +235,6 @@ import { Utils } from "./utils";
         });
     }
 
-    // 有効無効チェックボックスの動作
-    // ここではポップアップ画面のコントロールパネルにグレーのレイヤーをかぶせて操作できないようにする
-    function changeEnadbleDisableCheckbox(checked: boolean) {
-        // class_control_parts_block クラスにグレーのレイヤーを被せるスタイルをもたせる
-        const control_parts = document.getElementsByClassName(Const.class_control_parts_block)
-        Array.from(control_parts).forEach((elm) => {
-            if (checked) {
-                elm.classList.remove('controlpanel_disabled')
-            } else {
-                elm.classList.add('controlpanel_disabled')
-            }
-        });
 
 
-    }
 })();
