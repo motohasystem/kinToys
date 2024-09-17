@@ -12,6 +12,7 @@ import { TablePicker } from "./lib/table_picker";
         id_radio_cell_record: "radio_cell_record",
         id_radio_data_template: "radio_data_template",
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+        id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
         template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
@@ -44,6 +45,7 @@ import { TablePicker } from "./lib/table_picker";
             let radio_csv_tsv = null;
             let radio_data_template = null;
             let radio_cell_record = null;
+            let checkbox_on_off = null;
 
             for (const key in changes) {
                 const change = changes[key];
@@ -60,13 +62,19 @@ import { TablePicker } from "./lib/table_picker";
                     console.log("データ/テンプレートの選択が変更されました");
                     radio_data_template = change.newValue
                 }
+                else if (key === CONST.id_checkbox_on_off) {
+                    console.log("有効/無効のチェックが変更されました");
+                    checkbox_on_off = change.newValue
+                }
             }
 
+            // embedding_scripts.jsにメッセージを送る
             window.postMessage({
                 type: "changePopupOptions", data: {
                     radio_csv_tsv,
                     radio_data_template,
-                    radio_cell_record
+                    radio_cell_record,
+                    checkbox_on_off
                 }
             }, "*")
         }

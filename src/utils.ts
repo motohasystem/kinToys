@@ -83,6 +83,15 @@ export class Utils {
         }
     }
 
+    /**
+     * オプション設定を保存し、指定されたキーまたは名前に対応する要素の値をオプションオブジェクトに設定します。
+     * 
+     * @param option - 保存するオプション設定のオブジェクト
+     * @param key - 設定する要素のID（通常のinput要素の場合）
+     * @param name - 設定する要素の名前（radioボタンの場合）
+     * @returns 更新されたオプション設定のオブジェクト
+     * @throws 引数が無効な場合にエラーをスローします。
+     */
     static saveOption(option: { [key: string]: string | {} }, key: string | null, name: string | null) {
         if (option == undefined) {
             option = {};

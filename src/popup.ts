@@ -22,18 +22,30 @@ import { Utils } from "./utils";
         Const.id_radio_csv_tsv,
         Const.id_radio_cell_record,
         Const.id_radio_data_template,
+        Const.id_checkbox_on_off
     ].forEach((name) => {
         Array.from(document.getElementsByName(name)).forEach((elm) => {
             elm.addEventListener("change", (el) => {
                 console.log({ el })
-                let options = {};
+                let options: { [key: string]: string } | {} = {};
                 options = Utils.saveOption(options, null, name);
+
+                if (name === Const.id_checkbox_on_off) {
+                    // 機能オンオフチェックボックスの場合
+                    const optionsTyped = options as { [key: string]: string };
+                    const checked = optionsTyped['checkbox_on_off'] == 'enabled' ? 'enabled' : 'disabled';
+                    radioStatus[name] = checked;
+                    options = { [name]: checked }
+                }
+
                 chrome.storage.sync.set(options);
                 console.log({ options });
+
                 if (el.target) {
                     // @ts-ignore
                     radioStatus[name] = el.target.value
                 }
+                console.log({ radioStatus })
             });
         });
     });
@@ -227,11 +239,9 @@ import { Utils } from "./utils";
         });
     }
 
+    // 有効無効チェックボックスの動作
+    // ここではポップアップ画面のコントロールパネルにグレーのレイヤーをかぶせて操作できないようにする
     function changeEnadbleDisableCheckbox(checked: boolean) {
-        const options = { [Const.id_checkbox_on_off]: checked };
-        chrome.storage.sync.set(options);
-
-
         // class_control_parts_block クラスにグレーのレイヤーを被せるスタイルをもたせる
         const control_parts = document.getElementsByClassName(Const.class_control_parts_block)
         Array.from(control_parts).forEach((elm) => {
