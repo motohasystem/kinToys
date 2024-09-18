@@ -157,7 +157,7 @@ export class ClickEventDealer {
             .writeText(text)
             .then(() => {
                 // 背景セルを一瞬緑色にする
-                td.style.backgroundColor = "lightgreen";
+                td.style.backgroundColor = Utils.CONST.accent_color;
 
                 // すでにインターバルタイマーがセットされていれば削除する
                 if (this.prevInterval !== undefined) {
@@ -180,7 +180,7 @@ export class ClickEventDealer {
                         td.style.backgroundColor = "";
                     } else {
                         opacity -= 0.1;
-                        td.style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                        td.style.backgroundColor = `rgba(${Utils.CONST.accent_color_dec}, ${opacity})`;
                     }
                 }, 100);
                 console.log(`Copied! [${text}]`);
@@ -225,7 +225,7 @@ export class ClickEventDealer {
                 // const length = tr.children.length;
                 Array.from(tr.children).forEach((td, index) => {
                     if (isCopyTarget(tr, index)) {
-                        (td as HTMLTableCellElement).style.backgroundColor = "lightgreen";
+                        (td as HTMLTableCellElement).style.backgroundColor = Utils.CONST.accent_color;
                     }
                 });
 
@@ -239,7 +239,7 @@ export class ClickEventDealer {
                                 (td as HTMLTableCellElement).style.backgroundColor = "";
                             } else {
                                 opacity -= 0.1;
-                                (td as HTMLTableCellElement).style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                                (td as HTMLTableCellElement).style.backgroundColor = `rgba(${Utils.CONST.accent_color_dec}, ${opacity})`;
                             }
                         }, 50);
                     }

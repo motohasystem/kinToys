@@ -34,6 +34,9 @@ export class Utils {
         // 有効無効チェックボックスのID
         id_checkbox_on_off: "checkbox_on_off",
         class_control_parts_block: "control_parts", // コントロールパーツのブロックが持つクラス
+
+        accent_color: "#F09200",    // アクセントカラー
+        accent_color_dec: "240, 146, 0",    // アクセントカラー（10進数の組み合わせ）
     }
 
     static MSG = {

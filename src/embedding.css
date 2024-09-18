@@ -34,12 +34,19 @@
     background-color: #0056b3;
 }
 
+/*
+F0AE4F
+f09200
+ec744e
+*/
 .stripe-background {
     background: repeating-linear-gradient(
         45deg,
-        lightgreen,
-        lightgreen,
-        #fff 10px,
-        #fff 20px
+        rgba(240, 174, 79, 0.5), /* 明るいオレンジに透明度0.5 */
+        rgba(240, 174, 79, 0.5) 30px, /* 30px幅までオレンジ */
+        rgba(240, 146, 0, 0.5) 30px,  /* 濃いオレンジに透明度0.5 */
+        rgba(240, 146, 0, 0.5) 60px,  /* 60pxまで濃いオレンジ */
+        rgba(236, 116, 78, 0.5) 60px, /* ピンクオレンジに透明度0.5 */
+        rgba(236, 116, 78, 0.5) 90px  /* 90pxまでピンクオレンジ */
     );
 }
