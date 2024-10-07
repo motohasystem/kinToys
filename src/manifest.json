@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "kinToys",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "description": "Introducing the fun and playful clipboard assistant for kintone. It extracts data from any angles.",
     "permissions": [
         "storage",
@@ -46,6 +46,10 @@
         {
             "matches": [
                 "https://*.cybozu.com/k/*"
+            ],
+            "exclude_matches": [
+                "https://*.cybozu.com/k/*/edit",
+                "https://*.cybozu.com/k/*/report*"
             ],
             "js": [
                 "content_script.js"
