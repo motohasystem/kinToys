@@ -106,6 +106,34 @@ export class ClickEventDealer {
             var computedStyle = window.getComputedStyle(target);
             var cursorStyle = computedStyle.getPropertyValue('cursor');
 
+
+            // クリックされた要素を含むTRノードを取得し、編集モードかどうかを判定する。編集モードであればコピーの処理を行わない
+            if (target && target.tagName.toLowerCase() !== "tr") {
+                let target_tr: HTMLElement | null = null;
+                let parent = target.parentElement;
+                if (parent?.tagName.toLowerCase() === "tr") {
+                    if (parent !== null && parent.nextElementSibling && parent.nextElementSibling.classList.contains("recordlist-row-gaia__contextbar")) {
+                        console.log("編集モードを検出しました。")
+                        return;
+                    }
+                }
+
+                while (parent && parent.tagName.toLowerCase() !== "tr") {
+                    parent = parent.parentElement;
+                    if (parent?.tagName.toLowerCase() === "tr") {
+                        target_tr = parent;
+                        if (target_tr !== null && target_tr.nextElementSibling && target_tr.nextElementSibling.classList.contains("recordlist-row-gaia__contextbar")) {
+                            console.log("編集モードを検出しました。")
+                            return;
+                        }
+                    }
+                    else if (parent?.tagName.toLowerCase() === "tbody") {
+                        target_tr = null;
+                        break;
+                    }
+                }
+            }
+
             // クリックされた要素から親要素に遡る
             while (target) {
 
@@ -134,7 +162,6 @@ export class ClickEventDealer {
                         this.clickTimer = null;
                         console.log('ダブルクリック');
                     }
-
 
                     break;
                 }
