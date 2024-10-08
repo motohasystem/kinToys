@@ -48,8 +48,7 @@
                 "https://*.cybozu.com/k/*"
             ],
             "exclude_matches": [
-                "https://*.cybozu.com/k/*/edit",
-                "https://*.cybozu.com/k/*/report*"
+                "https://*.cybozu.com/k/*/edit"
             ],
             "js": [
                 "content_script.js"
