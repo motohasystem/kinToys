@@ -7,6 +7,14 @@ import { Utils } from "./utils";
     // オプションを読み込む
     document.addEventListener("DOMContentLoaded", function () {
         console.log('DOMContentLoaded')
+
+        // span_version ノードを取得してバージョン番号を設定
+        const spanVersion = document.getElementById('span_version') as HTMLSpanElement
+        if (spanVersion) {
+            const manifest = chrome.runtime.getManifest();
+            spanVersion.textContent = manifest.version;
+        }
+
         chrome.storage.sync.get(null, (options) => {
             console.log({ options });
             radioStatus = options
