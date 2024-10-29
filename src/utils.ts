@@ -29,7 +29,7 @@ export class Utils {
         key_export_label: "-- 保存用 --",
 
         // ポップアップウィンドウ
-        label_table_copy_button: 'Grab & Copy',  // #button_table_copy ボタンのラベル
+        label_table_copy_button: 'copy',  // #button_table_copy ボタンのラベル
 
         // 有効無効チェックボックスのID
         id_checkbox_on_off: "checkbox_on_off",
@@ -37,6 +37,10 @@ export class Utils {
 
         accent_color: "#F09200",    // アクセントカラー
         accent_color_dec: "240, 146, 0",    // アクセントカラー（10進数の組み合わせ）
+
+        // 画像コピーの設定
+        image_copy: false,  // 画像コピーを有効にするかどうか
+        max_online_length: 60,   // 画像コピー時の改行文字数
     }
 
     static MSG = {
@@ -160,16 +164,103 @@ export class Utils {
         return filledTemplate;
     }
 
-    static copyToClipboard(text: string) {
-        // response.dataをクリップボードにコピーする
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                console.log('Text copied to clipboard');
-            })
-            .catch((error) => {
-                console.error('Failed to copy text to clipboard', error);
-            });
+    static copyToClipboard(text: string, imageCopy: boolean = Utils.CONST.image_copy) {
+
+        if (imageCopy) {
+            // 画像としてクリップボードにコピーする
+            Utils.copyTextAsImageToClipboard(text);
+
+        }
+        else {
+            // テキストとしてクリップボードにコピーする
+
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    console.log('Text copied to clipboard');
+                })
+                .catch((error) => {
+                    console.error('Failed to copy text to clipboard', error);
+                });
+        }
     }
+
+    // HTML Canvasを使用して文字列を画像として描画し、クリップボードにコピーする関数
+    static async copyTextAsImageToClipboard(text: string): Promise<void> {
+        // 1. Canvasの作成とコンテキストの取得
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+            throw new Error('Canvas contextを取得できませんでした。');
+        }
+
+        // 2. 文字列を120文字で自動改行して行単位で分割
+        const formattedText = text.replace(new RegExp(`(.{${Utils.CONST.max_online_length}})`, 'g'), '$1\n');
+        const lines = formattedText.split('\n');
+        const lineHeight = 30;
+        const padding = 20;
+
+        // 3. Canvasのサイズ設定
+        ctx.font = '20px Arial';
+        const maxLineWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+        canvas.width = maxLineWidth + padding * 2;
+        canvas.height = lines.length * lineHeight + padding * 2;
+
+        // 4. 背景の描画
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 5. 文字列の描画
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        lines.forEach((line, index) => {
+            ctx.fillText(line, padding, padding + (index + 1) * lineHeight);
+        });
+
+        // 6. Canvasの内容をBlobに変換
+        const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve));
+
+        if (!blob) {
+            throw new Error('CanvasのBlobを作成できませんでした。');
+        }
+
+        // 7. Blobをクリップボードにコピー
+        try {
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    'image/png': blob
+                })
+            ]);
+            console.log('画像がクリップボードにコピーされました。');
+        } catch (error) {
+            console.error('画像をクリップボードにコピーできませんでした: ', error);
+        }
+
+        // 8. 画像をダイアログで表示
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        img.style.width = '100%'; // 画像をダイアログの幅に合わせて縮小
+
+        const dialog = document.createElement('div');
+        dialog.style.position = 'fixed';
+        dialog.style.top = '50%';
+        dialog.style.left = '50%';
+        dialog.style.transform = 'translate(-50%, -50%)';
+        dialog.style.padding = '20px';
+        dialog.style.backgroundColor = 'white';
+        dialog.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+        dialog.style.width = '80%'; // ダイアログの幅を設定
+        dialog.appendChild(img);
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '閉じる';
+        closeButton.style.marginTop = '10px';
+        closeButton.onclick = () => document.body.removeChild(dialog);
+        dialog.appendChild(closeButton);
+
+        document.body.appendChild(dialog);
+    }
+
 
     // 渡したURLが、kintoneの一覧画面なのか詳細画面なのか判定する
     static whereAmI(url: string) {
