@@ -29,7 +29,8 @@ export class Utils {
         key_export_label: "-- 保存用 --",
 
         // ポップアップウィンドウ
-        label_table_copy_button: 'copy',  // #button_table_copy ボタンのラベル
+        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
+        label_template_imagecopy_button: 'Image Copy',  // #button_template_copy ボタンのラベル
 
         // 有効無効チェックボックスのID
         id_checkbox_on_off: "checkbox_on_off",

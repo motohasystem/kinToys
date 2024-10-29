@@ -23,6 +23,7 @@ import { Utils } from "./utils";
             Utils.loadOption(options, null, Const.id_radio_data_template);
             Utils.loadOption(options, null, Const.id_radio_cell_record);
             Utils.loadOption(options, null, Const.id_checkbox_on_off);
+            // Utils.loadOption(options, null, Const.id_checkbox_imagecopy_button)
         });
     });
 
@@ -66,9 +67,19 @@ import { Utils } from "./utils";
     // テーブル抽出ボタンの動作
     const tableCopyButton = document.getElementById("button_table_copy") as HTMLButtonElement
     if (tableCopyButton) {
-        tableCopyButton.addEventListener("click", contentAbstractionButtonClicked);
-        // ラベルを label_table_copy_button に変更
-        tableCopyButton.value = Const.label_table_copy_button;
+        // イメージコピー機能の設定を取得
+        chrome.storage.sync.get(null, (options) => {
+            const flag_imagecopy = options[Const.id_checkbox_imagecopy_button] === "true" ? true : false;
+
+            tableCopyButton.addEventListener("click", contentAbstractionButtonClicked.bind(null, flag_imagecopy));
+            // ラベルを label_table_copy_button に変更
+            if (flag_imagecopy) {
+                tableCopyButton.value = Const.label_template_imagecopy_button;
+            }
+            else {
+                tableCopyButton.value = Const.label_table_copy_button;
+            }
+        });
     }
 
     // 機能の有効無効チェックボックスの動作
@@ -126,7 +137,8 @@ import { Utils } from "./utils";
 
 
     // コンテンツ抽出ボタンの動作 / グラブコピー
-    function contentAbstractionButtonClicked() {
+    // flag_imagecopy: 詳細画面のテンプレートコピーを画像コピーにする
+    function contentAbstractionButtonClicked(flag_imagecopy: boolean = false) {
         console.log("contentAbsctactionButtonClicked");
 
         // アクティブタグを取得する
@@ -223,7 +235,7 @@ import { Utils } from "./utils";
                         }
                         else {
                             textarea.value = response.data;
-                            Utils.copyToClipboard(response.data)
+                            Utils.copyToClipboard(response.data, flag_imagecopy)
                         }
                     });
                 });
