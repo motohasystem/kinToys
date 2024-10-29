@@ -15,8 +15,8 @@
     </div>
 
 
-    <div class="template_block">
-        <h3>レコード用テンプレート</h3>
+    <div class="options_block">
+        <h3>Template for one record</h3>
         <div class="part_block">
             <input type="text" id="input_template_name" placeholder="template name"
                 style="width: 200px; margin-right: 10px;" />
@@ -29,11 +29,19 @@
                 placeholder="fill in template for kintone record."></textarea>
         </div>
 
+        <h3>Options</h3>
+        <div class="part_block_rectangle">
+            <input type="checkbox" id="enable_imagecopy_button" />
+            <label for="enable_imagecopy_button">enable image copy button</label>
+        </div>
+
+
         <div class="part_block link_buttons">
             <button id="button_save_options" class="link">save</button>
             <button id="button_export_options" class="link" style="display:none;">load</button>
         </div>
     </div>
+
 
     <div id="message"></div>
 
