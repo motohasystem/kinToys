@@ -23,7 +23,14 @@ import { Utils } from "./utils";
             Utils.loadOption(options, null, Const.id_radio_data_template);
             Utils.loadOption(options, null, Const.id_radio_cell_record);
             Utils.loadOption(options, null, Const.id_checkbox_on_off);
-            // Utils.loadOption(options, null, Const.id_checkbox_imagecopy_button)
+
+            // 適用中のテンプレート名を表示
+            const applied_template = options[Const.id_input_template_name] as string
+            console.log({ applied_template })
+            const el_applied_template = document.getElementById(Const.id_applied_template) as HTMLInputElement;
+            if (el_applied_template) {
+                el_applied_template.textContent = `適用中のテンプレート: [ ${applied_template} ]`;
+            }
         });
     });
 

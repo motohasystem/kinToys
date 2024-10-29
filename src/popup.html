@@ -246,6 +246,16 @@
             clear: both;
         }
 
+        .information {
+            font-size: 12px;
+            margin-bottom: 8px;
+            color: #666; /* テキストカラーをさらに控えめに */
+            line-height: 1.4; /* 行間をさらに狭く */
+            padding: 6px; /* 内側の余白をさらに控えめに */
+            background-color: #fafafa; /* 背景色をさらに柔らかく */
+            border-left: 2px solid #D07000; /* アクセントカラーのボーダーをさらに控えめに */
+        }
+
         /* 無効時にグレーを被せる */
         .controlpanel_disabled {
             position: relative;
@@ -349,6 +359,7 @@
                         <label for="radio_recordcopy_template">template</label>
                     </span>
                 </div>
+                <div id="applied_template" class="information"></div>
             </div>
             <div class="body">
                 <input type="button" id="button_table_copy" class="copy_button" value="Grab Copy">

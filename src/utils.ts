@@ -13,6 +13,7 @@ export class Utils {
         id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
         id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+        id_applied_template: "applied_template", // 適用中テンプレートの表示領域
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
         template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
