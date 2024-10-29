@@ -52,6 +52,12 @@ type Options = { [key: string]: string | {} };
                 });
             }
 
+            // イメージコピーボタンのオプションを読み込む
+            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
+            if (el_image_copy) {
+                el_image_copy.checked = options[CONST.id_checkbox_imagecopy_button] === "true" ? true : false;
+            }
+
             // テンプレート履歴の選択イベント
             document
                 .getElementById(CONST.id_select_template_history)
@@ -152,6 +158,11 @@ type Options = { [key: string]: string | {} };
             options[Utils.CONST.key_template_history] = templateHistory;
             console.log({ options })
 
+            // イメージコピーボタンのオプションを保存
+            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
+            options[CONST.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
+
+            // オプションを保存
             chrome.storage.sync.set(options);
             console.log({ options });
             alert('オプション設定を保存しました。')

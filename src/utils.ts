@@ -39,6 +39,7 @@ export class Utils {
         accent_color_dec: "240, 146, 0",    // アクセントカラー（10進数の組み合わせ）
 
         // 画像コピーの設定
+        id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
         image_copy: false,  // 画像コピーを有効にするかどうか
         max_online_length: 60,   // 画像コピー時の改行文字数
     }
