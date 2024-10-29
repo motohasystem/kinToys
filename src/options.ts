@@ -20,6 +20,12 @@ type Options = { [key: string]: string | {} };
             Utils.loadOption(options, Utils.CONST.id_fillin_template, null);
             Utils.loadOption(options, null, Utils.CONST.id_radio_csv_tsv);
 
+            // テンプレート名称を読み込む
+            const input_template_name = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+            if (input_template_name) {
+                input_template_name.value = options[Utils.CONST.id_input_template_name] as string;
+            }
+
             // テンプレート履歴を読み込む
             let templateHistory: { [key: string]: string } = options[Utils.CONST.key_template_history] as { [key: string]: string };
             console.log({ templateHistory });
@@ -129,12 +135,15 @@ type Options = { [key: string]: string | {} };
             return;
         }
         else {
-            // 
-            // let options: { [key: string]: string | {} } = {};
+            // オプションを保存する
             console.log({ options })
             options = Utils.saveOption(options, CONST.id_fillin_template, null); // idを指定
             options = Utils.saveOption(options, null, CONST.id_radio_csv_tsv); // nameを指定
 
+            // テンプレート名称を保存
+            options[CONST.id_input_template_name] = template_name.value;
+
+            // テンプレート履歴を保存
             let templateHistory = options[Utils.CONST.key_template_history] as { [key: string]: string };
             const history = makeHistory();
             console.log({ history })
