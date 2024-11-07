@@ -13,6 +13,7 @@ export class ClickEventDealer {
     radio_csv_tsv: "csv" | "tsv" = "csv";
     radio_data_template: "data" | "template" | "json" = "data";
     checkbox_on_off: "enabled" | "disabled" = "enabled";
+    enable_break_multiline: boolean = false;
 
     embedder: TemplateEmbedder | undefined;
     previousFunction: ((event: HTMLElement) => void) | undefined;
@@ -30,7 +31,8 @@ export class ClickEventDealer {
         this.setOptions(options)
         // this.options = options
 
-        this.dealClicknCopyFunction()
+        this.dealClicknCopyFunction()   // クリックイベントの配布
+        this.dealBreakMultilineStyle()  // マルチラインのセルのスタイルを変更
     }
 
     setTemplateEmbedder(embedder: TemplateEmbedder) {
@@ -58,6 +60,11 @@ export class ClickEventDealer {
         // 機能有効化チェックボックスの状態を設定する
         if ('checkbox_on_off' in opt && opt['checkbox_on_off'] != null) {
             this.checkbox_on_off = opt['checkbox_on_off'] as "enabled" | "disabled";
+        }
+
+        // 複数行文字列の改行スタイルを有効化する
+        if ('enable_break_multiline' in opt && opt['enable_break_multiline'] != null) {
+            this.enable_break_multiline = opt['enable_break_multiline'] === "true";
         }
 
         console.log({ radio_cell_record: this.radio_cell_record, radio_csv_tsv: this.radio_csv_tsv, radio_data_template: this.radio_data_template })
@@ -406,6 +413,32 @@ export class ClickEventDealer {
             .catch((err) => {
                 console.error("Failed to copy: ", err);
             });
+
+    }
+
+    // マルチラインのセルのスタイルを変更する
+    dealBreakMultilineStyle() {
+        console.log({ 'enable_break_multiline': this.enable_break_multiline })
+        if (this.enable_break_multiline == false) return;
+
+        // テーブルの行に対して、複数行文字列を改行して表示するスタイルを当てる
+        const table = document.querySelector("table");
+        if (!table) return;
+
+        // テーブルのすべての行にスタイルを適用
+        // class="recordlist-multiple_line_text-gaia" が付与されているセルの中にあるspan要素に対してスタイルを適用する
+        const rows = table.querySelectorAll("tr");
+        rows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            cells.forEach((cell) => {
+                if (cell.classList.contains(Utils.CONST.class_multiline_text)) {
+                    const span = cell.querySelector("span");
+                    if (span) {
+                        span.style.whiteSpace = "pre-line";
+                    }
+                }
+            });
+        });
 
     }
 }

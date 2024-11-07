@@ -58,6 +58,12 @@ type Options = { [key: string]: string | {} };
                 el_image_copy.checked = options[CONST.id_checkbox_imagecopy_button] === "true" ? true : false;
             }
 
+            // 複数行文字列の改行オプションを読み込む
+            const el_break_ml = document.getElementById(CONST.id_enable_break_multiline) as HTMLInputElement;
+            if (el_break_ml) {
+                el_break_ml.checked = options[CONST.id_enable_break_multiline] === "true" ? true : false;
+            }
+
             // テンプレート履歴の選択イベント
             document
                 .getElementById(CONST.id_select_template_history)
@@ -161,6 +167,10 @@ type Options = { [key: string]: string | {} };
             // イメージコピーボタンのオプションを保存
             const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
             options[CONST.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
+
+            // 複数行文字列の改行オプションを保存
+            const el_break_ml = document.getElementById(CONST.id_enable_break_multiline) as HTMLInputElement;
+            options[CONST.id_enable_break_multiline] = el_break_ml.checked ? "true" : "false";
 
             // オプションを保存
             chrome.storage.sync.set(options);

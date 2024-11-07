@@ -44,6 +44,11 @@ export class Utils {
         id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
         image_copy: false,  // 画像コピーを有効にするかどうか
         max_online_length: 60,   // 画像コピー時の改行文字数
+
+        // 複数行文字列の改行設定
+        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
+        class_multiline_text: "recordlist-multiple_line_text-gaia"   // 複数行文字列のクラス名
+
     }
 
     static MSG = {
