@@ -34,7 +34,7 @@
                             simplified = simplified.replace(/(#record=\d+).*/, '$1');
 
                             // 2つ目のURL: ?view=\d までを残す。q&が入る場合を考慮する。
-                            simplified = simplified.replace(/(\?q?&?view=\d+).*/, '$1');
+                            simplified = simplified.replace(/\?q?&?(view=\d+).*/, '?$1');
 
                             navigator.clipboard.writeText(simplified).then(() => {
                                 console.log('URLをクリップボードにコピーしました');
