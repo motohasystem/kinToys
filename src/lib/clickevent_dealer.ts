@@ -431,7 +431,7 @@ export class ClickEventDealer {
         rows.forEach((row) => {
             const cells = row.querySelectorAll("td");
             cells.forEach((cell) => {
-                if (cell.classList.contains(Utils.CONST.class_multiline_text)) {
+                if (cell.classList.contains(Utils.CONST.class_multiline_text) || cell.classList.contains(Utils.CONST.class_singleline_text)) {
                     const span = cell.querySelector("span");
                     if (span) {
                         span.style.whiteSpace = "pre-line";
