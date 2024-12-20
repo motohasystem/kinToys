@@ -68,6 +68,10 @@ import { Utils } from "./utils";
                     if (tabs.length > 0) {
                         chrome.tabs.sendMessage(tabs[0].id as number, { name: Utils.Messages.changeBreaklineOption }, (_response) => {
                             console.log('toggle_newline message sent.');
+                            if (chrome.runtime.lastError) {
+                                console.error('Error sending message:', chrome.runtime.lastError);
+                                return;
+                            }
                         });
                     }
                 });

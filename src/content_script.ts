@@ -156,6 +156,7 @@ import { Options } from "./options";
                         return;
                     }
                     console.log('Toggle Newline: ', options[key_breakline]);
+                    sendResponse({ action: CONST.id_enable_break_multiline });
                     // リロードする
                     location.reload();
                 });
