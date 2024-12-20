@@ -1,22 +1,22 @@
 
-// import { Utils } from "./utils";
+import { Utils } from "./utils";
 import { TablePicker } from "./lib/table_picker";
 
 (() => {
-    // const CONST = Utils.CONST
+    const CONST = Utils.CONST
 
     // 通らないので一旦直接置く
-    const CONST = {
-        id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",
-        id_radio_cell_record: "radio_cell_record",
-        id_radio_data_template: "radio_data_template",
-        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-        id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
+    // const CONST = {
+    //     id_fillin_template: "textarea_fillin_template",
+    //     id_radio_csv_tsv: "radio_csv_tsv",
+    //     id_radio_cell_record: "radio_cell_record",
+    //     id_radio_data_template: "radio_data_template",
+    //     id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+    //     id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
 
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
-    };
+    //     table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+    //     template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+    // };
 
     chrome.storage.sync.get(null, (options) => {
         console.log({ 'chrome.storage.sync.get': options });
@@ -24,11 +24,11 @@ import { TablePicker } from "./lib/table_picker";
         // 埋め込みリクエストの受信を先に登録
         window.addEventListener("message", (event) => {
             if (event.source !== window) return;
-            if (event.data.type !== "requestPopupOptions") return;
+            if (event.data.type !== Utils.Messages.requestPopupOptions) return;
             // const embedded = event.data.data;
 
             window.postMessage({
-                type: "loadPopupOptions", data: options
+                type: Utils.Messages.loadPopupOptions, data: options
             }, "*")
         });
 
@@ -66,11 +66,18 @@ import { TablePicker } from "./lib/table_picker";
                     console.log("有効/無効のチェックが変更されました");
                     checkbox_on_off = change.newValue
                 }
+                else if (key === CONST.id_enable_break_multiline) {
+                    console.log("改行表示のチェックが変更されました");
+                    window.postMessage({
+                        type: Utils.Messages.changeBreaklineOption, data: change.newValue
+                    })
+                    return
+                }
             }
 
             // embedding_scripts.jsにメッセージを送る
             window.postMessage({
-                type: "changePopupOptions", data: {
+                type: Utils.Messages.changePopupOptions, data: {
                     radio_csv_tsv,
                     radio_data_template,
                     radio_cell_record,

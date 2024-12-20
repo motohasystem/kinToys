@@ -9,20 +9,20 @@ import { Utils } from "./utils";
     eventDealer.setTemplateEmbedder(embedder)
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
-    window.postMessage({ type: "requestPopupOptions" }, "*")
+    window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
 
     // kintoneの一覧画面表示のタイミングで実行する
     kintone.events.on("app.record.index.show", function (_event) {
         // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
         // eventDealer.deal();
-        window.postMessage({ type: "requestPopupOptions" }, "*")
+        window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
     });
 
     window.addEventListener("message", (event) => {
         console.log({ event })
         // メッセージが正しいかチェック
         if (event.source !== window) return;
-
+        console.log(`window message event: ${event.data.type}`)
 
         // kintoneレコード情報の埋め込みリクエストを受信した
         if (event.data.type === Utils.CONST.template_copy_button_clicked) {
@@ -74,9 +74,7 @@ import { Utils } from "./utils";
                 window.postMessage({ type: "kintoneRecordInfoEmbedded", data: response }, "*")
             }
         }
-        else if (event.data.type === "changePopupOptions" || event.data.type === "loadPopupOptions") {
-            console.log(`window message event: ${event.data.type}`)
-
+        else if (event.data.type === Utils.Messages.changePopupOptions || event.data.type === Utils.Messages.loadPopupOptions) {
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
@@ -87,6 +85,9 @@ import { Utils } from "./utils";
                 console.log({ 'set template by message': template })
                 eventDealer.setTemplateEmbedder(embedder)
             }
+        }
+        else if (event.data.type === Utils.Messages.changeBreaklineOption) {
+            console.log()
         }
 
     });

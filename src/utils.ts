@@ -6,6 +6,12 @@ export class Utils {
         excluded: "excluded",
         customize: "customize",
     }
+    static Messages = {
+        changeBreaklineOption: "changeBreaklineOption",
+        changePopupOptions: "changePopupOptions",
+        loadPopupOptions: "loadPopupOptions",
+        requestPopupOptions: "requestPopupOptions"
+    }
 
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
