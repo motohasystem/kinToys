@@ -1,9 +1,13 @@
 // import { TablePicker } from "./lib/table_picker";
 
+import { Options } from "./options";
+import { Utils } from "./utils";
+
 
 (() => {
     const CONTEXT_MENU = {
-        copy_simple_url: "copySimpleUrl"
+        copy_simple_url: "copySimpleUrl",
+        toggle_newline: "toggleNewline"
     }
 
 
@@ -12,10 +16,17 @@
     chrome.runtime.onInstalled.addListener(() => {
         console.log('拡張がインストールされました');
 
-        // 
+        // シンプルコピー機能のコンテキストメニューを追加
         chrome.contextMenus.create({
-            id: "copySimpleUrl",
+            id: CONTEXT_MENU.copy_simple_url,
             title: "Copy Simple URL",
+            contexts: ["action"]
+        });
+
+        // オプションの改行表示を切り替える
+        chrome.contextMenus.create({
+            id: CONTEXT_MENU.toggle_newline,
+            title: "Toggle Newline",
             contexts: ["action"]
         });
 
@@ -36,17 +47,39 @@
                             // 2つ目のURL: ?view=\d までを残す。q&が入る場合を考慮する。
                             simplified = simplified.replace(/\?q?&?(view=\d+).*/, '?$1');
 
+                            window.focus();
                             navigator.clipboard.writeText(simplified).then(() => {
                                 console.log('URLをクリップボードにコピーしました');
                             }).catch(err => {
                                 console.error('クリップボードへのコピーに失敗しました:', err);
                             });
+
                         }
                     });
                 }
+                else {
+                    console.error('タブ情報が取得できませんでした');
+                }
+            }
+            else if (info.menuItemId === CONTEXT_MENU.toggle_newline) {
+                console.log('Toggle Newline');
+                // オプションの改行表示を切り替える
+                // 保存された値を読み込み、トグルで切り替える
+                chrome.storage.sync.get(null, (options: Options) => {
+                    console.log({ options });
+                    options[Utils.CONST.id_enable_break_multiline] = !options[Utils.CONST.id_enable_break_multiline];
+                    // オプションを保存
+                    chrome.storage.sync.set(options);
+                });
+
             }
         });
+
     });
+
+    // chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, _tab) => {
+
+    // });
 
 
     // 接続成立時
