@@ -43,7 +43,7 @@ export class Utils {
         // 画像コピーの設定
         id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
         image_copy: false,  // 画像コピーを有効にするかどうか
-        max_online_length: 60,   // 画像コピー時の改行文字数
+        max_online_length: 70,   // 画像コピー時の改行文字数
 
         // 複数行文字列の改行設定
         id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
@@ -204,8 +204,25 @@ export class Utils {
         }
 
         // 2. 文字列を120文字で自動改行して行単位で分割
-        const formattedText = text.replace(new RegExp(`(.{${Utils.CONST.max_online_length}})`, 'g'), '$1\n');
-        const lines = formattedText.split('\n');
+        const lines = text.split('\n').map(line => {
+            // [\x00-\x7F]の範囲を1文字、それ以外を2文字としてカウントして、1行の最大文字数はmax_online_lengthとして改行する
+            const maxOnlineLength = Utils.CONST.max_online_length;
+            let lineLength = 0;
+            let lineText = '';
+            for (const char of line) {
+                lineLength += char.match(/[\x00-\x7F]/) ? 1 : 2;
+                if (lineLength > maxOnlineLength) {
+                    lineText += '\n';
+                    lineLength = 0
+                }
+                lineText += char;
+            }
+            return lineText;
+        }).join('\n').split('\n');
+
+
+        // const formattedText = text.replace(new RegExp(`(.{${Utils.CONST.max_online_length}})`, 'g'), '$1\n');
+        // const lines = formattedText.split('\n');
         const lineHeight = 30;
         const padding = 20;
 
@@ -266,6 +283,9 @@ export class Utils {
         closeButton.style.marginTop = '10px';
         closeButton.onclick = () => document.body.removeChild(dialog);
         dialog.appendChild(closeButton);
+
+        // ダイアログをクリックすると閉じる
+        dialog.onclick = () => document.body.removeChild(dialog);
 
         document.body.appendChild(dialog);
     }
