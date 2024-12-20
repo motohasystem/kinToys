@@ -1,6 +1,5 @@
 // import { TablePicker } from "./lib/table_picker";
 
-import { Options } from "./options";
 import { Utils } from "./utils";
 
 
@@ -62,14 +61,15 @@ import { Utils } from "./utils";
                 }
             }
             else if (info.menuItemId === CONTEXT_MENU.toggle_newline) {
-                console.log('Toggle Newline');
-                // オプションの改行表示を切り替える
-                // 保存された値を読み込み、トグルで切り替える
-                chrome.storage.sync.get(null, (options: Options) => {
-                    console.log({ options });
-                    options[Utils.CONST.id_enable_break_multiline] = !options[Utils.CONST.id_enable_break_multiline];
-                    // オプションを保存
-                    chrome.storage.sync.set(options);
+                console.log('Toggle BreakLineOption');
+
+                // メッセージを送る
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    if (tabs.length > 0) {
+                        chrome.tabs.sendMessage(tabs[0].id as number, { name: Utils.Messages.changeBreaklineOption }, (_response) => {
+                            console.log('toggle_newline message sent.');
+                        });
+                    }
                 });
 
             }

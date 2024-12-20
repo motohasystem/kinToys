@@ -1,5 +1,6 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
 import { TemplateEmbedder } from "./lib/template_embedder";
+// import { Options } from "./options";
 import { Utils } from "./utils";
 
 (() => {
@@ -87,7 +88,9 @@ import { Utils } from "./utils";
             }
         }
         else if (event.data.type === Utils.Messages.changeBreaklineOption) {
-            console.log()
+            // ブレークラインオプションが変更された
+            eventDealer.deal()
+
         }
 
     });

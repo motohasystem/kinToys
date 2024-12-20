@@ -1,22 +1,34 @@
 
-import { Utils } from "./utils";
+// import { Utils } from "./utils";
 import { TablePicker } from "./lib/table_picker";
+import { Options } from "./options";
 
 (() => {
-    const CONST = Utils.CONST
+    // const CONST = Utils.CONST
 
     // 通らないので一旦直接置く
-    // const CONST = {
-    //     id_fillin_template: "textarea_fillin_template",
-    //     id_radio_csv_tsv: "radio_csv_tsv",
-    //     id_radio_cell_record: "radio_cell_record",
-    //     id_radio_data_template: "radio_data_template",
-    //     id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-    //     id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
+    const CONST = {
+        id_fillin_template: "textarea_fillin_template",
+        id_radio_csv_tsv: "radio_csv_tsv",
+        id_radio_cell_record: "radio_cell_record",
+        id_radio_data_template: "radio_data_template",
+        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+        id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
 
-    //     table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-    //     template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
-    // };
+        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+
+        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
+    };
+    const Messages = {
+        changeBreaklineOption: "changeBreaklineOption",
+        changePopupOptions: "changePopupOptions",
+        loadPopupOptions: "loadPopupOptions",
+        requestPopupOptions: "requestPopupOptions"
+    }
+    // ここまでUtilsからコピー
+
+
 
     chrome.storage.sync.get(null, (options) => {
         console.log({ 'chrome.storage.sync.get': options });
@@ -24,11 +36,11 @@ import { TablePicker } from "./lib/table_picker";
         // 埋め込みリクエストの受信を先に登録
         window.addEventListener("message", (event) => {
             if (event.source !== window) return;
-            if (event.data.type !== Utils.Messages.requestPopupOptions) return;
+            if (event.data.type !== Messages.requestPopupOptions) return;
             // const embedded = event.data.data;
 
             window.postMessage({
-                type: Utils.Messages.loadPopupOptions, data: options
+                type: Messages.loadPopupOptions, data: options
             }, "*")
         });
 
@@ -69,7 +81,7 @@ import { TablePicker } from "./lib/table_picker";
                 else if (key === CONST.id_enable_break_multiline) {
                     console.log("改行表示のチェックが変更されました");
                     window.postMessage({
-                        type: Utils.Messages.changeBreaklineOption, data: change.newValue
+                        type: Messages.changeBreaklineOption, data: change.newValue
                     })
                     return
                 }
@@ -77,7 +89,7 @@ import { TablePicker } from "./lib/table_picker";
 
             // embedding_scripts.jsにメッセージを送る
             window.postMessage({
-                type: Utils.Messages.changePopupOptions, data: {
+                type: Messages.changePopupOptions, data: {
                     radio_csv_tsv,
                     radio_data_template,
                     radio_cell_record,
@@ -123,6 +135,32 @@ import { TablePicker } from "./lib/table_picker";
 
             // 埋め込みリクエストを embedding_scripts.ts に送信する
             window.postMessage({ type: CONST.template_copy_button_clicked, data: template, alignment: alignment }, "*")
+        }
+        else if (request.name === Messages.changeBreaklineOption) {
+            // ここで改行表示メッセージを受け取る
+            // // 改行表示設定を変更する
+            const key_breakline = CONST.id_enable_break_multiline
+            chrome.storage.sync.get(key_breakline, (options: Options) => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error retrieving options:', chrome.runtime.lastError);
+                    return;
+                }
+                console.log({ options });
+                options[key_breakline] = options[key_breakline] == "true" ? "false" : "true";
+                // options[key_breakline] = "true";
+                console.log({ options });
+                // オプションを保存
+                chrome.storage.sync.set({ [key_breakline]: options[key_breakline] }, () => {
+                    if (chrome.runtime.lastError) {
+                        console.error('Error saving options:', chrome.runtime.lastError);
+                        return;
+                    }
+                    console.log('Toggle Newline: ', options[key_breakline]);
+                    // リロードする
+                    location.reload();
+                });
+            });
+
         }
         else {
             console.warn("未知のメッセージを受信しました", request)

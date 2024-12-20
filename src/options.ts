@@ -1,6 +1,6 @@
 import { Utils } from "./utils";
 
-type Options = { [key: string]: string | {} };
+export type Options = { [key: string]: string | {} };
 
 (() => {
     const CONST = Utils.CONST;
@@ -252,6 +252,7 @@ type Options = { [key: string]: string | {} };
         }
     }
 
+    // メッセージの更新
     function update_message(selected_label: string | undefined = undefined) {
         let msg = Utils.MSG.msg_default;
         switch (selected_label) {
