@@ -13,6 +13,17 @@ export class Utils {
         requestPopupOptions: "requestPopupOptions"
     }
 
+    static CONTEXT_MENU = {
+        copy_simple_url: {
+            id: "copySimpleUrl",
+            label: "Copy Simple URL"
+        },
+        toggle_linebrake: {
+            id: "toggleNewline",
+            label: "Toggle LineBrake"
+        }
+    }
+
     static CONST = {
         id_fillin_template: "textarea_fillin_template",
         id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID

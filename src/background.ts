@@ -4,11 +4,7 @@ import { Utils } from "./utils";
 
 
 (() => {
-    const CONTEXT_MENU = {
-        copy_simple_url: "copySimpleUrl",
-        toggle_newline: "toggleNewline"
-    }
-
+    const context = Utils.CONTEXT_MENU
 
     let connection: chrome.runtime.Port | null = null;
 
@@ -17,15 +13,15 @@ import { Utils } from "./utils";
 
         // シンプルコピー機能のコンテキストメニューを追加
         chrome.contextMenus.create({
-            id: CONTEXT_MENU.copy_simple_url,
-            title: "Copy Simple URL",
+            id: context.copy_simple_url.id,
+            title: context.copy_simple_url.label,
             contexts: ["action"]
         });
 
         // オプションの改行表示を切り替える
         chrome.contextMenus.create({
-            id: CONTEXT_MENU.toggle_newline,
-            title: "Toggle Newline",
+            id: context.toggle_linebrake.id,
+            title: context.toggle_linebrake.label,
             contexts: ["action"]
         });
     });
@@ -33,7 +29,7 @@ import { Utils } from "./utils";
 
     chrome.contextMenus.onClicked.addListener((info, tab) => {
         console.log(`contextMenus.onClicked: ${info}`);
-        if (info.menuItemId === CONTEXT_MENU.copy_simple_url) {
+        if (info.menuItemId === context.copy_simple_url.id) {
             // シンプルURLのコピー
             if (tab != undefined && tab.id != undefined) {
                 // ブラウザのアドレスバーのURLをクリップボードにコピーする
@@ -62,14 +58,14 @@ import { Utils } from "./utils";
                 console.error('タブ情報が取得できませんでした');
             }
         }
-        else if (info.menuItemId === CONTEXT_MENU.toggle_newline) {
+        else if (info.menuItemId === context.toggle_linebrake.id) {
             console.log('Toggle BreakLineOption');
 
             // メッセージを送る
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs.length > 0) {
                     chrome.tabs.sendMessage(tabs[0].id as number, { name: Utils.Messages.changeBreaklineOption }, (_response) => {
-                        console.log('toggle_newline message sent.');
+                        console.log('toggle_linebrake message sent.');
                         if (chrome.runtime.lastError) {
                             console.error('Error sending message:', chrome.runtime.lastError);
                             return;

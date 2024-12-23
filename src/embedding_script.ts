@@ -89,6 +89,7 @@ import { Utils } from "./utils";
         }
         else if (event.data.type === Utils.Messages.changeBreaklineOption) {
             // ブレークラインオプションが変更された
+            console.log('Change Breakline Option')
             eventDealer.deal()
 
         }
