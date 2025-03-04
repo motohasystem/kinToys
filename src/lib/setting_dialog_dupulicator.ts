@@ -168,31 +168,28 @@ export class SettingDialogDuplicator {
         if (options.length > 0) {
             /////// ペースト処理
             // const lines = options.join("\n");
+            // selectionsの末尾のノードを取得し、そこのaddボタンをクリックしてinput要素のvalueにoptions[index]をセットする
+            const selectionRows = document.getElementsByClassName("treeeditor-node-item-cybozu");
 
-            // selectionsの末尾のノードを取得し、そこのaddボタンをlength回クリックする
-            const selectionRows = document.getElementsByClassName("treeeditor-node-item-cybozu")
-            const lastNode = selectionRows[selectionRows.length - 1];
-            const addButton = lastNode.querySelector(".treeeditor-node-item-add-cybozu");
-
-            // lengthの数だけaddボタンをクリックする
             for (let i = 0; i < options.length; i++) {
+                const lastNode = selectionRows[selectionRows.length - 1];
+                const addButton = lastNode.querySelector(".treeeditor-node-item-add-cybozu");
+
                 if (addButton) {
                     addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
                 }
-            }
 
-            // selectionsのうち、options.length番目以降の要素を取り出す
-            const selections = document.querySelectorAll('[id^="node-"][id$="-text"]') as NodeListOf<HTMLInputElement>;
-            const pasteTargets = Array.from(selections).slice(selections.length - options.length);
+                // 新しく追加されたinput要素を取得して、valueにoptions[i]をセットする
+                const selections = document.querySelectorAll('[id^="node-"][id$="-text"]') as NodeListOf<HTMLInputElement>;
+                const newInput = selections[selections.length - 1];
 
-            pasteTargets.forEach((target, index) => {
-                if (target) {
-                    console.log({ target });
-                    // input要素を取得して、valueにoptions[index]をセットする
-                    const inputElement = target as HTMLInputElement;
-                    inputElement.value = options[index];
+                if (newInput) {
+                    newInput.value = options[i];
+
+                    // 初期値リストに反映するために編集イベントをキックする
+                    newInput.dispatchEvent(new Event("change", { bubbles: true }));
                 }
-            });
+            }
 
             return null;
         }
