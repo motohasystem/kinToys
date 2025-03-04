@@ -230,11 +230,14 @@ export class SettingDialogDuplicator {
             ".input-inlinetext-show-cybozu"
         ) as HTMLElement).textContent;
 
-        if (value != null) {
+        if (value != undefined) {
             const oldValue = text;
             (fieldcode[0].querySelector(
-                ".input-inlinetext-show-cybozu"
+                ".input-inlinetext-show-cybozu span"
             ) as HTMLElement).textContent = value;
+
+            (fieldcode[0].querySelector(`[id^="varname-"][id$="-text"]`) as HTMLInputElement).value = value;
+
             return oldValue;
         }
         return text;
