@@ -8,6 +8,7 @@ interface DialogJson {
     hideFieldName?: boolean;
     requiredField?: boolean;
     uniqueCheck?: boolean;
+    selections?: string[];
 }
 
 export class SettingDialogDuplicator {
@@ -16,7 +17,6 @@ export class SettingDialogDuplicator {
     watchDialogSpawn() {
         // ダイアログ表示を監視する
         const targetSelector = "ocean-ui-dialog";
-
 
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -138,6 +138,10 @@ export class SettingDialogDuplicator {
         const required = this.requiredField();
         const uniqueCheck = this.uniqueField();
 
+        // 項目と順番を取得
+        const selections = this.selections();
+        console.log({ selections });
+
         return {
             fieldname: fn,
             fieldcode: fc,
@@ -145,6 +149,7 @@ export class SettingDialogDuplicator {
             // hasExpression: hasExp,
             requiredField: required,
             uniqueCheck: uniqueCheck,
+            selections: selections,
         };
     }
 
@@ -155,6 +160,49 @@ export class SettingDialogDuplicator {
         this.hideFieldName(dialogJson.hideFieldName);
         this.requiredField(dialogJson.requiredField);
         this.uniqueField(dialogJson.uniqueCheck);
+        this.selections(dialogJson.selections);
+    }
+
+    static selections(options: string[] = []) {
+
+        if (options.length > 0) {
+            /////// ペースト処理
+            // const lines = options.join("\n");
+
+            // selectionsの末尾のノードを取得し、そこのaddボタンをlength回クリックする
+            const selectionRows = document.getElementsByClassName("treeeditor-node-item-cybozu")
+            const lastNode = selectionRows[selectionRows.length - 1];
+            const addButton = lastNode.querySelector(".treeeditor-node-item-add-cybozu");
+
+            // lengthの数だけaddボタンをクリックする
+            for (let i = 0; i < options.length; i++) {
+                if (addButton) {
+                    addButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+                }
+            }
+
+            // selectionsのうち、options.length番目以降の要素を取り出す
+            const selections = document.querySelectorAll('[id^="node-"][id$="-text"]') as NodeListOf<HTMLInputElement>;
+            const pasteTargets = Array.from(selections).slice(selections.length - options.length);
+
+            pasteTargets.forEach((target, index) => {
+                if (target) {
+                    console.log({ target });
+                    // input要素を取得して、valueにoptions[index]をセットする
+                    const inputElement = target as HTMLInputElement;
+                    inputElement.value = options[index];
+                }
+            });
+
+            return null;
+        }
+        else {
+            //////// コピー処理
+            // node-:*-text の要素を取得する
+            let selections = document.querySelectorAll('[id^="node-"][id$="-text"]') as NodeListOf<HTMLInputElement>;
+
+            return Array.from(selections).map(selection => selection.value);
+        }
     }
 
     // フィールド名の情報を取得/記入する
