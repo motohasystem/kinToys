@@ -6,6 +6,7 @@ interface DialogJson {
     fieldname?: string;
     fieldcode?: string;
     hideFieldName?: boolean;
+    hasExpression?: boolean;
     requiredField?: boolean;
     uniqueCheck?: boolean;
     selections?: string[];
@@ -30,7 +31,7 @@ export class SettingDialogDuplicator {
                             node.classList.contains(targetSelector)
                         ) {
                             console.log("target-node が追加された!", node);
-                            this.button();
+                            this.addCopyPasteIcon();
                         }
                     });
 
@@ -55,7 +56,7 @@ export class SettingDialogDuplicator {
     }
 
     // デバッグ用に、アイコンを作成する
-    button() {
+    addCopyPasteIcon() {
         // ダイアログの中にあるクローズボタンを取得する
         const closeButton = document.querySelector(".ocean-ui-dialog-title-close");
 
@@ -134,7 +135,7 @@ export class SettingDialogDuplicator {
         const fn = this.fieldName();
         const fc = this.fieldCode();
         const hideFN = this.hideFieldName();
-        // const hasExp = this.hasExpression();
+        const hasExp = this.hasExpression();
         const required = this.requiredField();
         const uniqueCheck = this.uniqueField();
 
@@ -146,7 +147,7 @@ export class SettingDialogDuplicator {
             fieldname: fn,
             fieldcode: fc,
             hideFieldName: hideFN,
-            // hasExpression: hasExp,
+            hasExpression: hasExp,
             requiredField: required,
             uniqueCheck: uniqueCheck,
             selections: selections,
@@ -158,6 +159,7 @@ export class SettingDialogDuplicator {
         this.fieldName(dialogJson.fieldname);
         this.fieldCode(dialogJson.fieldcode);
         this.hideFieldName(dialogJson.hideFieldName);
+        this.hasExpression(dialogJson.hasExpression);
         this.requiredField(dialogJson.requiredField);
         this.uniqueField(dialogJson.uniqueCheck);
         this.selections(dialogJson.selections);
@@ -250,7 +252,7 @@ export class SettingDialogDuplicator {
 
     // チェックボックス: 自動計算する（一行文字列)
     static hasExpression(flag: boolean | null = null) {
-        return this.standardCheckboxUtil("hasExpression", "checkbox", flag);
+        return this.standardCheckboxUtil("hasExpression", "checkbox", flag, true);
     }
 
     // チェックボックス: 必須項目にする
@@ -264,7 +266,7 @@ export class SettingDialogDuplicator {
     }
 
     // チェックボックス共通の処理
-    static standardCheckboxUtil(prefix: string, suffix: string, flag: boolean | null) {
+    static standardCheckboxUtil(prefix: string, suffix: string, flag: boolean | null, click: boolean = false) {
         const checkbox = document.querySelectorAll(
             `[id^="${prefix}-"][id$="-${suffix}"]`
         ) as NodeListOf<HTMLInputElement>;
@@ -279,7 +281,14 @@ export class SettingDialogDuplicator {
             return oldValue;
         }
 
+
+        // クリックイベントを発火する
+        if (flag == true && click == true) {
+            checkbox[0].dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        }
+
         checkbox[0].checked = flag;
+
         return oldValue;
     }
 }
