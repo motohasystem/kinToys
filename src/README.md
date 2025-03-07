@@ -66,11 +66,12 @@ Google ChromeやMicrosoft EdgeなどのChromium系のWebブラウザでインス
 **更新予定**:
 
 - **kintoneのバージョンアップへの対応**:  
-  kinToysはkintoneのAPIを使用せずにタグ解析で実装されています。そのため、kintoneのバージョンアップに合わせて、kinToysも随時アップデートを行い、常に最新の環境で使用できるようにしていく予定です。
+  kinToysはkintoneのAPIを使用せずにタグ解析で実装されています。
+  そのためkintoneのバージョンアップに合わせて、kinToysも随時アップデートを行い、常に最新の環境で使用できるようにしていく予定です。
 
 
 # License
 
-ぷらまい kintonePluginMigrator はMITライセンスの元で公開しています。 This plugin is licensed under MIT license.
+kinToys はMITライセンスの元で公開しています。 kinToys is licensed under MIT license.
 
-Copyright (c) 2024 Daisuke Motohashi https://opensource.org/licenses/MIT
+Copyright (c) 2024-2025 Daisuke Motohashi https://opensource.org/licenses/MIT
