@@ -3,16 +3,19 @@ import path from "path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import liveReload from "vite-plugin-live-reload";
 
-export default defineConfig(({command, mode}) => {
-    console.log({command, mode});
+export default defineConfig(({ command, mode }) => {
+    console.log({ command, mode });
     let bool_sourcemap = true;
     let es_drop = [];
 
-    if (mode === 'production') {
-        console.log('Production build');
+    if (mode === "development") {
+        console.log("Development build");
+    } else if (mode === "production") {
+        console.log("Production build");
         bool_sourcemap = false;
         es_drop = ["console", "debugger"];
-    }    
+    }
+
     return {
         esbuild: {
             drop: es_drop,
@@ -69,5 +72,5 @@ export default defineConfig(({command, mode}) => {
                 interval: 1000,
             },
         },
-    }
+    };
 });

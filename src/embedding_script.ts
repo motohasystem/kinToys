@@ -1,4 +1,5 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
+import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
@@ -8,6 +9,10 @@ import { Utils } from "./utils";
     const eventDealer = new ClickEventDealer()
     const embedder = new TemplateEmbedder("")
     eventDealer.setTemplateEmbedder(embedder)
+
+    // ダイアログ表示を監視する
+    const duplicator = new SettingDialogDuplicator()
+    duplicator.watchDialogSpawn()
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
@@ -89,6 +94,7 @@ import { Utils } from "./utils";
         }
         else if (event.data.type === Utils.Messages.changeBreaklineOption) {
             // ブレークラインオプションが変更された
+            console.log('Change Breakline Option')
             eventDealer.deal()
 
         }
