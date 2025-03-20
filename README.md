@@ -1,4 +1,4 @@
-![](img/icon128.png) 
+![](img/kintone_ctrl_c.png) 
 
 ---
 
