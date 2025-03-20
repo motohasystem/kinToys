@@ -1,4 +1,4 @@
-![](images/icon128.png) 
+![](img/icon128.png) 
 
 ---
 
@@ -72,6 +72,6 @@ Google ChromeやMicrosoft EdgeなどのChromium系のWebブラウザでインス
 
 # License
 
-kinToys はMITライセンスの元で公開しています。 kinToys is licensed under MIT license.
-
-Copyright (c) 2024-2025 Daisuke Motohashi https://opensource.org/licenses/MIT
+kinToysプロジェクトは[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html)の下でライセンスされています。  
+GPL-3.0ライセンスの条件に従い、このソフトウェアを自由に使用、改変、再配布することができます。  
+詳細については、ライセンスファイルをご参照ください。
