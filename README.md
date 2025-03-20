@@ -1,8 +1,7 @@
-![](img/kintone_ctrl_c.png)
+<img src="img/kintone_ctrl_c.png" width="200px" />
 
 ---
-
-## **kinToys: kintoneをもっと便利に使うためのChrome拡張機能**
+# **kinToys: kintoneをもっと便利に使うためのChrome拡張機能**
 
 ### **1. 拡張機能の概要**
 
