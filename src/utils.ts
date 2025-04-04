@@ -65,8 +65,13 @@ export class Utils {
         // 複数行文字列の改行設定
         id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
         class_multiline_text: "recordlist-multiple_line_text-gaia",   // 複数行文字列のクラス名
-        class_singleline_text: "recordlist-single_line_text-gaia"   // 一行文字列のクラス名
+        class_singleline_text: "recordlist-single_line_text-gaia",   // 一行文字列のクラス名
 
+        // コピペアイコン
+        icon_field_setting_copy: "⬆️",
+        icon_field_setting_paste: "⬇️",
+        id_copy_button: "copy_button",  // コピペアイコンのID
+        id_paste_button: "paste_button",  // コピペアイコンのID
     }
 
     static MSG = {

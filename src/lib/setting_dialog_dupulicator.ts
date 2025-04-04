@@ -2,6 +2,8 @@
  * アプリ設定画面のダイアログ項目をコピーする機能を持ったユーティリティクラス
  */
 
+import { Utils } from "../utils";
+
 interface DialogJson {
     fieldname?: string;
     fieldcode?: string;
@@ -57,12 +59,24 @@ export class SettingDialogDuplicator {
 
     // デバッグ用に、アイコンを作成する
     addCopyPasteIcon() {
+        const { CONST: C } = Utils;
+
         // ダイアログの中にあるクローズボタンを取得する
         const closeButton = document.querySelector(".ocean-ui-dialog-title-close");
 
+        // 増殖回避のため、ダイアログの中にあるコピペボタンを取得する
+        const copyButton = document.getElementById(C.id_copy_button);
+        const pasteButton = document.getElementById(C.id_paste_button);
+
+        // コピペボタンが存在しない場合のみ、アイコンを追加する
+        if (copyButton || pasteButton) {
+            return;
+        }
+
         if (closeButton && closeButton.parentNode) {
             const copyIcon = document.createElement("span");
-            copyIcon.textContent = "⬆️";
+            copyIcon.id = C.id_copy_button;
+            copyIcon.textContent = C.icon_field_setting_copy;
             copyIcon.style.cursor = "pointer";
             copyIcon.onclick = (event) => {
                 this.copy(event);
@@ -71,7 +85,8 @@ export class SettingDialogDuplicator {
             closeButton.parentNode.insertBefore(copyIcon, closeButton);
 
             const pasteIcon = document.createElement("span");
-            pasteIcon.textContent = "⬇️";
+            pasteIcon.id = C.id_paste_button;
+            pasteIcon.textContent = C.icon_field_setting_paste;
             pasteIcon.style.cursor = "pointer";
             pasteIcon.onclick = (event) => {
                 this.paste(event);
