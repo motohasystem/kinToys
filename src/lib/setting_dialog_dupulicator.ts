@@ -16,8 +16,24 @@ interface DialogJson {
 
 export class SettingDialogDuplicator {
 
+    // フィールド設定画面を開いているか判定する
+    static isSettingDialogOpen() {
+        // URLが Utils.CONST.url_enable_copy_button_re にマッチするか確認
+        const url = location.href;
+        const isSettingDialog = new RegExp(Utils.CONST.url_enable_copy_button_re).test(url);
+        console.log("isSettingDialogOpen: ", isSettingDialog, url);
+        return isSettingDialog;
+    }
+
     // 設定画面のダイアログ表示を監視する
     watchDialogSpawn() {
+        // フィールド設定画面でなければ何もせず終了
+        if (!SettingDialogDuplicator.isSettingDialogOpen()) {
+            // console.log("フィールド設定画面ではないので、何もしません。");
+            return;
+        }
+
+        console.log("フィールド設定画面を監視します。");
         // ダイアログ表示を監視する
         const targetSelector = "ocean-ui-dialog";
 

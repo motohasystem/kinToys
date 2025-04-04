@@ -72,6 +72,9 @@ export class Utils {
         icon_field_setting_paste: "⬇️",
         id_copy_button: "copy_button",  // コピペアイコンのID
         id_paste_button: "paste_button",  // コピペアイコンのID
+
+        // コピペアイコンの表示URL
+        url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$"    // コピペボタンが表示されてよいURLの正規表現
     }
 
     static MSG = {
