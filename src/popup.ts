@@ -202,8 +202,23 @@ import { Utils } from "./utils";
                         textarea.value = "テーブル要素が見つかりませんでした。\n一覧画面、または集計画面で実行してください。"
                     }
                     else {
-                        textarea.value = response.data;
-                        Utils.copyToClipboard(response.data)
+                        // 一覧画面から取得した場合、ヘッダ行の先頭に空のセルを追加する
+                        if (pageCategory === Utils.PageCategory.index) {
+                            const delimiter_char = delimiter === 'csv' ? ',' : '\t'
+                            const data = response.data[0];
+                            const header = data.split('\n')[0];
+                            const headerArray = header.split(delimiter_char);
+                            headerArray.unshift('""');
+                            const newHeader = headerArray.join(delimiter_char);
+                            const newData = data.replace(header, newHeader);
+                            textarea.value = newData;
+                            Utils.copyToClipboard(newData);
+                        }
+                        // 集計画面から取得した場合、ヘッダ行の先頭に空のセルを追加しない
+                        else {
+                            textarea.value = response.data
+                            Utils.copyToClipboard(response.data)
+                        }
                     }
                 })
             }
