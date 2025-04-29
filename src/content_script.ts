@@ -1,32 +1,87 @@
-
+import { Names } from "./lib/Names";
+import { SubtableImporter } from "./lib/subtable_importer";
 // import { Utils } from "./utils";
 import { TablePicker } from "./lib/table_picker";
 import { Options } from "./options";
 
 (() => {
-    // const CONST = Utils.CONST
+    const CONST = Names.Ids
+    const Messages = Names.Messages
 
-    // 通らないので一旦直接置く
-    const CONST = {
-        id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",
-        id_radio_cell_record: "radio_cell_record",
-        id_radio_data_template: "radio_data_template",
-        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-        id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
 
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+    let lastUrl = location.href;
 
-        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
-    };
-    const Messages = {
-        changeBreaklineOption: "changeBreaklineOption",
-        changePopupOptions: "changePopupOptions",
-        loadPopupOptions: "loadPopupOptions",
-        requestPopupOptions: "requestPopupOptions"
+    // URLとDOMを監視する
+    const observer = new MutationObserver(() => {
+        const currentUrl = location.href;
+        if (currentUrl !== lastUrl) {
+            console.log('URL変わった: ', currentUrl);
+            lastUrl = currentUrl;
+            checkEditPage();
+        }
+    });
+
+    observer.observe(document, { subtree: true, childList: true });
+
+    // 最初にもチェックする
+    checkEditPage();
+
+    function checkEditPage() {
+        if (location.href.match(/\/k\/\d+\/(edit|show)/)) {
+            console.log('編集画面っぽいURL検知！');
+
+            // DOMの準備ができるのを待つ、サブテーブルの親要素が持つクラスを監視する
+            const subtable_class = Names.Classes.query_selector_class_subtable; // Utils.Classes.query_selector_class_subtable の定義を使いたいが、現状は使えない
+            waitForElement(subtable_class, (_element: Element) => {
+                console.log('Subtable dom detected.');
+                console.log({ url: location.href });
+
+                if (isEditOrCreatePage()) {
+                    const importer = new SubtableImporter()
+                    importer.initPaste()
+
+                }
+            });
+        }
     }
-    // ここまでUtilsからコピー
+
+    function isEditOrCreatePage() {
+        if (location.href.match(/\/k\/\d+\/(edit)/)) {
+            console.log("URLのmodeパラメータがeditまたはshowなので、編集画面と判断します。");
+            return true
+        }
+
+        // urlのうち、#以降を取得して、&で区切り、name=valueという辞書を取り出す
+        const hashParams = new URLSearchParams(location.hash.substring(1));
+        const paramsDict: { [key: string]: string } = {};
+        hashParams.forEach((value, key) => {
+            paramsDict[key] = value;
+        });
+        console.log('Hash parameters:', paramsDict);
+
+        // paramsDictのmode == "edit" であれば編集画面と判断
+        if (paramsDict['mode'] === 'edit') {
+            return true
+        }
+        console.warn("URLのmodeパラメータがeditではないので、編集画面ではないと判断します。");
+        return false;
+    }
+
+    function waitForElement(selector: string, callback: (element: Element) => void) {
+        const el = document.querySelector(selector);
+        if (el) {
+            callback(el);
+            return;
+        }
+        const observer = new MutationObserver((_mutations, obs) => {
+            const el = document.querySelector(selector);
+            if (el) {
+                obs.disconnect();
+                callback(el);
+            }
+        });
+        observer.observe(document, { childList: true, subtree: true });
+    }
 
 
 

@@ -1,3 +1,5 @@
+export { }
+
 export class Utils {
     static PageCategory = {
         index: "index",
@@ -82,12 +84,6 @@ export class Utils {
         // APIトークンの表示画面URL
         url_api_token_re: "^https://.*\\.cybozu\\.com/k/admin/app/apitoken.*$"          // APIトークンの表示画面URLの正規表現
 
-    }
-
-    // DOMノード取得のクラス設定
-    static readonly Classes = {
-        query_selector_class_subtable: ".subtable-row-gaia",    // 詳細画面のサブテーブルの親要素DIVが持つクラス
-        query_selector_add_row_button: ".add-row-image-gaia"    // サブテーブルの追加ボタンが持つクラス
     }
 
 

@@ -1,4 +1,6 @@
-import { Utils } from "../utils";
+// import { Utils } from "../utils";
+import { Names } from "./Names";
+
 
 export class SubtableImporter {
     static readonly id_copy_button = "copy-button"; // ID for the copy button
@@ -115,7 +117,7 @@ export class SubtableImporter {
 
     // サブテーブルへのペースト機能を初期化
     initPaste() {
-        const C = Utils.Classes; // Constants for DOM node selection
+        const C = Names.Classes; // Constants for DOM node selection
 
         // .subtable-row-gaia クラスを持った
         // 要素を取得
@@ -228,7 +230,7 @@ export class SubtableImporter {
 
     // Add a row with headers to elements with the class 'subtable-row-gaia'
     addRowWithHeaders(subtableRow: HTMLElement, contents: { [key: string]: string }[]): void {
-        const C = Utils.Classes; // Constants for DOM node selection
+        const C = Names.Classes; // Constants for DOM node selection
         const headers = this.getHeaders(subtableRow);
         if (!headers) return;
 

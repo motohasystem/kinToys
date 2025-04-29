@@ -1,6 +1,5 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
 import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
-import { SubtableImporter } from "./lib/subtable_importer";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
@@ -248,15 +247,6 @@ import { Utils } from "./utils";
     insertScriptButtons();
 
 
-    // // // レコード編集画面、作成画面のイベントを発火してテーブルインポーターを実行する
-    kintone.events.on(["app.record.edit.show", "app.record.create.show"], function (_event) {
-
-        console.log("Record edit event triggered");
-        // window.postMessage({ type: Utils.Messages.requestTableImporterOptions }, "*");
-        const importer = new SubtableImporter()
-        importer.initPaste()
-
-    });
 
 })();
 

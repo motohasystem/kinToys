@@ -37,7 +37,8 @@
             "resources": [
                 "embedding_script.js",
                 "embedding.css",
-                "utils.js"
+                "utils.js",
+                "embedding_event_handler.js"
             ],
             "matches": [
                 "https://*.cybozu.com/*"
@@ -53,7 +54,7 @@
                 "content_script.js"
             ],
             "type": "module",
-            "run_at": "document_end"
+            "run_at": "document_start"
         }
     ],
     "background": {
