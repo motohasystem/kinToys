@@ -30,22 +30,10 @@ export class Utils {
     }
 
     static CONST = {
-        id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID
-        id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
-        id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
-        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-        id_applied_template: "applied_template", // 適用中テンプレートの表示領域
-
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
-
         // オプション画面
         label_default_button: 'save',   // 初期表示、 -- Select Template -- の場合のボタンラベル
         label_import_button: 'apply',
         label_export_button: 'download',
-        id_input_template_name: "input_template_name",
-        id_select_template_history: "select_template_history",
         key_template_history: "template_history",
         key_default_option: "-- Select Template --",
         key_export_options: "-- Export Settings --",
@@ -56,7 +44,7 @@ export class Utils {
         label_template_imagecopy_button: 'Image Copy',  // #button_template_copy ボタンのラベル
 
         // 有効無効チェックボックスのID
-        id_checkbox_on_off: "checkbox_on_off",
+        // id_checkbox_on_off: "checkbox_on_off",
         class_control_parts_block: "control_parts", // コントロールパーツのブロックが持つクラス
 
         accent_color: "#F09200",    // アクセントカラー
@@ -68,15 +56,12 @@ export class Utils {
         max_online_length: 70,   // 画像コピー時の改行文字数
 
         // 複数行文字列の改行設定
-        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
         class_multiline_text: "recordlist-multiple_line_text-gaia",   // 複数行文字列のクラス名
         class_singleline_text: "recordlist-single_line_text-gaia",   // 一行文字列のクラス名
 
         // コピペアイコン
         icon_field_setting_copy: "⬆️",
         icon_field_setting_paste: "⬇️",
-        id_copy_button: "copy_button",  // コピペアイコンのID
-        id_paste_button: "paste_button",  // コピペアイコンのID
 
         // コピペアイコンの表示URL
         url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$",    // コピペボタンが表示されてよいURLの正規表現
