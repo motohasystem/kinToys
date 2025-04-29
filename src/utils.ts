@@ -2,9 +2,12 @@ export class Utils {
     static PageCategory = {
         index: "index",
         detail: "detail",
+        edit: "edit",
+        create: "create",
         report: "report",
         excluded: "excluded",
         customize: "customize",
+        plugin_setting: "plugin_setting"
     }
     static Messages = {
         changeBreaklineOption: "changeBreaklineOption",
@@ -74,8 +77,19 @@ export class Utils {
         id_paste_button: "paste_button",  // コピペアイコンのID
 
         // コピペアイコンの表示URL
-        url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$"    // コピペボタンが表示されてよいURLの正規表現
+        url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$",    // コピペボタンが表示されてよいURLの正規表現
+
+        // APIトークンの表示画面URL
+        url_api_token_re: "^https://.*\\.cybozu\\.com/k/admin/app/apitoken.*$"          // APIトークンの表示画面URLの正規表現
+
     }
+
+    // DOMノード取得のクラス設定
+    static readonly Classes = {
+        query_selector_class_subtable: ".subtable-row-gaia",    // 詳細画面のサブテーブルの親要素DIVが持つクラス
+        query_selector_add_row_button: ".add-row-image-gaia"    // サブテーブルの追加ボタンが持つクラス
+    }
+
 
     static MSG = {
         msg_default: `[${Utils.CONST.label_import_button}] テキストエリアのテンプレートを保存して使用します。`,
@@ -345,6 +359,19 @@ export class Utils {
         // パスが /k/{appId}/report であるかどうか
         if (path.endsWith("/report")) {
             return this.PageCategory.report;
+        }
+
+        // パスが /k/{appId}/edit であるかどうか
+        if (path.endsWith("/edit")) {
+            return this.PageCategory.edit;
+        }
+
+        const regex = new RegExp("\/k\/admin\/app\/\\d+\/plugin\/config");
+        console.log({ regex });
+        console.log({ path });
+        if (path.match(regex)) {
+            console.log("plugin setting page")
+            return this.PageCategory.plugin_setting;   // プラグイン設定画面
         }
 
         // それ以外は一覧画面

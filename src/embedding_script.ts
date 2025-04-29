@@ -1,5 +1,6 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
 import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
+import { SubtableImporter } from "./lib/subtable_importer";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
@@ -16,13 +17,6 @@ import { Utils } from "./utils";
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
-
-    // kintoneの一覧画面表示のタイミングで実行する
-    kintone.events.on("app.record.index.show", function (_event) {
-        // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
-        // eventDealer.deal();
-        window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
-    });
 
     window.addEventListener("message", (event) => {
         console.log({ event })
@@ -81,6 +75,7 @@ import { Utils } from "./utils";
             }
         }
         else if (event.data.type === Utils.Messages.changePopupOptions || event.data.type === Utils.Messages.loadPopupOptions) {
+            // ポップアップオプションが変更された、またはポップアップオプションを読み込んだ
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
@@ -105,16 +100,14 @@ import { Utils } from "./utils";
     // ここから下はプラグイン画面用のスクリプト
     //
 
+
     function insertScriptButtons() {
+        const here = Utils.whereAmI(location.href)
+        console.log({ where: here })
         // 一覧画面
 
         // プラグイン設定画面
-        if (
-            isMatchURL(
-                // prettier-ignore
-                "^https:\/\/\.+\.cybozu\.com\/k\/admin\/app\/\\d+\/plugin\/config\\?pluginId=.*$"
-            )
-        ) {
+        if (here == Utils.PageCategory.plugin_setting) {
             // エクスポートボタンの設置
             const export_button = make_export_button("⇩ download");
             document.body.appendChild(export_button);
@@ -128,10 +121,10 @@ import { Utils } from "./utils";
     }
 
     // 現在のURLが渡した正規表現とマッチするかどうかを返す
-    function isMatchURL(regex: string) {
-        // prettier-ignore
-        return new RegExp(regex).test(location.href);
-    }
+    // function isMatchURL(regex: string) {
+    //     // prettier-ignore
+    //     return new RegExp(regex).test(location.href);
+    // }
 
 
 
@@ -255,4 +248,15 @@ import { Utils } from "./utils";
     insertScriptButtons();
 
 
+    // // // レコード編集画面、作成画面のイベントを発火してテーブルインポーターを実行する
+    kintone.events.on(["app.record.edit.show", "app.record.create.show"], function (_event) {
+
+        console.log("Record edit event triggered");
+        // window.postMessage({ type: Utils.Messages.requestTableImporterOptions }, "*");
+        const importer = new SubtableImporter()
+        importer.initPaste()
+
+    });
+
 })();
+
