@@ -1,4 +1,5 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
+import { Names } from "./lib/Names";
 import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
@@ -24,7 +25,7 @@ import { Utils } from "./utils";
         console.log(`window message event: ${event.data.type}`)
 
         // kintoneレコード情報の埋め込みリクエストを受信した
-        if (event.data.type === Utils.CONST.template_copy_button_clicked) {
+        if (event.data.type === Names.Events.template_copy_button_clicked) {
             // テンプレートに対してプレースホルダを置換する
             const template = event.data.data;
             const embedder = new TemplateEmbedder(template);

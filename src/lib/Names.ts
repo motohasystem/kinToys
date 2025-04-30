@@ -4,7 +4,7 @@ export class Names {
     static readonly Classes = {
         query_selector_class_subtable: ".subtable-row-gaia",    // 詳細画面のサブテーブルの親要素DIVが持つクラス
         query_selector_add_row_button: ".add-row-image-gaia"    // サブテーブルの追加ボタンが持つクラス
-    }
+    };
 
     static readonly Ids = {
         id_fillin_template: "textarea_fillin_template",
@@ -13,10 +13,6 @@ export class Names {
         id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
         id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
         id_applied_template: "applied_template", // 適用中テンプレートの表示領域
-
-
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
 
         id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
 
@@ -30,6 +26,8 @@ export class Names {
         id_copy_button: "copy_button",  // コピペアイコンのID
         id_paste_button: "paste_button",  // コピペアイコンのID
 
+        id_checkbox_imagecopy_button: "enable_imagecopy_button"  // 画像コピーのチェックボックスID
+
     };
 
     static readonly Messages = {
@@ -37,6 +35,24 @@ export class Names {
         changePopupOptions: "changePopupOptions",
         loadPopupOptions: "loadPopupOptions",
         requestPopupOptions: "requestPopupOptions"
-    }
+    };
 
+    static readonly Events = {
+
+        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+
+
+    };
+
+    static readonly Labels = {
+        // コピペアイコン
+        icon_field_setting_copy: "⬆️",
+        icon_field_setting_paste: "⬇️",
+
+        // ポップアップウィンドウ
+        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
+        label_template_imagecopy_button: 'Image Copy'  // #button_template_copy ボタンのラベル
+
+    };
 }

@@ -55,9 +55,9 @@ export type Options = { [key: string]: string | {} };
             }
 
             // イメージコピーボタンのオプションを読み込む
-            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
+            const el_image_copy = document.getElementById(Ids.id_checkbox_imagecopy_button) as HTMLInputElement;
             if (el_image_copy) {
-                el_image_copy.checked = options[CONST.id_checkbox_imagecopy_button] === "true" ? true : false;
+                el_image_copy.checked = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
             }
 
             // 複数行文字列の改行オプションを読み込む
@@ -167,8 +167,8 @@ export type Options = { [key: string]: string | {} };
             console.log({ options })
 
             // イメージコピーボタンのオプションを保存
-            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
-            options[CONST.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
+            const el_image_copy = document.getElementById(Ids.id_checkbox_imagecopy_button) as HTMLInputElement;
+            options[Ids.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
 
             // 複数行文字列の改行オプションを保存
             const el_break_ml = document.getElementById(Ids.id_enable_break_multiline) as HTMLInputElement;

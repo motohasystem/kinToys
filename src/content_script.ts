@@ -7,6 +7,7 @@ import { Options } from "./options";
 (() => {
     const CONST = Names.Ids
     const Messages = Names.Messages
+    const Events = Names.Events
 
 
     let lastUrl = location.href;
@@ -161,16 +162,16 @@ import { Options } from "./options";
         console.log({ sender })
 
         // テーブルデータを取得してCSV化する
-        if (request.name === CONST.table_copy_button_clicked) {
+        if (request.name === Events.table_copy_button_clicked) {
             console.log('テーブルデータを取得してCSV化する')
             const mode = request.mode;
             const picker = new TablePicker(mode)
             const tableData = picker.getTableData();
             console.log({ tableData });
-            sendResponse({ action: CONST.table_copy_button_clicked, data: tableData });
+            sendResponse({ action: Events.table_copy_button_clicked, data: tableData });
         }
         // kintoneレコードを取得してテンプレートに埋め込む
-        else if (request.name === CONST.template_copy_button_clicked) {
+        else if (request.name === Events.template_copy_button_clicked) {
             console.log('kintoneレコードを取得してテンプレートに埋め込む')
             const template = request.template
             const alignment = request.alignment
@@ -185,11 +186,11 @@ import { Options } from "./options";
                 if (event.source !== window) return;
                 if (event.data.type !== "kintoneRecordInfoEmbedded") return;
                 const embedded = event.data.data;
-                sendResponse({ action: CONST.template_copy_button_clicked, data: embedded, alignment: alignment });
+                sendResponse({ action: Events.template_copy_button_clicked, data: embedded, alignment: alignment });
             });
 
             // 埋め込みリクエストを embedding_scripts.ts に送信する
-            window.postMessage({ type: CONST.template_copy_button_clicked, data: template, alignment: alignment }, "*")
+            window.postMessage({ type: Events.template_copy_button_clicked, data: template, alignment: alignment }, "*")
         }
         else if (request.name === Messages.changeBreaklineOption) {
             // ここで改行表示メッセージを受け取る

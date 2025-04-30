@@ -1,7 +1,8 @@
 import { Utils } from "./utils";
+import { Names } from "./lib/Names";
 
 (() => {
-    const Const = Utils.CONST;
+    const { Ids, Labels, Events } = Names;
     let radioStatus: { [key: string]: any } = {};
 
     // オプションを読み込む
@@ -19,15 +20,15 @@ import { Utils } from "./utils";
             console.log({ options });
             radioStatus = options
 
-            Utils.loadOption(options, null, Const.id_radio_csv_tsv);
-            Utils.loadOption(options, null, Const.id_radio_data_template);
-            Utils.loadOption(options, null, Const.id_radio_cell_record);
-            Utils.loadOption(options, null, Const.id_checkbox_on_off);
+            Utils.loadOption(options, null, Ids.id_radio_csv_tsv);
+            Utils.loadOption(options, null, Ids.id_radio_data_template);
+            Utils.loadOption(options, null, Ids.id_radio_cell_record);
+            Utils.loadOption(options, null, Ids.id_checkbox_on_off);
 
             // 適用中のテンプレート名を表示
-            const applied_template = options[Const.id_input_template_name] as string
+            const applied_template = options[Ids.id_input_template_name] as string
             console.log({ applied_template })
-            const el_applied_template = document.getElementById(Const.id_applied_template) as HTMLInputElement;
+            const el_applied_template = document.getElementById(Ids.id_applied_template) as HTMLInputElement;
             if (el_applied_template) {
                 el_applied_template.textContent = `適用中のテンプレート: [ ${applied_template} ]`;
             }
@@ -36,10 +37,10 @@ import { Utils } from "./utils";
 
     // ラジオボタンの編集イベントにあわせてオプションを保存
     [
-        Const.id_radio_csv_tsv,
-        Const.id_radio_cell_record,
-        Const.id_radio_data_template,
-        Const.id_checkbox_on_off
+        Ids.id_radio_csv_tsv,
+        Ids.id_radio_cell_record,
+        Ids.id_radio_data_template,
+        Ids.id_checkbox_on_off
     ].forEach((name) => {
         Array.from(document.getElementsByName(name)).forEach((elm) => {
             elm.addEventListener("change", (el) => {
@@ -47,7 +48,7 @@ import { Utils } from "./utils";
                 let options: { [key: string]: string } | {} = {};
                 options = Utils.saveOption(options, null, name);
 
-                if (name === Const.id_checkbox_on_off) {
+                if (name === Ids.id_checkbox_on_off) {
                     // 機能オンオフチェックボックスの場合
                     const optionsTyped = options as { [key: string]: string };
                     const checked = optionsTyped['checkbox_on_off'] == 'enabled' ? 'enabled' : 'disabled';
@@ -76,21 +77,21 @@ import { Utils } from "./utils";
     if (tableCopyButton) {
         // イメージコピー機能の設定を取得
         chrome.storage.sync.get(null, (options) => {
-            const flag_imagecopy = options[Const.id_checkbox_imagecopy_button] === "true" ? true : false;
+            const flag_imagecopy = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
 
             tableCopyButton.addEventListener("click", contentAbstractionButtonClicked.bind(null, flag_imagecopy));
             // ラベルを label_table_copy_button に変更
             if (flag_imagecopy) {
-                tableCopyButton.value = Const.label_template_imagecopy_button;
+                tableCopyButton.value = Labels.label_template_imagecopy_button;
             }
             else {
-                tableCopyButton.value = Const.label_table_copy_button;
+                tableCopyButton.value = Labels.label_table_copy_button;
             }
         });
     }
 
     // 機能の有効無効チェックボックスの動作
-    const enableCheckbox = document.getElementById(Const.id_checkbox_on_off) as HTMLInputElement;
+    const enableCheckbox = document.getElementById(Ids.id_checkbox_on_off) as HTMLInputElement;
     if (enableCheckbox) {
         enableCheckbox.addEventListener("change", (event) => {
             const checked = (event.target as HTMLInputElement).checked;
@@ -102,7 +103,7 @@ import { Utils } from "./utils";
     // テーブルデータ取得メッセージの受信
     port.onMessage.addListener((response) => {
         console.log({ response })
-        if (response.action === Const.table_copy_button_clicked) {
+        if (response.action === Events.table_copy_button_clicked) {
             console.log("バックグラウンドスクリプトからの応答", response);
             return true;
         }
@@ -155,29 +156,29 @@ import { Utils } from "./utils";
                 return;
             }
             const delimiter = ((style: 'csv' | 'tsv' | 'json') => {
-                if (radioStatus[Const.id_radio_data_template] == 'json') {
+                if (radioStatus[Ids.id_radio_data_template] == 'json') {
                     return 'json'
                 }
                 return style
-            })(radioStatus[Const.id_radio_csv_tsv])
+            })(radioStatus[Ids.id_radio_csv_tsv])
 
             // 一覧画面または集計画面の判定
             const pageCategory = Utils.whereAmI(tab.url)
-            if (pageCategory === Utils.PageCategory.index && radioStatus[Const.id_radio_data_template] === 'template') {
+            if (pageCategory === Utils.PageCategory.index && radioStatus[Ids.id_radio_data_template] === 'template') {
                 // 一覧画面かつテンプレート形式コピーの場合
                 const tab_id = tab.id
                 chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
                     console.log({ options });
-                    const template = options[Const.id_fillin_template]
+                    const template = options[Ids.id_fillin_template]
 
                     // コンテントスクリプト content_script.ts にテーブルデータ取得メッセージを送る
-                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: 'template' }, (response) => {
+                    chrome.tabs.sendMessage(tab_id, { name: Events.template_copy_button_clicked, template: template, alignment: 'template' }, (response) => {
                         // console.log({ response })
-                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                        const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
                             textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
                         }
-                        else if (response.action === Const.template_copy_button_clicked && response.data == "") {
+                        else if (response.action === Events.template_copy_button_clicked && response.data == "") {
                             textarea.value = "レコードが見つかりませんでした。\nレコード一覧画面で実行してください。"
                         }
                         else {
@@ -193,8 +194,8 @@ import { Utils } from "./utils";
                 console.log({ mode: delimiter })
 
                 // 一覧画面でテンプレート以外、または集計画面の場合
-                chrome.tabs.sendMessage(tab.id, { name: Const.table_copy_button_clicked, mode: delimiter }, (response) => {
-                    const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                chrome.tabs.sendMessage(tab.id, { name: Events.table_copy_button_clicked, mode: delimiter }, (response) => {
+                    const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                     if (response == undefined) {
                         textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
                     }
@@ -228,8 +229,8 @@ import { Utils } from "./utils";
                 chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
                     console.log({ options });
 
-                    const csv_or_tsv = radioStatus[Const.id_radio_csv_tsv] == undefined ? options[Const.id_radio_csv_tsv] : radioStatus[Const.id_radio_csv_tsv]
-                    const data_or_template = radioStatus[Const.id_radio_data_template]  // template , data(csv/tsv), json
+                    const csv_or_tsv = radioStatus[Ids.id_radio_csv_tsv] == undefined ? options[Ids.id_radio_csv_tsv] : radioStatus[Ids.id_radio_csv_tsv]
+                    const data_or_template = radioStatus[Ids.id_radio_data_template]  // template , data(csv/tsv), json
 
                     // template / csv / tsv / json のいずれかを返す
                     const alignment = ((d_or_t) => {
@@ -243,16 +244,16 @@ import { Utils } from "./utils";
                             return 'json'
                         }
                     })(data_or_template)
-                    const template = options[Const.id_fillin_template]
+                    const template = options[Ids.id_fillin_template]
                     console.log({ template })
 
                     // コンテントスクリプト content_script.ts にレコードデータ取得メッセージを送る
-                    chrome.tabs.sendMessage(tab_id, { name: Const.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
-                        const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                    chrome.tabs.sendMessage(tab_id, { name: Events.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
+                        const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
                             textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
                         }
-                        else if (response.action === Const.template_copy_button_clicked && response.data == "") {
+                        else if (response.action === Events.template_copy_button_clicked && response.data == "") {
                             textarea.value = "レコードが見つかりませんでした。\nレコード詳細画面で実行してください。"
                         }
                         else {
@@ -265,13 +266,13 @@ import { Utils } from "./utils";
             }
             // ひとまずカスタマイズ画面は対象外とします。あとでフィールド設定JSONを取得するようにしたい。
             else if (pageCategory === Utils.PageCategory.customize) {
-                const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                 textarea.value = "カスタマイズ画面では実行できません。"
             }
             else {
                 const msg = `未対応の画面で実行されました。(${pageCategory} / ${tab.url})`
                 console.error(msg);
-                const textarea = document.getElementById(Const.id_popup_preview) as HTMLTextAreaElement;
+                const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                 textarea.value = msg
             }
         });

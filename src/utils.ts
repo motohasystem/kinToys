@@ -39,9 +39,6 @@ export class Utils {
         key_export_options: "-- Export Settings --",
         key_export_label: "-- 保存用 --",
 
-        // ポップアップウィンドウ
-        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
-        label_template_imagecopy_button: 'Image Copy',  // #button_template_copy ボタンのラベル
 
         // 有効無効チェックボックスのID
         // id_checkbox_on_off: "checkbox_on_off",
@@ -51,7 +48,6 @@ export class Utils {
         accent_color_dec: "240, 146, 0",    // アクセントカラー（10進数の組み合わせ）
 
         // 画像コピーの設定
-        id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
         image_copy: false,  // 画像コピーを有効にするかどうか
         max_online_length: 70,   // 画像コピー時の改行文字数
 
@@ -59,9 +55,6 @@ export class Utils {
         class_multiline_text: "recordlist-multiple_line_text-gaia",   // 複数行文字列のクラス名
         class_singleline_text: "recordlist-single_line_text-gaia",   // 一行文字列のクラス名
 
-        // コピペアイコン
-        icon_field_setting_copy: "⬆️",
-        icon_field_setting_paste: "⬇️",
 
         // コピペアイコンの表示URL
         url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$",    // コピペボタンが表示されてよいURLの正規表現

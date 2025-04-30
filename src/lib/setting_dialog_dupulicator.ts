@@ -3,6 +3,7 @@
  */
 
 import { Utils } from "../utils";
+import { Names } from "./Names";
 
 interface DialogJson {
     fieldname?: string;
@@ -75,14 +76,14 @@ export class SettingDialogDuplicator {
 
     // デバッグ用に、アイコンを作成する
     addCopyPasteIcon() {
-        const { CONST: C } = Utils;
+        const { Ids, Labels } = Names;
 
         // ダイアログの中にあるクローズボタンを取得する
         const closeButton = document.querySelector(".ocean-ui-dialog-title-close");
 
         // 増殖回避のため、ダイアログの中にあるコピペボタンを取得する
-        const copyButton = document.getElementById(C.id_copy_button);
-        const pasteButton = document.getElementById(C.id_paste_button);
+        const copyButton = document.getElementById(Ids.id_copy_button);
+        const pasteButton = document.getElementById(Ids.id_paste_button);
 
         // コピペボタンが存在しない場合のみ、アイコンを追加する
         if (copyButton || pasteButton) {
@@ -91,8 +92,8 @@ export class SettingDialogDuplicator {
 
         if (closeButton && closeButton.parentNode) {
             const copyIcon = document.createElement("span");
-            copyIcon.id = C.id_copy_button;
-            copyIcon.textContent = C.icon_field_setting_copy;
+            copyIcon.id = Ids.id_copy_button;
+            copyIcon.textContent = Labels.icon_field_setting_copy;
             copyIcon.style.cursor = "pointer";
             copyIcon.onclick = (event) => {
                 this.copy(event);
@@ -101,8 +102,8 @@ export class SettingDialogDuplicator {
             closeButton.parentNode.insertBefore(copyIcon, closeButton);
 
             const pasteIcon = document.createElement("span");
-            pasteIcon.id = C.id_paste_button;
-            pasteIcon.textContent = C.icon_field_setting_paste;
+            pasteIcon.id = Ids.id_paste_button;
+            pasteIcon.textContent = Labels.icon_field_setting_paste;
             pasteIcon.style.cursor = "pointer";
             pasteIcon.onclick = (event) => {
                 this.paste(event);
