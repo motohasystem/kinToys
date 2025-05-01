@@ -11,12 +11,54 @@ export class Utils {
         customize: "customize",
         plugin_setting: "plugin_setting"
     }
+
+    static readonly Ids = {
+        id_fillin_template: "textarea_fillin_template",
+        id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID
+        id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
+        id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
+        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+        id_applied_template: "applied_template", // 適用中テンプレートの表示領域
+
+        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
+
+        // オプション画面
+        id_input_template_name: "input_template_name",
+        id_select_template_history: "select_template_history",
+
+        id_checkbox_on_off: "checkbox_on_off",        // 有効無効チェックボックスのID
+
+        // コピペアイコン
+        id_copy_button: "copy_button",  // コピペアイコンのID
+        id_paste_button: "paste_button",  // コピペアイコンのID
+
+        id_checkbox_imagecopy_button: "enable_imagecopy_button"  // 画像コピーのチェックボックスID
+
+    };
+
     static Messages = {
         changeBreaklineOption: "changeBreaklineOption",
         changePopupOptions: "changePopupOptions",
         loadPopupOptions: "loadPopupOptions",
         requestPopupOptions: "requestPopupOptions"
     }
+
+    static readonly Events = {
+
+        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+    };
+
+    static readonly Labels = {
+        // コピペアイコン
+        icon_field_setting_copy: "⬆️",
+        icon_field_setting_paste: "⬇️",
+
+        // ポップアップウィンドウ
+        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
+        label_template_imagecopy_button: 'Image Copy'  // #button_template_copy ボタンのラベル
+
+    };
 
     static CONTEXT_MENU = {
         copy_simple_url: {

@@ -3,7 +3,7 @@
  */
 
 import { Utils } from "../utils";
-import { Names } from "./Names";
+// import { Names } from "./Names";
 
 interface DialogJson {
     fieldname?: string;
@@ -76,7 +76,7 @@ export class SettingDialogDuplicator {
 
     // デバッグ用に、アイコンを作成する
     addCopyPasteIcon() {
-        const { Ids, Labels } = Names;
+        const { Ids, Labels } = Utils;
 
         // ダイアログの中にあるクローズボタンを取得する
         const closeButton = document.querySelector(".ocean-ui-dialog-title-close");

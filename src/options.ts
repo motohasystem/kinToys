@@ -1,11 +1,11 @@
-import { Names } from "./lib/Names";
+// import { Names } from "./lib/Names";
 import { Utils } from "./utils";
 
 export type Options = { [key: string]: string | {} };
 
 (() => {
     const CONST = Utils.CONST;
-    const Ids = Names.Ids;
+    const Ids = Utils.Ids;
     let templateHistory: { [key: string]: string } = {};
 
     console.log("options.js");

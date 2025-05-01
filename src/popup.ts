@@ -1,8 +1,8 @@
 import { Utils } from "./utils";
-import { Names } from "./lib/Names";
+// import { Names } from "./lib/Names";
 
 (() => {
-    const { Ids, Labels, Events } = Names;
+    const { Ids, Labels, Events } = Utils;
     let radioStatus: { [key: string]: any } = {};
 
     // オプションを読み込む

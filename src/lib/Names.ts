@@ -41,8 +41,6 @@ export class Names {
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
         template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
-
-
     };
 
     static readonly Labels = {
