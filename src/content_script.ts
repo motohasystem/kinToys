@@ -12,30 +12,11 @@ import { Options } from "./options";
 
     let lastUrl = location.href;
 
-    // URLとDOMを監視する
-    const observer = new MutationObserver(() => {
-        const currentUrl = location.href;
-        if (currentUrl !== lastUrl) {
-            console.log('URL変わった: ', currentUrl);
-            lastUrl = currentUrl;
-            checkEditPage();
-        }
-    });
-
-    observer.observe(document, { subtree: true, childList: true });
-
-    // 最初にもチェックする
-    checkEditPage();
-
     function checkEditPage() {
         if (location.href.match(/\/k\/\d+\/(edit|show)/)) {
-            console.log('編集画面っぽいURL検知！');
-
             // DOMの準備ができるのを待つ、サブテーブルの親要素が持つクラスを監視する
             const subtable_class = Names.Classes.query_selector_class_subtable; // Utils.Classes.query_selector_class_subtable の定義を使いたいが、現状は使えない
             waitForElement(subtable_class, (_element: Element) => {
-                console.log('Subtable dom detected.');
-                console.log({ url: location.href });
 
                 if (isEditOrCreatePage()) {
                     const importer = new SubtableImporter()
@@ -58,7 +39,7 @@ import { Options } from "./options";
         hashParams.forEach((value, key) => {
             paramsDict[key] = value;
         });
-        console.log('Hash parameters:', paramsDict);
+        // console.log('Hash parameters:', paramsDict);
 
         // paramsDictのmode == "edit" であれば編集画面と判断
         if (paramsDict['mode'] === 'edit') {
@@ -87,7 +68,26 @@ import { Options } from "./options";
 
 
     chrome.storage.sync.get(null, (options) => {
-        console.log({ 'chrome.storage.sync.get': options });
+        // console.log({ 'chrome.storage.sync.get': options });
+
+        if (options.hasOwnProperty(CONST.id_enable_subtable_importer) && options[CONST.id_enable_subtable_importer] == "true") {
+
+            // URLとDOMを監視する
+            const observer = new MutationObserver(() => {
+                const currentUrl = location.href;
+                if (currentUrl !== lastUrl) {
+                    console.log('URL変わった: ', currentUrl);
+                    lastUrl = currentUrl;
+                    checkEditPage();
+                }
+            });
+
+            observer.observe(document, { subtree: true, childList: true });
+
+            // 最初にもチェックする
+            checkEditPage();
+        }
+
 
         // 埋め込みリクエストの受信を先に登録
         window.addEventListener("message", (event) => {

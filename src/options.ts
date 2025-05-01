@@ -66,6 +66,13 @@ export type Options = { [key: string]: string | {} };
                 el_break_ml.checked = options[Ids.id_enable_break_multiline] === "true" ? true : false;
             }
 
+            // サブテーブルのインポート機能を有効にするかどうかのオプションを読み込む
+            const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
+            if (el_subtable) {
+                el_subtable.checked = options[Ids.id_enable_subtable_importer] === "true" ? true : false;
+            }
+
+
             // テンプレート履歴の選択イベント
             document
                 .getElementById(Ids.id_select_template_history)
@@ -173,6 +180,10 @@ export type Options = { [key: string]: string | {} };
             // 複数行文字列の改行オプションを保存
             const el_break_ml = document.getElementById(Ids.id_enable_break_multiline) as HTMLInputElement;
             options[Ids.id_enable_break_multiline] = el_break_ml.checked ? "true" : "false";
+
+            // サブテーブルのインポート機能を有効にするかどうかのオプションを保存
+            const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
+            options[Ids.id_enable_subtable_importer] = el_subtable.checked ? "true" : "false";
 
             // オプションを保存
             chrome.storage.sync.set(options);

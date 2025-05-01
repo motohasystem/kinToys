@@ -32,7 +32,8 @@ export class Utils {
         id_copy_button: "copy_button",  // コピペアイコンのID
         id_paste_button: "paste_button",  // コピペアイコンのID
 
-        id_checkbox_imagecopy_button: "enable_imagecopy_button"  // 画像コピーのチェックボックスID
+        id_checkbox_imagecopy_button: "enable_imagecopy_button",    // 画像コピーのチェックボックスID
+        id_enable_subtable_importer: "enable_subtable_importer"  // サブテーブルインポータのチェックボックスID
 
     };
 
