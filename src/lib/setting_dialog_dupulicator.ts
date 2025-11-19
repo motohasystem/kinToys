@@ -198,6 +198,7 @@ export class SettingDialogDuplicator {
         this.requiredField(dialogJson.requiredField);
         this.uniqueField(dialogJson.uniqueCheck);
         this.selections(dialogJson.selections);
+        this.expression(dialogJson.expression);
     }
 
     static selections(options: string[] = []) {
