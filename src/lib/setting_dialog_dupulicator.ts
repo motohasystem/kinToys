@@ -13,7 +13,15 @@ interface DialogJson {
     requiredField?: boolean;
     uniqueCheck?: boolean;
     selections?: string[];
+
+    // 計算フィールドの設定
     expression?: string;    // 計算式
+    showExpression?: boolean; // 計算式を表示するか
+    decimalFormat?: string; // 書式
+    displayScale?: string; // 小数点以下の表示桁数
+    unit?: string; // 単位記号
+    unitPosition?: "BEFORE" | "AFTER";   // 単位記号の位置
+
 }
 
 export class SettingDialogDuplicator {
@@ -173,6 +181,13 @@ export class SettingDialogDuplicator {
         const uniqueCheck = this.uniqueField();
         const expression = this.expression();
 
+        // 順番に実装
+        const showExpression = this.showExpression();
+        const decimalFormat = this.decimalFormat();
+        const displayScale = this.displayScale();
+        const unit = this.unit();
+        const unitPosition = this.unitPosition();
+
         // 項目と順番を取得
         const selections = this.selections();
         console.log({ selections });
@@ -185,7 +200,12 @@ export class SettingDialogDuplicator {
             requiredField: required,
             uniqueCheck: uniqueCheck,
             selections: selections,
-            expression: expression
+            expression: expression,
+            showExpression: showExpression,
+            decimalFormat: decimalFormat,
+            displayScale: displayScale,
+            unit: unit,
+            unitPosition: unitPosition
         };
     }
 
@@ -199,6 +219,12 @@ export class SettingDialogDuplicator {
         this.uniqueField(dialogJson.uniqueCheck);
         this.selections(dialogJson.selections);
         this.expression(dialogJson.expression);
+        // 順番に実装
+        this.showExpression(dialogJson.showExpression);
+        this.decimalFormat(dialogJson.decimalFormat);
+        this.displayScale(dialogJson.displayScale);
+        this.unit(dialogJson.unit);
+        this.unitPosition(dialogJson.unitPosition);
     }
 
     static selections(options: string[] = []) {
@@ -245,21 +271,7 @@ export class SettingDialogDuplicator {
         const label = this.standardInputUtil("label", "text", value);
         console.log({ label });
         return label;
-        // const fieldname = document.querySelectorAll(
-        //     '[id^="label-"][id$="-text"]'
-        // ) as NodeListOf<HTMLInputElement>;
-        // console.log({ fieldname });
-        // let namevalue = fieldname[0].value;
 
-        // // console.log({ namevalue });
-
-        // if (value != null) {
-        //     const oldValue = namevalue;
-        //     fieldname[0].value = value;
-        //     console.log({ oldValue, newValue: fieldname[0].value });
-        //     return oldValue;
-        // }
-        // return namevalue;
     }
 
     // フィールドコードを取得/記入する
@@ -309,24 +321,56 @@ export class SettingDialogDuplicator {
         console.log({ expression });
 
         return expression;
-
-        // console.log({ value });
-        // const fieldname = document.querySelectorAll(
-        //     '[id="expression-textarea"]'
-        // ) as NodeListOf<HTMLInputElement>;
-        // console.log({ fieldname });
-        // let exValue = fieldname[0].value;
-
-        // console.log({ exValue });
-
-        // if (value != null) {
-        //     const oldValue = exValue;
-        //     fieldname[0].value = value;
-        //     console.log({ oldValue, newValue: fieldname[0].value });
-        //     return oldValue;
-        // }
-        // return exValue;
     }
+
+    // 計算式を表示しない（チェックボックス）
+    static showExpression(flag: boolean | null = null) {
+        return this.standardCheckboxUtil("hideExpression", "checkbox", flag);
+    }
+
+    // 書式の取得/記入
+    static decimalFormat(value: string | undefined = undefined) {
+        return this.standardRadioUtil("format", value);
+    }
+
+    // 小数点以下の表示桁数の取得/記入
+    static displayScale(value: string | undefined = undefined) {
+        return this.standardInputUtil("displayScale", "text", value);
+    }
+
+    // 単位記号の取得/記入
+    static unit(value: string | undefined = undefined) {
+        return this.standardInputUtil("unit", "text", value);
+    }
+
+    // 単位記号の位置（ラジオボタン）の取得/記入
+    static unitPosition(value: "BEFORE" | "AFTER" | undefined = undefined) {
+        return this.standardRadioUtil("unitPosition", value) as "BEFORE" | "AFTER" | null;
+    }
+
+    // ラジオボタン共通の処理
+    static standardRadioUtil(name: string, value: string | undefined = undefined) {
+        const radios = document.getElementsByName(name) as NodeListOf<HTMLInputElement>;
+
+        if (value != undefined) {
+            // valueに一致するラジオボタンを選択する
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].value === value) {
+                    radios[i].checked = true;
+                    return;
+                }
+            }
+        }
+
+        // value == undefined の場合、選択されているラジオボタンのvalueを返す
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                return radios[i].value;
+            }
+        }
+        return null;
+    }
+
 
     static standardInputUtil(prefix: string | null, suffix: string | null, value: string | undefined = undefined) {
         const queryString = ((pref, suff) => {
