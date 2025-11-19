@@ -13,6 +13,7 @@ interface DialogJson {
     requiredField?: boolean;
     uniqueCheck?: boolean;
     selections?: string[];
+    expression?: string;    // 計算式
 }
 
 export class SettingDialogDuplicator {
@@ -170,6 +171,7 @@ export class SettingDialogDuplicator {
         const hasExp = this.hasExpression();
         const required = this.requiredField();
         const uniqueCheck = this.uniqueField();
+        const expression = this.expression();
 
         // 項目と順番を取得
         const selections = this.selections();
@@ -183,6 +185,7 @@ export class SettingDialogDuplicator {
             requiredField: required,
             uniqueCheck: uniqueCheck,
             selections: selections,
+            expression: expression
         };
     }
 
@@ -238,22 +241,24 @@ export class SettingDialogDuplicator {
 
     // フィールド名の情報を取得/記入する
     static fieldName(value: string | undefined = undefined) {
-        // console.log({ value });
-        const fieldname = document.querySelectorAll(
-            '[id^="label-"][id$="-text"]'
-        ) as NodeListOf<HTMLInputElement>;
-        console.log({ fieldname });
-        let namevalue = fieldname[0].value;
+        const label = this.standardInputUtil("label", "text", value);
+        console.log({ label });
+        return label;
+        // const fieldname = document.querySelectorAll(
+        //     '[id^="label-"][id$="-text"]'
+        // ) as NodeListOf<HTMLInputElement>;
+        // console.log({ fieldname });
+        // let namevalue = fieldname[0].value;
 
-        // console.log({ namevalue });
+        // // console.log({ namevalue });
 
-        if (value != null) {
-            const oldValue = namevalue;
-            fieldname[0].value = value;
-            console.log({ oldValue, newValue: fieldname[0].value });
-            return oldValue;
-        }
-        return namevalue;
+        // if (value != null) {
+        //     const oldValue = namevalue;
+        //     fieldname[0].value = value;
+        //     console.log({ oldValue, newValue: fieldname[0].value });
+        //     return oldValue;
+        // }
+        // return namevalue;
     }
 
     // フィールドコードを取得/記入する
@@ -296,6 +301,60 @@ export class SettingDialogDuplicator {
     static uniqueField(flag: boolean | null = null) {
         return this.standardCheckboxUtil("unique", "checkbox", flag);
     }
+
+    // 計算式の取得/記入
+    static expression(value: string | undefined = undefined) {
+        const expression = this.standardInputUtil("expression", "textarea", value);
+        console.log({ expression });
+
+        return expression;
+
+        // console.log({ value });
+        // const fieldname = document.querySelectorAll(
+        //     '[id="expression-textarea"]'
+        // ) as NodeListOf<HTMLInputElement>;
+        // console.log({ fieldname });
+        // let exValue = fieldname[0].value;
+
+        // console.log({ exValue });
+
+        // if (value != null) {
+        //     const oldValue = exValue;
+        //     fieldname[0].value = value;
+        //     console.log({ oldValue, newValue: fieldname[0].value });
+        //     return oldValue;
+        // }
+        // return exValue;
+    }
+
+    static standardInputUtil(prefix: string | null, suffix: string | null, value: string | undefined = undefined) {
+        const queryString = ((pref, suff) => {
+            if (pref == null && suff != null) {
+                return `[id$="- ${suff}"]`;
+            }
+            if (pref != null && suff == null) {
+                return `[id^="${pref}-"]`;
+            }
+            if (pref != null && suff != null) {
+                return `[id^="${pref}-"][id$="-${suff}"]`;
+            }
+            return ''
+        })(prefix, suffix);
+
+        const input = document.querySelectorAll(
+            queryString
+        ) as NodeListOf<HTMLInputElement>;
+        let inputValue = input[0].value;
+
+        if (value != null) {
+            const oldValue = inputValue;
+            input[0].value = value;
+            return oldValue;
+        }
+        return inputValue;
+    }
+
+
 
     // チェックボックス共通の処理
     static standardCheckboxUtil(prefix: string, suffix: string, flag: boolean | null, click: boolean = false) {
