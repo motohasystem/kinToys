@@ -105,7 +105,13 @@ export class SettingDialogDuplicator {
             copyIcon.textContent = Labels.icon_field_setting_copy;
             copyIcon.style.cursor = "pointer";
             copyIcon.onclick = (event) => {
-                this.copy(event);
+                try {
+                    this.copy(event);
+                } catch (error) {
+                    console.error("コピーに失敗しました:", error);
+                    this.showTooltip(event, "copy failed!");
+                    return;
+                }
                 this.showTooltip(event, "copy!");
             };
             closeButton.parentNode.insertBefore(copyIcon, closeButton);
@@ -116,7 +122,6 @@ export class SettingDialogDuplicator {
             pasteIcon.style.cursor = "pointer";
             pasteIcon.onclick = (event) => {
                 this.paste(event);
-                this.showTooltip(event, "paste!");
             };
             closeButton.parentNode.insertBefore(pasteIcon, closeButton);
         } else {
@@ -163,7 +168,18 @@ export class SettingDialogDuplicator {
         navigator.clipboard.readText().then((text) => {
             console.log({ text });
             // ダイアログ情報をセットする
-            SettingDialogDuplicator.setDialogJson(JSON.parse(text));
+            let jsonData;
+            try {
+                jsonData = JSON.parse(text);
+            } catch (e) {
+                console.error("Invalid JSON data in clipboard:", e);
+                this.showTooltip(event, "Not a JSON!");
+                throw new Error("Invalid JSON data");
+
+            }
+            SettingDialogDuplicator.setDialogJson(jsonData);
+            this.showTooltip(event, "paste!");
+
         });
     }
 
@@ -389,6 +405,9 @@ export class SettingDialogDuplicator {
         const input = document.querySelectorAll(
             queryString
         ) as NodeListOf<HTMLInputElement>;
+        if (input.length === 0) {
+            return null;
+        }
         let inputValue = input[0].value;
 
         if (value != null) {
