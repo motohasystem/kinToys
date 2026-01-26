@@ -1,9 +1,11 @@
+// import { Names } from "./lib/Names";
 import { Utils } from "./utils";
 
 export type Options = { [key: string]: string | {} };
 
 (() => {
     const CONST = Utils.CONST;
+    const Ids = Utils.Ids;
     let templateHistory: { [key: string]: string } = {};
 
     console.log("options.js");
@@ -17,25 +19,25 @@ export type Options = { [key: string]: string | {} };
             update_message()
             console.log({ options });
 
-            Utils.loadOption(options, Utils.CONST.id_fillin_template, null);
-            Utils.loadOption(options, null, Utils.CONST.id_radio_csv_tsv);
+            Utils.loadOption(options, Ids.id_fillin_template, null);
+            Utils.loadOption(options, null, Ids.id_radio_csv_tsv);
 
             // テンプレート名称を読み込む
-            const input_template_name = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+            const input_template_name = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
             if (input_template_name) {
-                input_template_name.value = options[Utils.CONST.id_input_template_name] as string;
+                input_template_name.value = options[Ids.id_input_template_name] as string;
             }
 
             // テンプレート履歴を読み込む
-            let templateHistory: { [key: string]: string } = options[Utils.CONST.key_template_history] as { [key: string]: string };
+            let templateHistory: { [key: string]: string } = options[CONST.key_template_history] as { [key: string]: string };
             console.log({ templateHistory });
             if (templateHistory == undefined) {
                 templateHistory = {}
             }
 
-            const select = document.getElementById(CONST.id_select_template_history) as HTMLSelectElement;
+            const select = document.getElementById(Ids.id_select_template_history) as HTMLSelectElement;
             // 初期値を設定
-            [Utils.CONST.key_default_option, Utils.CONST.key_export_options].forEach((key) => {
+            [CONST.key_default_option, CONST.key_export_options].forEach((key) => {
                 const option = document.createElement("option");
                 option.text = key;
                 option.value = "";
@@ -53,20 +55,27 @@ export type Options = { [key: string]: string | {} };
             }
 
             // イメージコピーボタンのオプションを読み込む
-            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
+            const el_image_copy = document.getElementById(Ids.id_checkbox_imagecopy_button) as HTMLInputElement;
             if (el_image_copy) {
-                el_image_copy.checked = options[CONST.id_checkbox_imagecopy_button] === "true" ? true : false;
+                el_image_copy.checked = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
             }
 
             // 複数行文字列の改行オプションを読み込む
-            const el_break_ml = document.getElementById(CONST.id_enable_break_multiline) as HTMLInputElement;
+            const el_break_ml = document.getElementById(Ids.id_enable_break_multiline) as HTMLInputElement;
             if (el_break_ml) {
-                el_break_ml.checked = options[CONST.id_enable_break_multiline] === "true" ? true : false;
+                el_break_ml.checked = options[Ids.id_enable_break_multiline] === "true" ? true : false;
             }
+
+            // サブテーブルのインポート機能を有効にするかどうかのオプションを読み込む
+            const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
+            if (el_subtable) {
+                el_subtable.checked = options[Ids.id_enable_subtable_importer] === "true" ? true : false;
+            }
+
 
             // テンプレート履歴の選択イベント
             document
-                .getElementById(CONST.id_select_template_history)
+                .getElementById(Ids.id_select_template_history)
                 ?.addEventListener("change", () => {
                     return changeTemplateDropdown(options);
                 });
@@ -103,8 +112,8 @@ export type Options = { [key: string]: string | {} };
 
     // input_template_name が空欄でなければ、textarea_fillin_template の値とセットでオプションとして保存する
     function makeHistory(): { [key: string]: string } {
-        const el_input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
-        const el_template = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
+        const el_input = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
+        const el_template = document.getElementById(Ids.id_fillin_template) as HTMLTextAreaElement;
 
         if (el_input && el_template) {
             const name = el_input.value;
@@ -123,7 +132,7 @@ export type Options = { [key: string]: string | {} };
     function saveTemplate(options: Options) {
         console.log('clicked save button')
         // 見出しのインプット要素
-        const template_name = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+        const template_name = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
 
         if (template_name.value === "") {
             alert('テンプレート名を入力してから保存ボタンを押してください。')
@@ -131,7 +140,7 @@ export type Options = { [key: string]: string | {} };
         }
         else if (template_name.value == Utils.CONST.key_export_label) {
             // エクスポートラベルが選択されている場合は値をそのままoptionとして保存する
-            const textarea = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
+            const textarea = document.getElementById(Ids.id_fillin_template) as HTMLTextAreaElement;
 
             try {
                 const options = JSON.parse(textarea.value);
@@ -149,11 +158,11 @@ export type Options = { [key: string]: string | {} };
         else {
             // オプションを保存する
             console.log({ options })
-            options = Utils.saveOption(options, CONST.id_fillin_template, null); // idを指定
-            options = Utils.saveOption(options, null, CONST.id_radio_csv_tsv); // nameを指定
+            options = Utils.saveOption(options, Ids.id_fillin_template, null); // idを指定
+            options = Utils.saveOption(options, null, Ids.id_radio_csv_tsv); // nameを指定
 
             // テンプレート名称を保存
-            options[CONST.id_input_template_name] = template_name.value;
+            options[Ids.id_input_template_name] = template_name.value;
 
             // テンプレート履歴を保存
             let templateHistory = options[Utils.CONST.key_template_history] as { [key: string]: string };
@@ -165,12 +174,16 @@ export type Options = { [key: string]: string | {} };
             console.log({ options })
 
             // イメージコピーボタンのオプションを保存
-            const el_image_copy = document.getElementById(CONST.id_checkbox_imagecopy_button) as HTMLInputElement;
-            options[CONST.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
+            const el_image_copy = document.getElementById(Ids.id_checkbox_imagecopy_button) as HTMLInputElement;
+            options[Ids.id_checkbox_imagecopy_button] = el_image_copy.checked ? "true" : "false";
 
             // 複数行文字列の改行オプションを保存
-            const el_break_ml = document.getElementById(CONST.id_enable_break_multiline) as HTMLInputElement;
-            options[CONST.id_enable_break_multiline] = el_break_ml.checked ? "true" : "false";
+            const el_break_ml = document.getElementById(Ids.id_enable_break_multiline) as HTMLInputElement;
+            options[Ids.id_enable_break_multiline] = el_break_ml.checked ? "true" : "false";
+
+            // サブテーブルのインポート機能を有効にするかどうかのオプションを保存
+            const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
+            options[Ids.id_enable_subtable_importer] = el_subtable.checked ? "true" : "false";
 
             // オプションを保存
             chrome.storage.sync.set(options);
@@ -187,9 +200,9 @@ export type Options = { [key: string]: string | {} };
         disable_export_button();
         console.log({ options })
 
-        const select = document.getElementById(CONST.id_select_template_history) as HTMLSelectElement;
-        const textarea = document.getElementById(CONST.id_fillin_template) as HTMLTextAreaElement;
-        const input = document.getElementById(CONST.id_input_template_name) as HTMLInputElement;
+        const select = document.getElementById(Ids.id_select_template_history) as HTMLSelectElement;
+        const textarea = document.getElementById(Ids.id_fillin_template) as HTMLTextAreaElement;
+        const input = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
 
         const selected_value = select.value
         const selected_label = select.options[select.selectedIndex].text

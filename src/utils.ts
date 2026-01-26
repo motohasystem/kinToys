@@ -1,17 +1,65 @@
+export { }
+
 export class Utils {
     static PageCategory = {
         index: "index",
         detail: "detail",
+        edit: "edit",
+        create: "create",
         report: "report",
         excluded: "excluded",
         customize: "customize",
+        plugin_setting: "plugin_setting"
     }
+
+    static readonly Ids = {
+        id_fillin_template: "textarea_fillin_template",
+        id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID
+        id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
+        id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
+        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
+        id_applied_template: "applied_template", // 適用中テンプレートの表示領域
+
+        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
+
+        // オプション画面
+        id_input_template_name: "input_template_name",
+        id_select_template_history: "select_template_history",
+
+        id_checkbox_on_off: "checkbox_on_off",        // 有効無効チェックボックスのID
+
+        // コピペアイコン
+        id_copy_button: "copy_button",  // コピペアイコンのID
+        id_paste_button: "paste_button",  // コピペアイコンのID
+
+        id_checkbox_imagecopy_button: "enable_imagecopy_button",    // 画像コピーのチェックボックスID
+        id_enable_subtable_importer: "enable_subtable_importer"  // サブテーブルインポータのチェックボックスID
+
+    };
+
     static Messages = {
         changeBreaklineOption: "changeBreaklineOption",
         changePopupOptions: "changePopupOptions",
         loadPopupOptions: "loadPopupOptions",
         requestPopupOptions: "requestPopupOptions"
     }
+
+    static readonly Events = {
+
+        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
+        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+    };
+
+    static readonly Labels = {
+        // コピペアイコン
+        icon_field_setting_copy: "⬆️",
+        icon_field_setting_paste: "⬇️",
+
+        // ポップアップウィンドウ
+        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
+        label_template_imagecopy_button: 'Image Copy'  // #button_template_copy ボタンのラベル
+
+    };
 
     static CONTEXT_MENU = {
         copy_simple_url: {
@@ -25,49 +73,40 @@ export class Utils {
     }
 
     static CONST = {
-        id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",      // csv または tsv のラジオボタンID
-        id_radio_cell_record: "radio_cell_record",  // cell, row, record, link のラジオボタンID
-        id_radio_data_template: "radio_data_template",  // template, csv/tsv, json のラジオボタンID
-        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-        id_applied_template: "applied_template", // 適用中テンプレートの表示領域
-
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
-
         // オプション画面
         label_default_button: 'save',   // 初期表示、 -- Select Template -- の場合のボタンラベル
         label_import_button: 'apply',
         label_export_button: 'download',
-        id_input_template_name: "input_template_name",
-        id_select_template_history: "select_template_history",
         key_template_history: "template_history",
         key_default_option: "-- Select Template --",
         key_export_options: "-- Export Settings --",
         key_export_label: "-- 保存用 --",
 
-        // ポップアップウィンドウ
-        label_table_copy_button: 'Copy',  // #button_table_copy ボタンのラベル
-        label_template_imagecopy_button: 'Image Copy',  // #button_template_copy ボタンのラベル
 
         // 有効無効チェックボックスのID
-        id_checkbox_on_off: "checkbox_on_off",
+        // id_checkbox_on_off: "checkbox_on_off",
         class_control_parts_block: "control_parts", // コントロールパーツのブロックが持つクラス
 
         accent_color: "#F09200",    // アクセントカラー
         accent_color_dec: "240, 146, 0",    // アクセントカラー（10進数の組み合わせ）
 
         // 画像コピーの設定
-        id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
         image_copy: false,  // 画像コピーを有効にするかどうか
         max_online_length: 70,   // 画像コピー時の改行文字数
 
         // 複数行文字列の改行設定
-        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
         class_multiline_text: "recordlist-multiple_line_text-gaia",   // 複数行文字列のクラス名
-        class_singleline_text: "recordlist-single_line_text-gaia"   // 一行文字列のクラス名
+        class_singleline_text: "recordlist-single_line_text-gaia",   // 一行文字列のクラス名
+
+
+        // コピペアイコンの表示URL
+        url_enable_copy_button_re: "^https://.*\\.cybozu\\.com/k/admin/app/flow.*$",    // コピペボタンが表示されてよいURLの正規表現
+
+        // APIトークンの表示画面URL
+        url_api_token_re: "^https://.*\\.cybozu\\.com/k/admin/app/apitoken.*$"          // APIトークンの表示画面URLの正規表現
 
     }
+
 
     static MSG = {
         msg_default: `[${Utils.CONST.label_import_button}] テキストエリアのテンプレートを保存して使用します。`,
@@ -337,6 +376,19 @@ export class Utils {
         // パスが /k/{appId}/report であるかどうか
         if (path.endsWith("/report")) {
             return this.PageCategory.report;
+        }
+
+        // パスが /k/{appId}/edit であるかどうか
+        if (path.endsWith("/edit")) {
+            return this.PageCategory.edit;
+        }
+
+        const regex = new RegExp("\/k\/admin\/app\/\\d+\/plugin\/config");
+        console.log({ regex });
+        console.log({ path });
+        if (path.match(regex)) {
+            console.log("plugin setting page")
+            return this.PageCategory.plugin_setting;   // プラグイン設定画面
         }
 
         // それ以外は一覧画面

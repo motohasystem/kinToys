@@ -1,4 +1,5 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
+// import { Names } from "./lib/Names";
 import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
@@ -17,13 +18,6 @@ import { Utils } from "./utils";
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
 
-    // kintoneの一覧画面表示のタイミングで実行する
-    kintone.events.on("app.record.index.show", function (_event) {
-        // レコード一覧の表示が完了したら、セルにクリックしてコピーする機能を追加する
-        // eventDealer.deal();
-        window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
-    });
-
     window.addEventListener("message", (event) => {
         console.log({ event })
         // メッセージが正しいかチェック
@@ -31,7 +25,7 @@ import { Utils } from "./utils";
         console.log(`window message event: ${event.data.type}`)
 
         // kintoneレコード情報の埋め込みリクエストを受信した
-        if (event.data.type === Utils.CONST.template_copy_button_clicked) {
+        if (event.data.type === Utils.Events.template_copy_button_clicked) {
             // テンプレートに対してプレースホルダを置換する
             const template = event.data.data;
             const embedder = new TemplateEmbedder(template);
@@ -81,6 +75,7 @@ import { Utils } from "./utils";
             }
         }
         else if (event.data.type === Utils.Messages.changePopupOptions || event.data.type === Utils.Messages.loadPopupOptions) {
+            // ポップアップオプションが変更された、またはポップアップオプションを読み込んだ
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
@@ -105,16 +100,14 @@ import { Utils } from "./utils";
     // ここから下はプラグイン画面用のスクリプト
     //
 
+
     function insertScriptButtons() {
+        const here = Utils.whereAmI(location.href)
+        console.log({ where: here })
         // 一覧画面
 
         // プラグイン設定画面
-        if (
-            isMatchURL(
-                // prettier-ignore
-                "^https:\/\/\.+\.cybozu\.com\/k\/admin\/app\/\\d+\/plugin\/config\\?pluginId=.*$"
-            )
-        ) {
+        if (here == Utils.PageCategory.plugin_setting) {
             // エクスポートボタンの設置
             const export_button = make_export_button("⇩ download");
             document.body.appendChild(export_button);
@@ -128,10 +121,10 @@ import { Utils } from "./utils";
     }
 
     // 現在のURLが渡した正規表現とマッチするかどうかを返す
-    function isMatchURL(regex: string) {
-        // prettier-ignore
-        return new RegExp(regex).test(location.href);
-    }
+    // function isMatchURL(regex: string) {
+    //     // prettier-ignore
+    //     return new RegExp(regex).test(location.href);
+    // }
 
 
 
@@ -255,4 +248,6 @@ import { Utils } from "./utils";
     insertScriptButtons();
 
 
+
 })();
+

@@ -1,6 +1,6 @@
 // import { TablePicker } from "./lib/table_picker";
 
-import { Utils } from "./utils";
+import { Utils } from "./utils.js";
 
 
 (() => {

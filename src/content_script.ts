@@ -1,37 +1,93 @@
-
+import { Names } from "./lib/Names";
+import { SubtableImporter } from "./lib/subtable_importer";
 // import { Utils } from "./utils";
 import { TablePicker } from "./lib/table_picker";
 import { Options } from "./options";
 
 (() => {
-    // const CONST = Utils.CONST
+    const CONST = Names.Ids
+    const Messages = Names.Messages
+    const Events = Names.Events
 
-    // 通らないので一旦直接置く
-    const CONST = {
-        id_fillin_template: "textarea_fillin_template",
-        id_radio_csv_tsv: "radio_csv_tsv",
-        id_radio_cell_record: "radio_cell_record",
-        id_radio_data_template: "radio_data_template",
-        id_popup_preview: "textarea_clipboard_preview", // ポップアップのプレビュー領域
-        id_checkbox_on_off: "checkbox_on_off",  // 機能全体の有効無効チェックボックス
 
-        table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+    let lastUrl = location.href;
 
-        id_enable_break_multiline: "enable_break_multiline",  // 複数行文字列の改行設定のチェックボックスID
-    };
-    const Messages = {
-        changeBreaklineOption: "changeBreaklineOption",
-        changePopupOptions: "changePopupOptions",
-        loadPopupOptions: "loadPopupOptions",
-        requestPopupOptions: "requestPopupOptions"
+    function checkEditPage() {
+        if (location.href.match(/\/k\/\d+\/(edit|show)/)) {
+            // DOMの準備ができるのを待つ、サブテーブルの親要素が持つクラスを監視する
+            const subtable_class = Names.Classes.query_selector_class_subtable; // Utils.Classes.query_selector_class_subtable の定義を使いたいが、現状は使えない
+            waitForElement(subtable_class, (_element: Element) => {
+
+                if (isEditOrCreatePage()) {
+                    const importer = new SubtableImporter()
+                    importer.initPaste()
+
+                }
+            });
+        }
     }
-    // ここまでUtilsからコピー
+
+    function isEditOrCreatePage() {
+        if (location.href.match(/\/k\/\d+\/(edit)/)) {
+            console.log("URLのmodeパラメータがeditまたはshowなので、編集画面と判断します。");
+            return true
+        }
+
+        // urlのうち、#以降を取得して、&で区切り、name=valueという辞書を取り出す
+        const hashParams = new URLSearchParams(location.hash.substring(1));
+        const paramsDict: { [key: string]: string } = {};
+        hashParams.forEach((value, key) => {
+            paramsDict[key] = value;
+        });
+        // console.log('Hash parameters:', paramsDict);
+
+        // paramsDictのmode == "edit" であれば編集画面と判断
+        if (paramsDict['mode'] === 'edit') {
+            return true
+        }
+        console.warn("URLのmodeパラメータがeditではないので、編集画面ではないと判断します。");
+        return false;
+    }
+
+    function waitForElement(selector: string, callback: (element: Element) => void) {
+        const el = document.querySelector(selector);
+        if (el) {
+            callback(el);
+            return;
+        }
+        const observer = new MutationObserver((_mutations, obs) => {
+            const el = document.querySelector(selector);
+            if (el) {
+                obs.disconnect();
+                callback(el);
+            }
+        });
+        observer.observe(document, { childList: true, subtree: true });
+    }
 
 
 
     chrome.storage.sync.get(null, (options) => {
-        console.log({ 'chrome.storage.sync.get': options });
+        // console.log({ 'chrome.storage.sync.get': options });
+
+        if (options.hasOwnProperty(CONST.id_enable_subtable_importer) && options[CONST.id_enable_subtable_importer] == "true") {
+
+            // URLとDOMを監視する
+            const observer = new MutationObserver(() => {
+                const currentUrl = location.href;
+                if (currentUrl !== lastUrl) {
+                    console.log('URL変わった: ', currentUrl);
+                    lastUrl = currentUrl;
+                    checkEditPage();
+                }
+            });
+
+            observer.observe(document, { subtree: true, childList: true });
+
+            // 最初にもチェックする
+            checkEditPage();
+        }
+
 
         // 埋め込みリクエストの受信を先に登録
         window.addEventListener("message", (event) => {
@@ -106,16 +162,16 @@ import { Options } from "./options";
         console.log({ sender })
 
         // テーブルデータを取得してCSV化する
-        if (request.name === CONST.table_copy_button_clicked) {
+        if (request.name === Events.table_copy_button_clicked) {
             console.log('テーブルデータを取得してCSV化する')
             const mode = request.mode;
             const picker = new TablePicker(mode)
             const tableData = picker.getTableData();
             console.log({ tableData });
-            sendResponse({ action: CONST.table_copy_button_clicked, data: tableData });
+            sendResponse({ action: Events.table_copy_button_clicked, data: tableData });
         }
         // kintoneレコードを取得してテンプレートに埋め込む
-        else if (request.name === CONST.template_copy_button_clicked) {
+        else if (request.name === Events.template_copy_button_clicked) {
             console.log('kintoneレコードを取得してテンプレートに埋め込む')
             const template = request.template
             const alignment = request.alignment
@@ -130,11 +186,11 @@ import { Options } from "./options";
                 if (event.source !== window) return;
                 if (event.data.type !== "kintoneRecordInfoEmbedded") return;
                 const embedded = event.data.data;
-                sendResponse({ action: CONST.template_copy_button_clicked, data: embedded, alignment: alignment });
+                sendResponse({ action: Events.template_copy_button_clicked, data: embedded, alignment: alignment });
             });
 
             // 埋め込みリクエストを embedding_scripts.ts に送信する
-            window.postMessage({ type: CONST.template_copy_button_clicked, data: template, alignment: alignment }, "*")
+            window.postMessage({ type: Events.template_copy_button_clicked, data: template, alignment: alignment }, "*")
         }
         else if (request.name === Messages.changeBreaklineOption) {
             // ここで改行表示メッセージを受け取る

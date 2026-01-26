@@ -32,6 +32,11 @@ export default defineConfig(({ command, mode }) => {
                         __dirname,
                         "src/content_script.ts"
                     ),
+                    embedding_event_handler: path.resolve(
+                        __dirname,
+                        "src/embedding_event_handler.ts"
+                    ),
+                    utils: path.resolve(__dirname, "src/utils.ts"),
                     background: path.resolve(__dirname, "src/background.ts"),
                     popup: path.resolve(__dirname, "src/popup.html"),
                     options: path.resolve(__dirname, "src/options.html"),
