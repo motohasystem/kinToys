@@ -132,6 +132,21 @@ textarea {
     resize: vertical;
 }
 
+.template_help {
+    margin-top: 5px;
+    text-align: right;
+}
+
+.template_help a {
+    font-size: 12px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.template_help a:hover {
+    text-decoration: underline;
+}
+
 button.link {
     background-color: #007bff;
     color: #ffffff;
