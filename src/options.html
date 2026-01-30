@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <!-- エンコーディングの指定 -->
@@ -19,14 +19,20 @@
         <h3>Template for one record</h3>
         <div class="part_block">
             <input type="text" id="input_template_name" placeholder="template name"
+                aria-label="Template name"
                 style="width: 200px; margin-right: 10px;" />
             <!-- 過去に使用した帳票テンプレートの履歴を一覧したドロップダウンリスト -->
-            <select id="select_template_history" style="width: 200px; margin-right: 10px;">
+            <select id="select_template_history" style="width: 200px; margin-right: 10px;"
+                aria-label="Template history">
             </select>
         </div>
         <div class="part_block">
             <textarea id="textarea_fillin_template" class="textarea_template" rows="20" cols="40"
+                aria-label="Template body"
                 placeholder="fill in template for kintone record."></textarea>
+            <div class="template_help">
+                <a href="https://github.com/motohasystem/kinToys/blob/main/docs/template-syntax.md" target="_blank">Template Syntax Reference</a>
+            </div>
         </div>
 
         <h3>Options</h3>
@@ -54,7 +60,7 @@
     <div id="message"></div>
 
     <div class="footer">
-        <p>contact: <a href="https://motohasystem.kamiyama.club/" target="_blank">bookmarks</a></p>
+        <p>contact: <a href="https://motohasystem.kamiyama.club/" target="_blank" rel="noopener noreferrer">bookmarks</a></p>
     </div>
 </body>
 
