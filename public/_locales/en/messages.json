@@ -1,0 +1,140 @@
+{
+  "common_logo_alt": {
+    "message": "Logo"
+  },
+  "options_header_tagline": {
+    "message": " - Keep Integrating New Toys"
+  },
+  "options_section_template_title": {
+    "message": "Template for one record"
+  },
+  "options_input_template_name_placeholder": {
+    "message": "template name"
+  },
+  "options_textarea_template_placeholder": {
+    "message": "fill in template for kintone record."
+  },
+  "options_section_options_title": {
+    "message": "Options"
+  },
+  "options_option_imagecopy": {
+    "message": "Enable image copy button"
+  },
+  "options_option_break_multiline": {
+    "message": "Break multi-line and single-line text (list view)"
+  },
+  "options_option_subtable_importer": {
+    "message": "Enable Subtable Importer"
+  },
+  "options_button_save": {
+    "message": "save"
+  },
+  "options_button_load": {
+    "message": "load"
+  },
+  "options_button_apply": {
+    "message": "apply"
+  },
+  "options_button_download": {
+    "message": "download"
+  },
+  "options_select_default_option": {
+    "message": "-- Select Template --"
+  },
+  "options_select_export_options": {
+    "message": "-- Export Settings --"
+  },
+  "options_select_export_label": {
+    "message": "-- Export --"
+  },
+  "options_message_default": {
+    "message": "[{apply}] Save and use the template in the textarea."
+  },
+  "options_message_export": {
+    "message": "[{apply}] Load the textarea as options. / [{download}] Download as JSON."
+  },
+  "options_alert_template_required": {
+    "message": "Enter a template name before saving."
+  },
+  "options_alert_import_success": {
+    "message": "Loaded JSON as options."
+  },
+  "options_alert_save_failed": {
+    "message": "Failed to save options. [{error}]"
+  },
+  "options_alert_saved": {
+    "message": "Options saved."
+  },
+  "options_language_label": {
+    "message": "Language"
+  },
+  "options_language_ja": {
+    "message": "Japanese"
+  },
+  "options_language_en": {
+    "message": "English"
+  },
+  "options_footer_contact": {
+    "message": "contact:"
+  },
+  "options_footer_bookmarks": {
+    "message": "bookmarks"
+  },
+  "popup_title": {
+    "message": "kinToys Popup"
+  },
+  "popup_link_options": {
+    "message": "options"
+  },
+  "popup_section_common_delimiter": {
+    "message": "[Common] Delimiter:"
+  },
+  "popup_section_index_click_range": {
+    "message": "[List] Table click range:"
+  },
+  "popup_section_index_detail_record_format": {
+    "message": "[List/Detail] Record format:"
+  },
+  "popup_section_preview_title": {
+    "message": "Clipboard Preview"
+  },
+  "popup_footer_developer": {
+    "message": "Developer:"
+  },
+  "popup_footer_version": {
+    "message": "version:"
+  },
+  "popup_button_copy": {
+    "message": "Grab Copy"
+  },
+  "popup_button_copy_image": {
+    "message": "Image Copy"
+  },
+  "popup_applied_template": {
+    "message": "Applied template: [ {name} ]"
+  },
+  "popup_error_invalid_url": {
+    "message": "Invalid URL detected.\nPlease run this on a kintone page."
+  },
+  "popup_error_no_record_index": {
+    "message": "No records found.\nPlease run this on the record list page."
+  },
+  "popup_error_no_table": {
+    "message": "Table element not found.\nPlease run this on the list or report page."
+  },
+  "popup_error_no_record_detail": {
+    "message": "No records found.\nPlease run this on the record detail page."
+  },
+  "popup_error_customize_not_supported": {
+    "message": "Cannot run on the customize page."
+  },
+  "popup_error_unsupported_page": {
+    "message": "Unsupported page. ({category} / {url})"
+  },
+  "context_copy_simple_url": {
+    "message": "Copy Simple URL"
+  },
+  "context_toggle_linebreak": {
+    "message": "Toggle LineBreak"
+  }
+}

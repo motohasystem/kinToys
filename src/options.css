@@ -119,6 +119,20 @@ h3 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.language_row {
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.language_label {
+    font-size: 16px;
+    color: #333333;
+}
+
+.language_select {
+    min-width: 160px;
+}
+
 
 input[type="text"], select, textarea {
     font-size: 14px;

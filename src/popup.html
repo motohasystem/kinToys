@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="ja">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>kinToys Popup</title>
+    <title data-i18n="popup_title">kinToys Popup</title>
     <style>
         html {
             font-size: 16px;
@@ -289,13 +289,13 @@
 <body>
     <div class="grid_container">
         <div class="icon top_grid_1">
-            <img src="../images/icon128.png" alt="Logo" class="logo">
+            <img src="../images/icon128.png" alt="Logo" class="logo" data-i18n-alt="common_logo_alt">
         </div>
 
         <div class="header top_grid_2">
-            <h1>kinToys<span class="tagline"> - Keep Integrating New Toys</tagline>
+            <h1>kinToys<span class="tagline" data-i18n="options_header_tagline"> - Keep Integrating New Toys</tagline>
             </h1>
-            <a href="chrome-extension://johmoplafihagepgbceblbhlmacejoee/src/options.html" target="_blank">options</a>
+            <a href="chrome-extension://johmoplafihagepgbceblbhlmacejoee/src/options.html" target="_blank" data-i18n="popup_link_options">options</a>
             <!-- <a href="chrome-extension://cmekdehkdgdeflndlembcpnecfiefmho/src/options.html" target="_blank">options</a> -->
         </div>
 
@@ -309,7 +309,7 @@
     <div class="columns">
         <div class="left_column control_parts">
             <div class="body">
-                <h3>[共通] 区切り文字:</h3>
+                <h3 data-i18n="popup_section_common_delimiter">[Common] Delimiter:</h3>
                 <div class="radio_set">
                     <span class="unit">
                         <input type="radio" id="radio_tablecopy_csv" name="radio_csv_tsv" value="csv" checked>
@@ -322,7 +322,7 @@
                 </div>
             </div>
             <div class="body">
-                <h3>[一覧画面] テーブルクリックの抽出範囲:</h3>
+                <h3 data-i18n="popup_section_index_click_range">[List] Table click range:</h3>
                 <div class="radio_set">
                     <span class="unit">
                         <input type="radio" id="radio_tablecopy_cell" name="radio_cell_record" value="cell" checked>
@@ -343,7 +343,7 @@
                 </div>
             </div>
             <div class="body">
-                <h3>[一覧画面/詳細画面] レコード単位の書式:</h3>
+                <h3 data-i18n="popup_section_index_detail_record_format">[List/Detail] Record format:</h3>
                 <div class="radio_set">
                     <span class="unit">
                         <input type="radio" id="radio_recordcopy_data" name="radio_data_template" value="data">
@@ -362,14 +362,14 @@
                 <div id="applied_template" class="information"></div>
             </div>
             <div class="body">
-                <input type="button" id="button_table_copy" class="copy_button" value="Grab Copy">
+                <input type="button" id="button_table_copy" class="copy_button" value="Grab Copy" data-i18n-value="popup_button_copy">
             </div>
 
         </div>
 
         <div class="right_column">
             <div class="body">
-                <h3>Clipboard Preview</h3>
+                <h3 data-i18n="popup_section_preview_title">Clipboard Preview</h3>
                 <div class="textarea_template">
                     <textarea id="textarea_clipboard_preview"></textarea>
                 </div>
@@ -382,9 +382,11 @@
     </div> -->
     <div class="footer">
         <hr />
-        <p>Developer: <a href="https://motohasystem.kamiyama.club/" target="_blank">Daisuke Motohashi</a></p>
-        <p>version: <span id="span_version"></span></p>
+        <p><span data-i18n="popup_footer_developer">Developer:</span> <a href="https://motohasystem.kamiyama.club/" target="_blank">Daisuke Motohashi</a></p>
+        <p><span data-i18n="popup_footer_version">version:</span> <span id="span_version"></span></p>
     </div>
 </body>
 
 </html>
+
+

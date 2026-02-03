@@ -1,5 +1,6 @@
 // import { TablePicker } from "./lib/table_picker";
 
+import { I18n } from "./i18n.js";
 import { Utils } from "./utils.js";
 
 
@@ -10,20 +11,26 @@ import { Utils } from "./utils.js";
 
     chrome.runtime.onInstalled.addListener(() => {
         console.log('拡張がインストールされました');
+        void (async () => {
+            const storedLang = await I18n.getStoredLanguage();
+            const { messages } = await I18n.loadMessages(storedLang);
+            const copyLabel = messages["context_copy_simple_url"]?.message ?? context.copy_simple_url.label;
+            const toggleLabel = messages["context_toggle_linebreak"]?.message ?? context.toggle_linebrake.label;
 
-        // シンプルコピー機能のコンテキストメニューを追加
-        chrome.contextMenus.create({
-            id: context.copy_simple_url.id,
-            title: context.copy_simple_url.label,
-            contexts: ["action"]
-        });
+            // シンプルコピー機能のコンテキストメニューを追加
+            chrome.contextMenus.create({
+                id: context.copy_simple_url.id,
+                title: copyLabel,
+                contexts: ["action"]
+            });
 
-        // オプションの改行表示を切り替える
-        chrome.contextMenus.create({
-            id: context.toggle_linebrake.id,
-            title: context.toggle_linebrake.label,
-            contexts: ["action"]
-        });
+            // オプションの改行表示を切り替える
+            chrome.contextMenus.create({
+                id: context.toggle_linebrake.id,
+                title: toggleLabel,
+                contexts: ["action"]
+            });
+        })();
     });
 
 
@@ -117,3 +124,4 @@ import { Utils } from "./utils.js";
 
 
 })();
+

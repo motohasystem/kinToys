@@ -1,4 +1,5 @@
 // import { Names } from "./lib/Names";
+import { I18n, I18nMessages } from "./i18n";
 import { Utils } from "./utils";
 
 export type Options = { [key: string]: string | {} };
@@ -7,13 +8,46 @@ export type Options = { [key: string]: string | {} };
     const CONST = Utils.CONST;
     const Ids = Utils.Ids;
     let templateHistory: { [key: string]: string } = {};
+    let i18nMessages: I18nMessages = {};
+    const t = (key: string, params?: Record<string, string>) => I18n.t(i18nMessages, key, params);
 
     console.log("options.js");
-    updateButtonLabel()
-
 
     // オプションを読み込む
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", async function () {
+        const storedLang = await I18n.getStoredLanguage();
+        const { lang, messages } = await I18n.loadMessages(storedLang);
+        i18nMessages = messages;
+        document.documentElement.lang = lang;
+        I18n.applyToDom(messages);
+
+        const languageSelect = document.getElementById("select_language") as HTMLSelectElement | null;
+        if (languageSelect) {
+            languageSelect.value = lang;
+            languageSelect.addEventListener("change", async () => {
+                await I18n.setStoredLanguage(languageSelect.value);
+                location.reload();
+            });
+        }
+
+        CONST.label_default_button = t("options_button_save");
+        CONST.label_import_button = t("options_button_apply");
+        CONST.label_export_button = t("options_button_download");
+        CONST.key_default_option = t("options_select_default_option");
+        CONST.key_export_options = t("options_select_export_options");
+        CONST.key_export_label = t("options_select_export_label");
+
+        Utils.MSG.msg_default = t("options_message_default", {
+            apply: CONST.label_import_button,
+            download: CONST.label_export_button
+        });
+        Utils.MSG.msg_export_options = t("options_message_export", {
+            apply: CONST.label_import_button,
+            download: CONST.label_export_button
+        });
+
+        updateButtonLabel();
+
         // 保存された値を読み込む
         chrome.storage.sync.get(null, (options: Options) => {
             update_message()
@@ -135,7 +169,7 @@ export type Options = { [key: string]: string | {} };
         const template_name = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
 
         if (template_name.value === "") {
-            alert('テンプレート名を入力してから保存ボタンを押してください。')
+            alert(t("options_alert_template_required"))
             return;
         }
         else if (template_name.value == Utils.CONST.key_export_label) {
@@ -145,10 +179,10 @@ export type Options = { [key: string]: string | {} };
             try {
                 const options = JSON.parse(textarea.value);
                 chrome.storage.sync.set(options);
-                alert('JSONをオプション設定として読み込みました。')
+                alert(t("options_alert_import_success"))
             }
             catch (e) {
-                const msg = `オプションが保存できませんでした。[${e}]`
+                const msg = t("options_alert_save_failed", { error: String(e) })
                 console.error(msg);
                 // エラーのアラートダイアログを表示
                 alert(msg);
@@ -188,7 +222,7 @@ export type Options = { [key: string]: string | {} };
             // オプションを保存
             chrome.storage.sync.set(options);
             console.log({ options });
-            alert('オプション設定を保存しました。')
+            alert(t("options_alert_saved"))
             // リロード
             location.reload();
         }
@@ -282,3 +316,4 @@ export type Options = { [key: string]: string | {} };
         }
     }
 })();
+

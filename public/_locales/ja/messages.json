@@ -1,0 +1,140 @@
+{
+  "common_logo_alt": {
+    "message": "ロゴ"
+  },
+  "options_header_tagline": {
+    "message": " - Keep Integrating New Toys"
+  },
+  "options_section_template_title": {
+    "message": "レコード単位のテンプレート"
+  },
+  "options_input_template_name_placeholder": {
+    "message": "テンプレート名"
+  },
+  "options_textarea_template_placeholder": {
+    "message": "kintoneレコード用テンプレートを入力"
+  },
+  "options_section_options_title": {
+    "message": "オプション"
+  },
+  "options_option_imagecopy": {
+    "message": "画像コピーを有効にする"
+  },
+  "options_option_break_multiline": {
+    "message": "複数行・単一行テキストを改行表示（一覧画面）"
+  },
+  "options_option_subtable_importer": {
+    "message": "サブテーブルインポーターを有効化"
+  },
+  "options_button_save": {
+    "message": "保存"
+  },
+  "options_button_load": {
+    "message": "読み込み"
+  },
+  "options_button_apply": {
+    "message": "適用"
+  },
+  "options_button_download": {
+    "message": "ダウンロード"
+  },
+  "options_select_default_option": {
+    "message": "-- テンプレートを選択 --"
+  },
+  "options_select_export_options": {
+    "message": "-- 設定をエクスポート --"
+  },
+  "options_select_export_label": {
+    "message": "-- 保存用 --"
+  },
+  "options_message_default": {
+    "message": "[{apply}] テキストエリアのテンプレートを保存して使用します。"
+  },
+  "options_message_export": {
+    "message": "[{apply}] テキストエリアをオプション設定として読み込みます。/ [{download}] JSONとしてダウンロードします。"
+  },
+  "options_alert_template_required": {
+    "message": "テンプレート名を入力してから保存ボタンを押してください。"
+  },
+  "options_alert_import_success": {
+    "message": "JSONをオプション設定として読み込みました。"
+  },
+  "options_alert_save_failed": {
+    "message": "オプションが保存できませんでした。[{error}]"
+  },
+  "options_alert_saved": {
+    "message": "オプション設定を保存しました。"
+  },
+  "options_language_label": {
+    "message": "言語"
+  },
+  "options_language_ja": {
+    "message": "日本語"
+  },
+  "options_language_en": {
+    "message": "English"
+  },
+  "options_footer_contact": {
+    "message": "contact:"
+  },
+  "options_footer_bookmarks": {
+    "message": "ブックマーク"
+  },
+  "popup_title": {
+    "message": "kinToys ポップアップ"
+  },
+  "popup_link_options": {
+    "message": "オプション"
+  },
+  "popup_section_common_delimiter": {
+    "message": "[共通] 区切り文字:"
+  },
+  "popup_section_index_click_range": {
+    "message": "[一覧画面] テーブルクリックの抽出範囲:"
+  },
+  "popup_section_index_detail_record_format": {
+    "message": "[一覧画面/詳細画面] レコード単位の書式:"
+  },
+  "popup_section_preview_title": {
+    "message": "クリップボード プレビュー"
+  },
+  "popup_footer_developer": {
+    "message": "Developer:"
+  },
+  "popup_footer_version": {
+    "message": "version:"
+  },
+  "popup_button_copy": {
+    "message": "コピー取得"
+  },
+  "popup_button_copy_image": {
+    "message": "画像コピー"
+  },
+  "popup_applied_template": {
+    "message": "適用中のテンプレート: [ {name} ]"
+  },
+  "popup_error_invalid_url": {
+    "message": "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+  },
+  "popup_error_no_record_index": {
+    "message": "レコードが見つかりませんでした。\nレコード一覧画面で実行してください。"
+  },
+  "popup_error_no_table": {
+    "message": "テーブル要素が見つかりませんでした。\n一覧画面、または集計画面で実行してください。"
+  },
+  "popup_error_no_record_detail": {
+    "message": "レコードが見つかりませんでした。\nレコード詳細画面で実行してください。"
+  },
+  "popup_error_customize_not_supported": {
+    "message": "カスタマイズ画面では実行できません。"
+  },
+  "popup_error_unsupported_page": {
+    "message": "未対応の画面で実行されました。({category} / {url})"
+  },
+  "context_copy_simple_url": {
+    "message": "シンプルURLをコピー"
+  },
+  "context_toggle_linebreak": {
+    "message": "改行表示を切り替え"
+  }
+}
