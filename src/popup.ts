@@ -1,19 +1,58 @@
+import { I18n, I18nMessages } from "./i18n";
 import { Utils } from "./utils";
-// import { Names } from "./lib/Names";
+import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog";
 
 (() => {
     const { Ids, Labels, Events } = Utils;
     let radioStatus: { [key: string]: any } = {};
+    let i18nMessages: I18nMessages = {};
+    const t = (key: string, params?: Record<string, string>) => I18n.t(i18nMessages, key, params);
 
     // オプションを読み込む
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", async function () {
         console.log('DOMContentLoaded')
+
+        const storedLang = await I18n.getStoredLanguage();
+        const { lang, messages } = await I18n.loadMessages(storedLang);
+        i18nMessages = messages;
+        document.documentElement.lang = lang;
+        I18n.applyToDom(messages);
+
+        Utils.Labels.label_table_copy_button = t("popup_button_copy");
+        Utils.Labels.label_template_imagecopy_button = t("popup_button_copy_image");
 
         // span_version ノードを取得してバージョン番号を設定
         const spanVersion = document.getElementById('span_version') as HTMLSpanElement
         if (spanVersion) {
             const manifest = chrome.runtime.getManifest();
             spanVersion.textContent = manifest.version;
+        }
+
+        // ロゴ連打イースターエッグ: 5回連続クリックでレビューダイアログを強制表示
+        const logo = document.querySelector('.logo') as HTMLImageElement;
+        if (logo) {
+            const EASTER_EGG_CLICKS = 5;
+            const EASTER_EGG_TIMEOUT = 1500; // 1.5秒以内にクリック
+            let clickCount = 0;
+            let clickTimer: number | null = null;
+
+            logo.style.cursor = 'pointer';
+            logo.addEventListener('click', () => {
+                clickCount++;
+
+                if (clickTimer) {
+                    clearTimeout(clickTimer);
+                }
+
+                if (clickCount >= EASTER_EGG_CLICKS) {
+                    clickCount = 0;
+                    forceShowReviewDialog(document.body, i18nMessages);
+                } else {
+                    clickTimer = window.setTimeout(() => {
+                        clickCount = 0;
+                    }, EASTER_EGG_TIMEOUT);
+                }
+            });
         }
 
         chrome.storage.sync.get(null, (options) => {
@@ -30,9 +69,37 @@ import { Utils } from "./utils";
             console.log({ applied_template })
             const el_applied_template = document.getElementById(Ids.id_applied_template) as HTMLInputElement;
             if (el_applied_template) {
-                el_applied_template.textContent = `適用中のテンプレート: [ ${applied_template} ]`;
+                el_applied_template.textContent = t("popup_applied_template", { name: applied_template ?? "" });
             }
         });
+
+        // テーブル抽出ボタンの動作
+        const tableCopyButton = document.getElementById("button_table_copy") as HTMLButtonElement
+        if (tableCopyButton) {
+            // イメージコピー機能の設定を取得
+            chrome.storage.sync.get(null, (options) => {
+                const flag_imagecopy = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
+
+                tableCopyButton.addEventListener("click", contentAbstractionButtonClicked.bind(null, flag_imagecopy));
+                // ラベルを label_table_copy_button に変更
+                if (flag_imagecopy) {
+                    tableCopyButton.value = Labels.label_template_imagecopy_button;
+                }
+                else {
+                    tableCopyButton.value = Labels.label_table_copy_button;
+                }
+            });
+        }
+
+        // 機能の有効無効チェックボックスの動作
+        const enableCheckbox = document.getElementById(Ids.id_checkbox_on_off) as HTMLInputElement;
+        if (enableCheckbox) {
+            enableCheckbox.addEventListener("change", (event) => {
+                const checked = (event.target as HTMLInputElement).checked;
+                console.log({ checked });
+                Utils.changeEnadbleDisableCheckbox(checked)
+            });
+        }
     });
 
     // ラジオボタンの編集イベントにあわせてオプションを保存
@@ -71,34 +138,6 @@ import { Utils } from "./utils";
     // popup.js
     console.log("popup.js");
     const port = chrome.runtime.connect({ name: "popup" });
-
-    // テーブル抽出ボタンの動作
-    const tableCopyButton = document.getElementById("button_table_copy") as HTMLButtonElement
-    if (tableCopyButton) {
-        // イメージコピー機能の設定を取得
-        chrome.storage.sync.get(null, (options) => {
-            const flag_imagecopy = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
-
-            tableCopyButton.addEventListener("click", contentAbstractionButtonClicked.bind(null, flag_imagecopy));
-            // ラベルを label_table_copy_button に変更
-            if (flag_imagecopy) {
-                tableCopyButton.value = Labels.label_template_imagecopy_button;
-            }
-            else {
-                tableCopyButton.value = Labels.label_table_copy_button;
-            }
-        });
-    }
-
-    // 機能の有効無効チェックボックスの動作
-    const enableCheckbox = document.getElementById(Ids.id_checkbox_on_off) as HTMLInputElement;
-    if (enableCheckbox) {
-        enableCheckbox.addEventListener("change", (event) => {
-            const checked = (event.target as HTMLInputElement).checked;
-            console.log({ checked });
-            Utils.changeEnadbleDisableCheckbox(checked)
-        });
-    }
 
     // テーブルデータ取得メッセージの受信
     port.onMessage.addListener((response) => {
@@ -176,14 +215,16 @@ import { Utils } from "./utils";
                         // console.log({ response })
                         const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
-                            textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                            textarea.value = t("popup_error_invalid_url")
                         }
                         else if (response.action === Events.template_copy_button_clicked && response.data == "") {
-                            textarea.value = "レコードが見つかりませんでした。\nレコード一覧画面で実行してください。"
+                            textarea.value = t("popup_error_no_record_index")
                         }
                         else {
                             textarea.value = response.data;
-                            Utils.copyToClipboard(response.data)
+                            Utils.copyToClipboard(response.data);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     })
                 })
@@ -197,10 +238,10 @@ import { Utils } from "./utils";
                 chrome.tabs.sendMessage(tab.id, { name: Events.table_copy_button_clicked, mode: delimiter }, (response) => {
                     const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                     if (response == undefined) {
-                        textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                        textarea.value = t("popup_error_invalid_url")
                     }
                     else if (response == undefined || response.data == "") {
-                        textarea.value = "テーブル要素が見つかりませんでした。\n一覧画面、または集計画面で実行してください。"
+                        textarea.value = t("popup_error_no_table")
                     }
                     else {
                         // 一覧画面から取得した場合、ヘッダ行の先頭に空のセルを追加する
@@ -214,11 +255,15 @@ import { Utils } from "./utils";
                             const newData = data.replace(header, newHeader);
                             textarea.value = newData;
                             Utils.copyToClipboard(newData);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                         // 集計画面から取得した場合、ヘッダ行の先頭に空のセルを追加しない
                         else {
                             textarea.value = response.data
-                            Utils.copyToClipboard(response.data)
+                            Utils.copyToClipboard(response.data);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     }
                 })
@@ -251,14 +296,16 @@ import { Utils } from "./utils";
                     chrome.tabs.sendMessage(tab_id, { name: Events.template_copy_button_clicked, template: template, alignment: alignment }, (response) => {
                         const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                         if (response == undefined) {
-                            textarea.value = "無効なURLが検出されました。\nkintoneの画面で実行してください。"
+                            textarea.value = t("popup_error_invalid_url")
                         }
                         else if (response.action === Events.template_copy_button_clicked && response.data == "") {
-                            textarea.value = "レコードが見つかりませんでした。\nレコード詳細画面で実行してください。"
+                            textarea.value = t("popup_error_no_record_detail")
                         }
                         else {
                             textarea.value = response.data;
-                            Utils.copyToClipboard(response.data, flag_imagecopy)
+                            Utils.copyToClipboard(response.data, flag_imagecopy);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     });
                 });
@@ -267,10 +314,10 @@ import { Utils } from "./utils";
             // ひとまずカスタマイズ画面は対象外とします。あとでフィールド設定JSONを取得するようにしたい。
             else if (pageCategory === Utils.PageCategory.customize) {
                 const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
-                textarea.value = "カスタマイズ画面では実行できません。"
+                textarea.value = t("popup_error_customize_not_supported")
             }
             else {
-                const msg = `未対応の画面で実行されました。(${pageCategory} / ${tab.url})`
+                const msg = t("popup_error_unsupported_page", { category: pageCategory, url: tab.url })
                 console.error(msg);
                 const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
                 textarea.value = msg
@@ -281,3 +328,4 @@ import { Utils } from "./utils";
 
 
 })();
+

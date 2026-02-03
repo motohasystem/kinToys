@@ -1,4 +1,5 @@
 // import { Names } from "./lib/Names";
+import { I18n, I18nMessages } from "./i18n";
 import { Utils } from "./utils";
 
 export type Options = { [key: string]: string | {} };
@@ -7,16 +8,39 @@ export type Options = { [key: string]: string | {} };
     const CONST = Utils.CONST;
     const Ids = Utils.Ids;
     let templateHistory: { [key: string]: string } = {};
+    let i18nMessages: I18nMessages = {};
+    const t = (key: string, params?: Record<string, string>) => I18n.t(i18nMessages, key, params);
 
     console.log("options.js");
-    updateButtonLabel()
-
 
     // オプションを読み込む
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", async function () {
+        const storedLang = await I18n.getStoredLanguage();
+        const { lang, messages } = await I18n.loadMessages(storedLang);
+        i18nMessages = messages;
+        document.documentElement.lang = lang;
+        I18n.applyToDom(messages);
+
+        const languageSelect = document.getElementById("select_language") as HTMLSelectElement | null;
+        if (languageSelect) {
+            languageSelect.value = lang;
+            languageSelect.addEventListener("change", async () => {
+                await I18n.setStoredLanguage(languageSelect.value);
+                location.reload();
+            });
+        }
+
+        CONST.label_default_button = t("options_button_save");
+        CONST.label_import_button = t("options_button_apply");
+        CONST.label_export_button = t("options_button_download");
+        CONST.key_default_option = t("options_select_default_option");
+        CONST.key_export_options = t("options_select_export_options");
+        CONST.key_export_label = t("options_select_export_label");
+
+        updateButtonLabel();
+
         // 保存された値を読み込む
         chrome.storage.sync.get(null, (options: Options) => {
-            update_message()
             console.log({ options });
 
             Utils.loadOption(options, Ids.id_fillin_template, null);
@@ -87,8 +111,52 @@ export type Options = { [key: string]: string | {} };
                     return saveTemplate(options);
                 });
 
+            // インポートボタンのクリックイベント
+            document
+                .getElementById("button_import_options")
+                ?.addEventListener("click", importOptionsFromFile);
+
+            // ファイル選択イベント
+            document
+                .getElementById("input_import_file")
+                ?.addEventListener("change", handleFileImport);
+
         });
     });
+
+    // ファイル選択ダイアログを開く
+    function importOptionsFromFile() {
+        const fileInput = document.getElementById("input_import_file") as HTMLInputElement;
+        fileInput.click();
+    }
+
+    // ファイルインポート処理
+    function handleFileImport(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target?.result as string;
+                const options = JSON.parse(content);
+                chrome.storage.sync.set(options, () => {
+                    alert(t("options_alert_import_success"));
+                    location.reload();
+                });
+            } catch (err) {
+                alert(t("options_alert_import_failed", { error: String(err) }));
+            }
+        };
+        reader.onerror = () => {
+            alert(t("options_alert_import_failed", { error: "File read error" }));
+        };
+        reader.readAsText(file);
+
+        // Reset input to allow re-importing same file
+        input.value = "";
+    }
 
     // ボタンラベルの書き換え
     function updateButtonLabel(label: string | undefined = undefined) {
@@ -135,7 +203,7 @@ export type Options = { [key: string]: string | {} };
         const template_name = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
 
         if (template_name.value === "") {
-            alert('テンプレート名を入力してから保存ボタンを押してください。')
+            alert(t("options_alert_template_required"))
             return;
         }
         else if (template_name.value == Utils.CONST.key_export_label) {
@@ -145,10 +213,10 @@ export type Options = { [key: string]: string | {} };
             try {
                 const options = JSON.parse(textarea.value);
                 chrome.storage.sync.set(options);
-                alert('JSONをオプション設定として読み込みました。')
+                alert(t("options_alert_import_success"))
             }
             catch (e) {
-                const msg = `オプションが保存できませんでした。[${e}]`
+                const msg = t("options_alert_save_failed", { error: String(e) })
                 console.error(msg);
                 // エラーのアラートダイアログを表示
                 alert(msg);
@@ -188,7 +256,7 @@ export type Options = { [key: string]: string | {} };
             // オプションを保存
             chrome.storage.sync.set(options);
             console.log({ options });
-            alert('オプション設定を保存しました。')
+            alert(t("options_alert_saved"))
             // リロード
             location.reload();
         }
@@ -210,7 +278,6 @@ export type Options = { [key: string]: string | {} };
         console.log({ select: select })
         console.log({ templateHistory })
 
-        update_message(selected_label)
         updateButtonLabel(selected_label)
         if (selected_label == Utils.CONST.key_export_options) {
             // オプションをエクスポート
@@ -265,20 +332,5 @@ export type Options = { [key: string]: string | {} };
         }
     }
 
-    // メッセージの更新
-    function update_message(selected_label: string | undefined = undefined) {
-        let msg = Utils.MSG.msg_default;
-        switch (selected_label) {
-            case Utils.CONST.key_export_options:
-                msg = Utils.MSG.msg_export_options;
-                break;
-            default:
-                break;
-        }
-
-        const node_message = document.getElementById("message")
-        if (node_message) {
-            node_message.innerText = msg;
-        }
-    }
 })();
+
