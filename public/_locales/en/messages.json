@@ -38,6 +38,12 @@
   "options_button_load": {
     "message": "load"
   },
+  "options_button_import": {
+    "message": "import"
+  },
+  "options_alert_import_failed": {
+    "message": "Failed to import settings. [{error}]"
+  },
   "options_button_apply": {
     "message": "apply"
   },

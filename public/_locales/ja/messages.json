@@ -38,6 +38,12 @@
   "options_button_load": {
     "message": "読み込み"
   },
+  "options_button_import": {
+    "message": "インポート"
+  },
+  "options_alert_import_failed": {
+    "message": "設定のインポートに失敗しました。[{error}]"
+  },
   "options_button_apply": {
     "message": "適用"
   },
