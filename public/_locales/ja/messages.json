@@ -148,5 +148,20 @@
   },
   "context_toggle_linebreak": {
     "message": "改行表示を切り替え"
+  },
+  "review_dialog_title": {
+    "message": "kinToysをご利用いただきありがとうございます!"
+  },
+  "review_dialog_description": {
+    "message": "よろしければChrome Web Storeで評価をお願いします"
+  },
+  "review_dialog_button_review": {
+    "message": "評価する"
+  },
+  "review_dialog_button_later": {
+    "message": "後で"
+  },
+  "review_dialog_button_never": {
+    "message": "もう表示しない"
   }
 }

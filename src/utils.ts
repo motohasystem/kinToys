@@ -37,6 +37,16 @@ export class Utils {
 
     };
 
+    // レビューダイアログ用のストレージキー
+    static readonly ReviewStorageKeys = {
+        usage_count: "review_usage_count",              // 使用回数
+        install_date: "review_install_date",            // インストール日時
+        dialog_shown_count: "review_dialog_shown_count",// 表示回数
+        last_shown_date: "review_last_shown_date",      // 最終表示日時
+        never_show: "review_never_show",                // 永久非表示フラグ
+        completed: "review_completed"                   // 評価完了フラグ
+    };
+
     static Messages = {
         changeBreaklineOption: "changeBreaklineOption",
         changePopupOptions: "changePopupOptions",

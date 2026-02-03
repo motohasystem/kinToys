@@ -148,5 +148,20 @@
   },
   "context_toggle_linebreak": {
     "message": "Toggle LineBreak"
+  },
+  "review_dialog_title": {
+    "message": "Thank you for using kinToys!"
+  },
+  "review_dialog_description": {
+    "message": "Please consider rating us on the Chrome Web Store"
+  },
+  "review_dialog_button_review": {
+    "message": "Rate Now"
+  },
+  "review_dialog_button_later": {
+    "message": "Later"
+  },
+  "review_dialog_button_never": {
+    "message": "Don't show again"
   }
 }
