@@ -11,6 +11,12 @@
   "options_input_template_name_placeholder": {
     "message": "template name"
   },
+  "options_label_template_name": {
+    "message": "Template Name"
+  },
+  "options_label_template_history": {
+    "message": "History"
+  },
   "options_textarea_template_placeholder": {
     "message": "fill in template for kintone record."
   },
