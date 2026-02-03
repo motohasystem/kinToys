@@ -35,9 +35,6 @@
   "options_button_save": {
     "message": "save"
   },
-  "options_button_load": {
-    "message": "load"
-  },
   "options_button_import": {
     "message": "import"
   },
@@ -58,12 +55,6 @@
   },
   "options_select_export_label": {
     "message": "-- Export --"
-  },
-  "options_message_default": {
-    "message": "[{apply}] Save and use the template in the textarea."
-  },
-  "options_message_export": {
-    "message": "[{apply}] Load the textarea as options. / [{download}] Download as JSON."
   },
   "options_alert_template_required": {
     "message": "Enter a template name before saving."

@@ -35,9 +35,6 @@
   "options_button_save": {
     "message": "保存"
   },
-  "options_button_load": {
-    "message": "読み込み"
-  },
   "options_button_import": {
     "message": "インポート"
   },
@@ -58,12 +55,6 @@
   },
   "options_select_export_label": {
     "message": "-- 保存用 --"
-  },
-  "options_message_default": {
-    "message": "[{apply}] テキストエリアのテンプレートを保存して使用します。"
-  },
-  "options_message_export": {
-    "message": "[{apply}] テキストエリアをオプション設定として読み込みます。/ [{download}] JSONとしてダウンロードします。"
   },
   "options_alert_template_required": {
     "message": "テンプレート名を入力してから保存ボタンを押してください。"

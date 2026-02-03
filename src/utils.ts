@@ -266,7 +266,7 @@ export class Utils {
         const ctx = canvas.getContext('2d');
 
         if (!ctx) {
-            throw new Error('Canvas contextを取得できませんでした。');
+            throw new Error("Failed to get Canvas context.");
         }
 
         // 2. 文字列を120文字で自動改行して行単位で分割
@@ -313,7 +313,7 @@ export class Utils {
         const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve));
 
         if (!blob) {
-            throw new Error('CanvasのBlobを作成できませんでした。');
+            throw new Error("Failed to create Canvas Blob.");
         }
 
         // 7. Blobをクリップボードにコピー
