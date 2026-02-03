@@ -37,20 +37,10 @@ export type Options = { [key: string]: string | {} };
         CONST.key_export_options = t("options_select_export_options");
         CONST.key_export_label = t("options_select_export_label");
 
-        Utils.MSG.msg_default = t("options_message_default", {
-            apply: CONST.label_import_button,
-            download: CONST.label_export_button
-        });
-        Utils.MSG.msg_export_options = t("options_message_export", {
-            apply: CONST.label_import_button,
-            download: CONST.label_export_button
-        });
-
         updateButtonLabel();
 
         // 保存された値を読み込む
         chrome.storage.sync.get(null, (options: Options) => {
-            update_message()
             console.log({ options });
 
             Utils.loadOption(options, Ids.id_fillin_template, null);
@@ -244,7 +234,6 @@ export type Options = { [key: string]: string | {} };
         console.log({ select: select })
         console.log({ templateHistory })
 
-        update_message(selected_label)
         updateButtonLabel(selected_label)
         if (selected_label == Utils.CONST.key_export_options) {
             // オプションをエクスポート
@@ -299,21 +288,5 @@ export type Options = { [key: string]: string | {} };
         }
     }
 
-    // メッセージの更新
-    function update_message(selected_label: string | undefined = undefined) {
-        let msg = Utils.MSG.msg_default;
-        switch (selected_label) {
-            case Utils.CONST.key_export_options:
-                msg = Utils.MSG.msg_export_options;
-                break;
-            default:
-                break;
-        }
-
-        const node_message = document.getElementById("message")
-        if (node_message) {
-            node_message.innerText = msg;
-        }
-    }
 })();
 
