@@ -27,3 +27,4 @@ plans/*
 *.sln
 *.sw?
 dist.zip
+/.claude
