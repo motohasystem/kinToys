@@ -111,8 +111,52 @@ export type Options = { [key: string]: string | {} };
                     return saveTemplate(options);
                 });
 
+            // インポートボタンのクリックイベント
+            document
+                .getElementById("button_import_options")
+                ?.addEventListener("click", importOptionsFromFile);
+
+            // ファイル選択イベント
+            document
+                .getElementById("input_import_file")
+                ?.addEventListener("change", handleFileImport);
+
         });
     });
+
+    // ファイル選択ダイアログを開く
+    function importOptionsFromFile() {
+        const fileInput = document.getElementById("input_import_file") as HTMLInputElement;
+        fileInput.click();
+    }
+
+    // ファイルインポート処理
+    function handleFileImport(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target?.result as string;
+                const options = JSON.parse(content);
+                chrome.storage.sync.set(options, () => {
+                    alert(t("options_alert_import_success"));
+                    location.reload();
+                });
+            } catch (err) {
+                alert(t("options_alert_import_failed", { error: String(err) }));
+            }
+        };
+        reader.onerror = () => {
+            alert(t("options_alert_import_failed", { error: "File read error" }));
+        };
+        reader.readAsText(file);
+
+        // Reset input to allow re-importing same file
+        input.value = "";
+    }
 
     // ボタンラベルの書き換え
     function updateButtonLabel(label: string | undefined = undefined) {

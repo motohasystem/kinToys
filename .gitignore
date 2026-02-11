@@ -12,8 +12,11 @@ dist
 _dist
 dist-ssr
 *.local
+*.local.json
 
 # Editor directories and files
+.claude/*
+plans/*
 .vscode/*
 !.vscode/extensions.json
 .idea

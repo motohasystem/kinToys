@@ -11,6 +11,12 @@
   "options_input_template_name_placeholder": {
     "message": "テンプレート名"
   },
+  "options_label_template_name": {
+    "message": "テンプレート名"
+  },
+  "options_label_template_history": {
+    "message": "履歴"
+  },
   "options_textarea_template_placeholder": {
     "message": "kintoneレコード用テンプレートを入力"
   },
@@ -29,8 +35,11 @@
   "options_button_save": {
     "message": "保存"
   },
-  "options_button_load": {
-    "message": "読み込み"
+  "options_button_import": {
+    "message": "インポート"
+  },
+  "options_alert_import_failed": {
+    "message": "設定のインポートに失敗しました。[{error}]"
   },
   "options_button_apply": {
     "message": "適用"
@@ -46,12 +55,6 @@
   },
   "options_select_export_label": {
     "message": "-- 保存用 --"
-  },
-  "options_message_default": {
-    "message": "[{apply}] テキストエリアのテンプレートを保存して使用します。"
-  },
-  "options_message_export": {
-    "message": "[{apply}] テキストエリアをオプション設定として読み込みます。/ [{download}] JSONとしてダウンロードします。"
   },
   "options_alert_template_required": {
     "message": "テンプレート名を入力してから保存ボタンを押してください。"
@@ -136,5 +139,20 @@
   },
   "context_toggle_linebreak": {
     "message": "改行表示を切り替え"
+  },
+  "review_dialog_title": {
+    "message": "kinToysをご利用いただきありがとうございます!"
+  },
+  "review_dialog_description": {
+    "message": "よろしければChrome Web Storeで評価をお願いします"
+  },
+  "review_dialog_button_review": {
+    "message": "評価する"
+  },
+  "review_dialog_button_later": {
+    "message": "後で"
+  },
+  "review_dialog_button_never": {
+    "message": "もう表示しない"
   }
 }

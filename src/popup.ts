@@ -1,6 +1,6 @@
 import { I18n, I18nMessages } from "./i18n";
 import { Utils } from "./utils";
-// import { Names } from "./lib/Names";
+import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog";
 
 (() => {
     const { Ids, Labels, Events } = Utils;
@@ -26,6 +26,33 @@ import { Utils } from "./utils";
         if (spanVersion) {
             const manifest = chrome.runtime.getManifest();
             spanVersion.textContent = manifest.version;
+        }
+
+        // ロゴ連打イースターエッグ: 5回連続クリックでレビューダイアログを強制表示
+        const logo = document.querySelector('.logo') as HTMLImageElement;
+        if (logo) {
+            const EASTER_EGG_CLICKS = 5;
+            const EASTER_EGG_TIMEOUT = 1500; // 1.5秒以内にクリック
+            let clickCount = 0;
+            let clickTimer: number | null = null;
+
+            logo.style.cursor = 'pointer';
+            logo.addEventListener('click', () => {
+                clickCount++;
+
+                if (clickTimer) {
+                    clearTimeout(clickTimer);
+                }
+
+                if (clickCount >= EASTER_EGG_CLICKS) {
+                    clickCount = 0;
+                    forceShowReviewDialog(document.body, i18nMessages);
+                } else {
+                    clickTimer = window.setTimeout(() => {
+                        clickCount = 0;
+                    }, EASTER_EGG_TIMEOUT);
+                }
+            });
         }
 
         chrome.storage.sync.get(null, (options) => {
@@ -195,7 +222,9 @@ import { Utils } from "./utils";
                         }
                         else {
                             textarea.value = response.data;
-                            Utils.copyToClipboard(response.data)
+                            Utils.copyToClipboard(response.data);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     })
                 })
@@ -226,11 +255,15 @@ import { Utils } from "./utils";
                             const newData = data.replace(header, newHeader);
                             textarea.value = newData;
                             Utils.copyToClipboard(newData);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                         // 集計画面から取得した場合、ヘッダ行の先頭に空のセルを追加しない
                         else {
                             textarea.value = response.data
-                            Utils.copyToClipboard(response.data)
+                            Utils.copyToClipboard(response.data);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     }
                 })
@@ -270,7 +303,9 @@ import { Utils } from "./utils";
                         }
                         else {
                             textarea.value = response.data;
-                            Utils.copyToClipboard(response.data, flag_imagecopy)
+                            Utils.copyToClipboard(response.data, flag_imagecopy);
+                            // レビューダイアログを表示
+                            tryShowReviewDialog(document.body, i18nMessages);
                         }
                     });
                 });

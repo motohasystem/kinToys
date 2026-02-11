@@ -11,6 +11,12 @@
   "options_input_template_name_placeholder": {
     "message": "template name"
   },
+  "options_label_template_name": {
+    "message": "Template Name"
+  },
+  "options_label_template_history": {
+    "message": "History"
+  },
   "options_textarea_template_placeholder": {
     "message": "fill in template for kintone record."
   },
@@ -29,8 +35,11 @@
   "options_button_save": {
     "message": "save"
   },
-  "options_button_load": {
-    "message": "load"
+  "options_button_import": {
+    "message": "import"
+  },
+  "options_alert_import_failed": {
+    "message": "Failed to import settings. [{error}]"
   },
   "options_button_apply": {
     "message": "apply"
@@ -46,12 +55,6 @@
   },
   "options_select_export_label": {
     "message": "-- Export --"
-  },
-  "options_message_default": {
-    "message": "[{apply}] Save and use the template in the textarea."
-  },
-  "options_message_export": {
-    "message": "[{apply}] Load the textarea as options. / [{download}] Download as JSON."
   },
   "options_alert_template_required": {
     "message": "Enter a template name before saving."
@@ -136,5 +139,20 @@
   },
   "context_toggle_linebreak": {
     "message": "Toggle LineBreak"
+  },
+  "review_dialog_title": {
+    "message": "Thank you for using kinToys!"
+  },
+  "review_dialog_description": {
+    "message": "Please consider rating us on the Chrome Web Store"
+  },
+  "review_dialog_button_review": {
+    "message": "Rate Now"
+  },
+  "review_dialog_button_later": {
+    "message": "Later"
+  },
+  "review_dialog_button_never": {
+    "message": "Don't show again"
   }
 }

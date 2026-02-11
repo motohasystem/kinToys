@@ -167,10 +167,11 @@ export class SettingDialogDuplicator {
         // クリップボードからダイアログ情報を取得する
         navigator.clipboard.readText().then((text) => {
             console.log({ text });
+            const sanitizedText = text.replace(/\r\n|\r|\n/g, "");
             // ダイアログ情報をセットする
             let jsonData;
             try {
-                jsonData = JSON.parse(text);
+                jsonData = JSON.parse(sanitizedText);
             } catch (e) {
                 console.error("Invalid JSON data in clipboard:", e);
                 this.showTooltip(event, "Not a JSON!");
