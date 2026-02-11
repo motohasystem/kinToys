@@ -6,118 +6,118 @@
     "message": " - Keep Integrating New Toys"
   },
   "options_section_template_title": {
-    "message": "Template for one record"
+    "message": "记录模板"
   },
   "options_input_template_name_placeholder": {
-    "message": "template name"
+    "message": "模板名称"
   },
   "options_label_template_name": {
-    "message": "Template Name"
+    "message": "模板名称"
   },
   "options_label_template_history": {
-    "message": "History"
+    "message": "历史记录"
   },
   "options_textarea_template_placeholder": {
-    "message": "fill in template for kintone record."
+    "message": "请输入kintone记录的模板"
   },
   "options_section_options_title": {
-    "message": "Options"
+    "message": "选项"
   },
   "options_option_imagecopy": {
-    "message": "Enable image copy button"
+    "message": "启用图片复制按钮"
   },
   "options_option_break_multiline": {
-    "message": "Break multi-line and single-line text (list view)"
+    "message": "多行/单行文本换行显示（列表页面）"
   },
   "options_option_subtable_importer": {
-    "message": "Enable Subtable Importer"
+    "message": "启用子表格导入器"
   },
   "options_button_save": {
-    "message": "save"
+    "message": "保存"
   },
   "options_button_import": {
-    "message": "import"
+    "message": "导入"
   },
   "options_alert_import_failed": {
-    "message": "Failed to import settings. [{error}]"
+    "message": "设置导入失败。[{error}]"
   },
   "options_button_apply": {
-    "message": "apply"
+    "message": "应用"
   },
   "options_button_download": {
-    "message": "download"
+    "message": "下载"
   },
   "options_select_default_option": {
-    "message": "-- Select Template --"
+    "message": "-- 选择模板 --"
   },
   "options_select_export_options": {
-    "message": "-- Export Settings --"
+    "message": "-- 导出设置 --"
   },
   "options_select_export_label": {
-    "message": "-- Export --"
+    "message": "-- 导出 --"
   },
   "options_alert_template_required": {
-    "message": "Enter a template name before saving."
+    "message": "请在保存之前输入模板名称。"
   },
   "options_alert_import_success": {
-    "message": "Loaded JSON as options."
+    "message": "已将JSON作为选项设置加载。"
   },
   "options_alert_save_failed": {
-    "message": "Failed to save options. [{error}]"
+    "message": "选项保存失败。[{error}]"
   },
   "options_alert_saved": {
-    "message": "Options saved."
+    "message": "选项已保存。"
   },
   "options_language_label": {
-    "message": "Language"
+    "message": "语言"
   },
   "options_language_ja": {
-    "message": "Japanese"
+    "message": "日语"
   },
   "options_language_en": {
-    "message": "English"
+    "message": "英语"
   },
   "options_language_zh_cn": {
-    "message": "Chinese (Simplified)"
+    "message": "中文（简体）"
   },
   "options_language_zh_tw": {
-    "message": "Chinese (Traditional)"
+    "message": "中文（繁体）"
   },
   "options_language_es": {
-    "message": "Spanish"
+    "message": "西班牙语"
   },
   "options_language_pt_br": {
-    "message": "Portuguese (Brazil)"
+    "message": "葡萄牙语（巴西）"
   },
   "options_language_th": {
-    "message": "Thai"
+    "message": "泰语"
   },
   "options_language_vi": {
-    "message": "Vietnamese"
+    "message": "越南语"
   },
   "options_footer_contact": {
     "message": "contact:"
   },
   "options_footer_bookmarks": {
-    "message": "bookmarks"
+    "message": "书签"
   },
   "popup_title": {
-    "message": "kinToys Popup"
+    "message": "kinToys 弹出窗口"
   },
   "popup_link_options": {
-    "message": "options"
+    "message": "选项"
   },
   "popup_section_common_delimiter": {
-    "message": "[Common] Delimiter:"
+    "message": "[通用] 分隔符:"
   },
   "popup_section_index_click_range": {
-    "message": "[List] Table click range:"
+    "message": "[列表] 表格点击范围:"
   },
   "popup_section_index_detail_record_format": {
-    "message": "[List/Detail] Record format:"
+    "message": "[列表/详情] 记录格式:"
   },
   "popup_section_preview_title": {
-    "message": "Clipboard Preview"
+    "message": "剪贴板预览"
   },
   "popup_footer_developer": {
     "message": "Developer:"
@@ -126,51 +126,51 @@
     "message": "version:"
   },
   "popup_button_copy": {
-    "message": "Grab Copy"
+    "message": "复制"
   },
   "popup_button_copy_image": {
-    "message": "Image Copy"
+    "message": "图片复制"
   },
   "popup_applied_template": {
-    "message": "Applied template: [ {name} ]"
+    "message": "当前模板: [ {name} ]"
   },
   "popup_error_invalid_url": {
-    "message": "Invalid URL detected.\nPlease run this on a kintone page."
+    "message": "检测到无效URL。\n请在kintone页面上运行。"
   },
   "popup_error_no_record_index": {
-    "message": "No records found.\nPlease run this on the record list page."
+    "message": "未找到记录。\n请在记录列表页面上运行。"
   },
   "popup_error_no_table": {
-    "message": "Table element not found.\nPlease run this on the list or report page."
+    "message": "未找到表格元素。\n请在列表页面或汇总页面上运行。"
   },
   "popup_error_no_record_detail": {
-    "message": "No records found.\nPlease run this on the record detail page."
+    "message": "未找到记录。\n请在记录详情页面上运行。"
   },
   "popup_error_customize_not_supported": {
-    "message": "Cannot run on the customize page."
+    "message": "无法在自定义页面上运行。"
   },
   "popup_error_unsupported_page": {
-    "message": "Unsupported page. ({category} / {url})"
+    "message": "不支持的页面。({category} / {url})"
   },
   "context_copy_simple_url": {
-    "message": "Copy Simple URL"
+    "message": "复制简洁URL"
   },
   "context_toggle_linebreak": {
-    "message": "Toggle LineBreak"
+    "message": "切换换行显示"
   },
   "review_dialog_title": {
-    "message": "Thank you for using kinToys!"
+    "message": "感谢您使用kinToys！"
   },
   "review_dialog_description": {
-    "message": "Please consider rating us on the Chrome Web Store"
+    "message": "请考虑在Chrome Web Store上为我们评分"
   },
   "review_dialog_button_review": {
-    "message": "Rate Now"
+    "message": "立即评价"
   },
   "review_dialog_button_later": {
-    "message": "Later"
+    "message": "稍后"
   },
   "review_dialog_button_never": {
-    "message": "Don't show again"
+    "message": "不再显示"
   }
 }

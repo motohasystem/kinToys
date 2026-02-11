@@ -1,10 +1,20 @@
 export type I18nMessages = Record<string, { message: string }>;
 
 const LANGUAGE_KEY = "language";
-const SUPPORTED_LANGUAGES = ["ja", "en"] as const;
+const SUPPORTED_LANGUAGES = ["ja", "en", "zh_CN", "zh_TW", "es", "pt_BR", "th", "vi"] as const;
+
+const LANGUAGE_FALLBACKS: Record<string, string> = {
+    zh: "zh_CN",
+    pt: "pt_BR",
+};
 
 function normalizeLanguage(lang: string): string {
-    return lang.toLowerCase().split("-")[0];
+    const parts = lang.split(/[-_]/);
+    if (parts.length >= 2) {
+        return `${parts[0].toLowerCase()}_${parts[1].toUpperCase()}`;
+    }
+    const base = parts[0].toLowerCase();
+    return LANGUAGE_FALLBACKS[base] ?? base;
 }
 
 function getStoredLanguage(): Promise<string | undefined> {

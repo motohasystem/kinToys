@@ -54,7 +54,7 @@
     "message": "-- 設定をエクスポート --"
   },
   "options_select_export_label": {
-    "message": "-- 保存用 --"
+    "message": "-- エクスポート --"
   },
   "options_alert_template_required": {
     "message": "テンプレート名を入力してから保存ボタンを押してください。"
@@ -76,6 +76,24 @@
   },
   "options_language_en": {
     "message": "English"
+  },
+  "options_language_zh_cn": {
+    "message": "中国語（簡体字）"
+  },
+  "options_language_zh_tw": {
+    "message": "中国語（繁体字）"
+  },
+  "options_language_es": {
+    "message": "スペイン語"
+  },
+  "options_language_pt_br": {
+    "message": "ポルトガル語（ブラジル）"
+  },
+  "options_language_th": {
+    "message": "タイ語"
+  },
+  "options_language_vi": {
+    "message": "ベトナム語"
   },
   "options_footer_contact": {
     "message": "contact:"

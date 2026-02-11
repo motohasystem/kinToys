@@ -1,0 +1,176 @@
+{
+  "common_logo_alt": {
+    "message": "Logo"
+  },
+  "options_header_tagline": {
+    "message": " - Keep Integrating New Toys"
+  },
+  "options_section_template_title": {
+    "message": "เทมเพลตต่อเรคคอร์ด"
+  },
+  "options_input_template_name_placeholder": {
+    "message": "ชื่อเทมเพลต"
+  },
+  "options_label_template_name": {
+    "message": "ชื่อเทมเพลต"
+  },
+  "options_label_template_history": {
+    "message": "ประวัติ"
+  },
+  "options_textarea_template_placeholder": {
+    "message": "กรอกเทมเพลตสำหรับเรคคอร์ด kintone"
+  },
+  "options_section_options_title": {
+    "message": "ตัวเลือก"
+  },
+  "options_option_imagecopy": {
+    "message": "เปิดใช้งานปุ่มคัดลอกรูปภาพ"
+  },
+  "options_option_break_multiline": {
+    "message": "แสดงการขึ้นบรรทัดใหม่ในข้อความหลายบรรทัด/บรรทัดเดียว (มุมมองรายการ)"
+  },
+  "options_option_subtable_importer": {
+    "message": "เปิดใช้งานตัวนำเข้าตารางย่อย"
+  },
+  "options_button_save": {
+    "message": "บันทึก"
+  },
+  "options_button_import": {
+    "message": "นำเข้า"
+  },
+  "options_alert_import_failed": {
+    "message": "การนำเข้าการตั้งค่าล้มเหลว [{error}]"
+  },
+  "options_button_apply": {
+    "message": "นำไปใช้"
+  },
+  "options_button_download": {
+    "message": "ดาวน์โหลด"
+  },
+  "options_select_default_option": {
+    "message": "-- เลือกเทมเพลต --"
+  },
+  "options_select_export_options": {
+    "message": "-- ส่งออกการตั้งค่า --"
+  },
+  "options_select_export_label": {
+    "message": "-- ส่งออก --"
+  },
+  "options_alert_template_required": {
+    "message": "กรุณากรอกชื่อเทมเพลตก่อนบันทึก"
+  },
+  "options_alert_import_success": {
+    "message": "โหลด JSON เป็นการตั้งค่าตัวเลือกแล้ว"
+  },
+  "options_alert_save_failed": {
+    "message": "บันทึกตัวเลือกล้มเหลว [{error}]"
+  },
+  "options_alert_saved": {
+    "message": "บันทึกตัวเลือกแล้ว"
+  },
+  "options_language_label": {
+    "message": "ภาษา"
+  },
+  "options_language_ja": {
+    "message": "ญี่ปุ่น"
+  },
+  "options_language_en": {
+    "message": "อังกฤษ"
+  },
+  "options_language_zh_cn": {
+    "message": "จีน (ตัวย่อ)"
+  },
+  "options_language_zh_tw": {
+    "message": "จีน (ตัวเต็ม)"
+  },
+  "options_language_es": {
+    "message": "สเปน"
+  },
+  "options_language_pt_br": {
+    "message": "โปรตุเกส (บราซิล)"
+  },
+  "options_language_th": {
+    "message": "ไทย"
+  },
+  "options_language_vi": {
+    "message": "เวียดนาม"
+  },
+  "options_footer_contact": {
+    "message": "ติดต่อ:"
+  },
+  "options_footer_bookmarks": {
+    "message": "บุ๊กมาร์ก"
+  },
+  "popup_title": {
+    "message": "kinToys ป๊อปอัป"
+  },
+  "popup_link_options": {
+    "message": "ตัวเลือก"
+  },
+  "popup_section_common_delimiter": {
+    "message": "[ทั่วไป] ตัวคั่น:"
+  },
+  "popup_section_index_click_range": {
+    "message": "[รายการ] ช่วงการคลิกตาราง:"
+  },
+  "popup_section_index_detail_record_format": {
+    "message": "[รายการ/รายละเอียด] รูปแบบเรคคอร์ด:"
+  },
+  "popup_section_preview_title": {
+    "message": "ตัวอย่างคลิปบอร์ด"
+  },
+  "popup_footer_developer": {
+    "message": "Developer:"
+  },
+  "popup_footer_version": {
+    "message": "version:"
+  },
+  "popup_button_copy": {
+    "message": "คัดลอก"
+  },
+  "popup_button_copy_image": {
+    "message": "คัดลอกรูปภาพ"
+  },
+  "popup_applied_template": {
+    "message": "เทมเพลตที่ใช้: [ {name} ]"
+  },
+  "popup_error_invalid_url": {
+    "message": "ตรวจพบ URL ที่ไม่ถูกต้อง\nกรุณาเรียกใช้บนหน้า kintone"
+  },
+  "popup_error_no_record_index": {
+    "message": "ไม่พบเรคคอร์ด\nกรุณาเรียกใช้บนหน้ารายการเรคคอร์ด"
+  },
+  "popup_error_no_table": {
+    "message": "ไม่พบองค์ประกอบตาราง\nกรุณาเรียกใช้บนหน้ารายการหรือหน้ารายงาน"
+  },
+  "popup_error_no_record_detail": {
+    "message": "ไม่พบเรคคอร์ด\nกรุณาเรียกใช้บนหน้ารายละเอียดเรคคอร์ด"
+  },
+  "popup_error_customize_not_supported": {
+    "message": "ไม่สามารถเรียกใช้บนหน้าปรับแต่งได้"
+  },
+  "popup_error_unsupported_page": {
+    "message": "หน้าที่ไม่รองรับ ({category} / {url})"
+  },
+  "context_copy_simple_url": {
+    "message": "คัดลอก URL แบบย่อ"
+  },
+  "context_toggle_linebreak": {
+    "message": "สลับการแสดงการขึ้นบรรทัดใหม่"
+  },
+  "review_dialog_title": {
+    "message": "ขอบคุณที่ใช้ kinToys!"
+  },
+  "review_dialog_description": {
+    "message": "กรุณาพิจารณาให้คะแนนเราบน Chrome Web Store"
+  },
+  "review_dialog_button_review": {
+    "message": "ให้คะแนนเลย"
+  },
+  "review_dialog_button_later": {
+    "message": "ภายหลัง"
+  },
+  "review_dialog_button_never": {
+    "message": "ไม่แสดงอีก"
+  }
+}

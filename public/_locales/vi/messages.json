@@ -1,0 +1,176 @@
+{
+  "common_logo_alt": {
+    "message": "Logo"
+  },
+  "options_header_tagline": {
+    "message": " - Keep Integrating New Toys"
+  },
+  "options_section_template_title": {
+    "message": "Mẫu theo bản ghi"
+  },
+  "options_input_template_name_placeholder": {
+    "message": "tên mẫu"
+  },
+  "options_label_template_name": {
+    "message": "Tên mẫu"
+  },
+  "options_label_template_history": {
+    "message": "Lịch sử"
+  },
+  "options_textarea_template_placeholder": {
+    "message": "Nhập mẫu cho bản ghi kintone."
+  },
+  "options_section_options_title": {
+    "message": "Tùy chọn"
+  },
+  "options_option_imagecopy": {
+    "message": "Bật nút sao chép hình ảnh"
+  },
+  "options_option_break_multiline": {
+    "message": "Hiển thị ngắt dòng trong văn bản nhiều dòng/một dòng (chế độ xem danh sách)"
+  },
+  "options_option_subtable_importer": {
+    "message": "Bật trình nhập bảng con"
+  },
+  "options_button_save": {
+    "message": "lưu"
+  },
+  "options_button_import": {
+    "message": "nhập"
+  },
+  "options_alert_import_failed": {
+    "message": "Nhập cài đặt thất bại. [{error}]"
+  },
+  "options_button_apply": {
+    "message": "áp dụng"
+  },
+  "options_button_download": {
+    "message": "tải xuống"
+  },
+  "options_select_default_option": {
+    "message": "-- Chọn mẫu --"
+  },
+  "options_select_export_options": {
+    "message": "-- Xuất cài đặt --"
+  },
+  "options_select_export_label": {
+    "message": "-- Xuất --"
+  },
+  "options_alert_template_required": {
+    "message": "Vui lòng nhập tên mẫu trước khi lưu."
+  },
+  "options_alert_import_success": {
+    "message": "Đã tải JSON làm cài đặt tùy chọn."
+  },
+  "options_alert_save_failed": {
+    "message": "Lưu tùy chọn thất bại. [{error}]"
+  },
+  "options_alert_saved": {
+    "message": "Đã lưu tùy chọn."
+  },
+  "options_language_label": {
+    "message": "Ngôn ngữ"
+  },
+  "options_language_ja": {
+    "message": "Tiếng Nhật"
+  },
+  "options_language_en": {
+    "message": "Tiếng Anh"
+  },
+  "options_language_zh_cn": {
+    "message": "Tiếng Trung (Giản thể)"
+  },
+  "options_language_zh_tw": {
+    "message": "Tiếng Trung (Phồn thể)"
+  },
+  "options_language_es": {
+    "message": "Tiếng Tây Ban Nha"
+  },
+  "options_language_pt_br": {
+    "message": "Tiếng Bồ Đào Nha (Brazil)"
+  },
+  "options_language_th": {
+    "message": "Tiếng Thái"
+  },
+  "options_language_vi": {
+    "message": "Tiếng Việt"
+  },
+  "options_footer_contact": {
+    "message": "liên hệ:"
+  },
+  "options_footer_bookmarks": {
+    "message": "dấu trang"
+  },
+  "popup_title": {
+    "message": "kinToys Popup"
+  },
+  "popup_link_options": {
+    "message": "tùy chọn"
+  },
+  "popup_section_common_delimiter": {
+    "message": "[Chung] Dấu phân cách:"
+  },
+  "popup_section_index_click_range": {
+    "message": "[Danh sách] Phạm vi nhấp bảng:"
+  },
+  "popup_section_index_detail_record_format": {
+    "message": "[Danh sách/Chi tiết] Định dạng bản ghi:"
+  },
+  "popup_section_preview_title": {
+    "message": "Xem trước bộ nhớ tạm"
+  },
+  "popup_footer_developer": {
+    "message": "Developer:"
+  },
+  "popup_footer_version": {
+    "message": "version:"
+  },
+  "popup_button_copy": {
+    "message": "Sao chép"
+  },
+  "popup_button_copy_image": {
+    "message": "Sao chép hình ảnh"
+  },
+  "popup_applied_template": {
+    "message": "Mẫu đang dùng: [ {name} ]"
+  },
+  "popup_error_invalid_url": {
+    "message": "Phát hiện URL không hợp lệ.\nVui lòng chạy trên trang kintone."
+  },
+  "popup_error_no_record_index": {
+    "message": "Không tìm thấy bản ghi.\nVui lòng chạy trên trang danh sách bản ghi."
+  },
+  "popup_error_no_table": {
+    "message": "Không tìm thấy phần tử bảng.\nVui lòng chạy trên trang danh sách hoặc trang báo cáo."
+  },
+  "popup_error_no_record_detail": {
+    "message": "Không tìm thấy bản ghi.\nVui lòng chạy trên trang chi tiết bản ghi."
+  },
+  "popup_error_customize_not_supported": {
+    "message": "Không thể chạy trên trang tùy chỉnh."
+  },
+  "popup_error_unsupported_page": {
+    "message": "Trang không được hỗ trợ. ({category} / {url})"
+  },
+  "context_copy_simple_url": {
+    "message": "Sao chép URL đơn giản"
+  },
+  "context_toggle_linebreak": {
+    "message": "Chuyển đổi ngắt dòng"
+  },
+  "review_dialog_title": {
+    "message": "Cảm ơn bạn đã sử dụng kinToys!"
+  },
+  "review_dialog_description": {
+    "message": "Vui lòng đánh giá chúng tôi trên Chrome Web Store"
+  },
+  "review_dialog_button_review": {
+    "message": "Đánh giá ngay"
+  },
+  "review_dialog_button_later": {
+    "message": "Để sau"
+  },
+  "review_dialog_button_never": {
+    "message": "Không hiển thị nữa"
+  }
+}

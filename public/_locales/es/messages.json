@@ -6,118 +6,118 @@
     "message": " - Keep Integrating New Toys"
   },
   "options_section_template_title": {
-    "message": "Template for one record"
+    "message": "Plantilla por registro"
   },
   "options_input_template_name_placeholder": {
-    "message": "template name"
+    "message": "nombre de la plantilla"
   },
   "options_label_template_name": {
-    "message": "Template Name"
+    "message": "Nombre de la plantilla"
   },
   "options_label_template_history": {
-    "message": "History"
+    "message": "Historial"
   },
   "options_textarea_template_placeholder": {
-    "message": "fill in template for kintone record."
+    "message": "Ingrese la plantilla para el registro de kintone."
   },
   "options_section_options_title": {
-    "message": "Options"
+    "message": "Opciones"
   },
   "options_option_imagecopy": {
-    "message": "Enable image copy button"
+    "message": "Habilitar botón de copia de imagen"
   },
   "options_option_break_multiline": {
-    "message": "Break multi-line and single-line text (list view)"
+    "message": "Mostrar saltos de línea en texto multilínea/línea única (vista de lista)"
   },
   "options_option_subtable_importer": {
-    "message": "Enable Subtable Importer"
+    "message": "Habilitar importador de subtablas"
   },
   "options_button_save": {
-    "message": "save"
+    "message": "guardar"
   },
   "options_button_import": {
-    "message": "import"
+    "message": "importar"
   },
   "options_alert_import_failed": {
-    "message": "Failed to import settings. [{error}]"
+    "message": "Error al importar la configuración. [{error}]"
   },
   "options_button_apply": {
-    "message": "apply"
+    "message": "aplicar"
   },
   "options_button_download": {
-    "message": "download"
+    "message": "descargar"
   },
   "options_select_default_option": {
-    "message": "-- Select Template --"
+    "message": "-- Seleccionar plantilla --"
   },
   "options_select_export_options": {
-    "message": "-- Export Settings --"
+    "message": "-- Exportar configuración --"
   },
   "options_select_export_label": {
-    "message": "-- Export --"
+    "message": "-- Exportar --"
   },
   "options_alert_template_required": {
-    "message": "Enter a template name before saving."
+    "message": "Ingrese un nombre de plantilla antes de guardar."
   },
   "options_alert_import_success": {
-    "message": "Loaded JSON as options."
+    "message": "JSON cargado como configuración de opciones."
   },
   "options_alert_save_failed": {
-    "message": "Failed to save options. [{error}]"
+    "message": "Error al guardar las opciones. [{error}]"
   },
   "options_alert_saved": {
-    "message": "Options saved."
+    "message": "Opciones guardadas."
   },
   "options_language_label": {
-    "message": "Language"
+    "message": "Idioma"
   },
   "options_language_ja": {
-    "message": "Japanese"
+    "message": "Japonés"
   },
   "options_language_en": {
-    "message": "English"
+    "message": "Inglés"
   },
   "options_language_zh_cn": {
-    "message": "Chinese (Simplified)"
+    "message": "Chino (simplificado)"
   },
   "options_language_zh_tw": {
-    "message": "Chinese (Traditional)"
+    "message": "Chino (tradicional)"
   },
   "options_language_es": {
-    "message": "Spanish"
+    "message": "Español"
   },
   "options_language_pt_br": {
-    "message": "Portuguese (Brazil)"
+    "message": "Portugués (Brasil)"
   },
   "options_language_th": {
-    "message": "Thai"
+    "message": "Tailandés"
   },
   "options_language_vi": {
-    "message": "Vietnamese"
+    "message": "Vietnamita"
   },
   "options_footer_contact": {
-    "message": "contact:"
+    "message": "contacto:"
   },
   "options_footer_bookmarks": {
-    "message": "bookmarks"
+    "message": "marcadores"
   },
   "popup_title": {
     "message": "kinToys Popup"
   },
   "popup_link_options": {
-    "message": "options"
+    "message": "opciones"
   },
   "popup_section_common_delimiter": {
-    "message": "[Common] Delimiter:"
+    "message": "[Común] Delimitador:"
   },
   "popup_section_index_click_range": {
-    "message": "[List] Table click range:"
+    "message": "[Lista] Rango de clic en tabla:"
   },
   "popup_section_index_detail_record_format": {
-    "message": "[List/Detail] Record format:"
+    "message": "[Lista/Detalle] Formato de registro:"
   },
   "popup_section_preview_title": {
-    "message": "Clipboard Preview"
+    "message": "Vista previa del portapapeles"
   },
   "popup_footer_developer": {
     "message": "Developer:"
@@ -126,51 +126,51 @@
     "message": "version:"
   },
   "popup_button_copy": {
-    "message": "Grab Copy"
+    "message": "Copiar"
   },
   "popup_button_copy_image": {
-    "message": "Image Copy"
+    "message": "Copiar imagen"
   },
   "popup_applied_template": {
-    "message": "Applied template: [ {name} ]"
+    "message": "Plantilla aplicada: [ {name} ]"
   },
   "popup_error_invalid_url": {
-    "message": "Invalid URL detected.\nPlease run this on a kintone page."
+    "message": "URL no válida detectada.\nEjecute esto en una página de kintone."
   },
   "popup_error_no_record_index": {
-    "message": "No records found.\nPlease run this on the record list page."
+    "message": "No se encontraron registros.\nEjecute esto en la página de lista de registros."
   },
   "popup_error_no_table": {
-    "message": "Table element not found.\nPlease run this on the list or report page."
+    "message": "Elemento de tabla no encontrado.\nEjecute esto en la página de lista o informe."
   },
   "popup_error_no_record_detail": {
-    "message": "No records found.\nPlease run this on the record detail page."
+    "message": "No se encontraron registros.\nEjecute esto en la página de detalle del registro."
   },
   "popup_error_customize_not_supported": {
-    "message": "Cannot run on the customize page."
+    "message": "No se puede ejecutar en la página de personalización."
   },
   "popup_error_unsupported_page": {
-    "message": "Unsupported page. ({category} / {url})"
+    "message": "Página no compatible. ({category} / {url})"
   },
   "context_copy_simple_url": {
-    "message": "Copy Simple URL"
+    "message": "Copiar URL simplificada"
   },
   "context_toggle_linebreak": {
-    "message": "Toggle LineBreak"
+    "message": "Alternar salto de línea"
   },
   "review_dialog_title": {
-    "message": "Thank you for using kinToys!"
+    "message": "¡Gracias por usar kinToys!"
   },
   "review_dialog_description": {
-    "message": "Please consider rating us on the Chrome Web Store"
+    "message": "Considere calificarnos en Chrome Web Store"
   },
   "review_dialog_button_review": {
-    "message": "Rate Now"
+    "message": "Calificar ahora"
   },
   "review_dialog_button_later": {
-    "message": "Later"
+    "message": "Más tarde"
   },
   "review_dialog_button_never": {
-    "message": "Don't show again"
+    "message": "No mostrar de nuevo"
   }
 }
