@@ -132,14 +132,14 @@ export class SettingDialogDuplicator {
     showTooltip(event: MouseEvent, message: string) {
         const tooltip = document.createElement("span");
         tooltip.textContent = message;
-        tooltip.style.position = "absolute";
+        tooltip.style.position = "fixed";
         tooltip.style.backgroundColor = "black";
         tooltip.style.color = "white";
         tooltip.style.padding = "5px";
         tooltip.style.borderRadius = "5px";
         tooltip.style.top = `${event.clientY + 10}px`;
         tooltip.style.left = `${event.clientX + 10}px`;
-        tooltip.style.zIndex = '1000';
+        tooltip.style.zIndex = '100000';
         document.body.appendChild(tooltip);
 
         setTimeout(() => {
