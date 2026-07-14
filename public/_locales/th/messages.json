@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "ไม่แสดงอีก"
+  },
+  "options_label_template_manager": {
+    "message": "จัดการเทมเพลต"
+  },
+  "options_template_sync_note": {
+    "message": "เทมเพลตจะถูกบันทึกไว้บนอุปกรณ์นี้เท่านั้นและจะไม่ซิงค์ระหว่างอุปกรณ์ หากต้องการย้ายไปยังอุปกรณ์อื่น โปรดใช้ปุ่มนำเข้า / ส่งออกในตัวจัดการเทมเพลต"
+  },
+  "options_template_manager_empty": {
+    "message": "ยังไม่มีเทมเพลตที่บันทึกไว้"
+  },
+  "options_template_manager_up": {
+    "message": "เลื่อนขึ้น"
+  },
+  "options_template_manager_down": {
+    "message": "เลื่อนลง"
+  },
+  "options_template_manager_delete": {
+    "message": "ลบ"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "ลบเทมเพลต \"{name}\" หรือไม่?"
   }
 }

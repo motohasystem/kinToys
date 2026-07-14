@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "Don't show again"
+  },
+  "options_label_template_manager": {
+    "message": "Manage templates"
+  },
+  "options_template_sync_note": {
+    "message": "Templates are saved on this device only and are not synced across devices. To move them to another device, use the import / export buttons in the template manager above."
+  },
+  "options_template_manager_empty": {
+    "message": "No saved templates yet."
+  },
+  "options_template_manager_up": {
+    "message": "Move up"
+  },
+  "options_template_manager_down": {
+    "message": "Move down"
+  },
+  "options_template_manager_delete": {
+    "message": "Delete"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "Delete the template \"{name}\"?"
   }
 }

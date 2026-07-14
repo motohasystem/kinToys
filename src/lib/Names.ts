@@ -31,6 +31,9 @@ export class Names {
 
     };
 
+    // chrome.storage.local に格納するキー（utils.ts の Utils.LOCAL_KEYS と一致させること）
+    static readonly LOCAL_KEYS = ["template_history", "textarea_fillin_template"];
+
     static readonly Messages = {
         changeBreaklineOption: "changeBreaklineOption",
         changePopupOptions: "changePopupOptions",

@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "Không hiển thị nữa"
+  },
+  "options_label_template_manager": {
+    "message": "Quản lý mẫu"
+  },
+  "options_template_sync_note": {
+    "message": "Mẫu chỉ được lưu trên thiết bị này và không được đồng bộ giữa các thiết bị. Để chuyển sang thiết bị khác, hãy dùng nút nhập / xuất trong trình quản lý mẫu."
+  },
+  "options_template_manager_empty": {
+    "message": "Chưa có mẫu nào được lưu."
+  },
+  "options_template_manager_up": {
+    "message": "Di chuyển lên"
+  },
+  "options_template_manager_down": {
+    "message": "Di chuyển xuống"
+  },
+  "options_template_manager_delete": {
+    "message": "Xóa"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "Xóa mẫu \"{name}\"?"
   }
 }

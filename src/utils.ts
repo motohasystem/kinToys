@@ -230,6 +230,78 @@ export class Utils {
         throw new Error(`Invalid argument: key: ${key} / name: ${name}`);
     }
 
+    /**
+     * chrome.storage.local に格納するキーの一覧。
+     * テンプレート本体・テンプレート履歴は容量が大きく、chrome.storage.sync の
+     * 1アイテム上限（QUOTA_BYTES_PER_ITEM = 8KB）を超えて保存に失敗するため local に置く。
+     * それ以外の小さな設定（ラジオ・チェックボックス・言語など）は sync に残して端末間同期する。
+     *   - "template_history"        = CONST.key_template_history
+     *   - "textarea_fillin_template" = Ids.id_fillin_template
+     */
+    static readonly LOCAL_KEYS = ["template_history", "textarea_fillin_template"];
+
+    static isLocalKey(key: string): boolean {
+        return Utils.LOCAL_KEYS.includes(key);
+    }
+
+    /**
+     * sync と local の両方からオプションを取得してマージした1つのオブジェクトを返す。
+     * local 側（テンプレート）が sync 側より優先される。
+     */
+    static async getAllOptions(): Promise<{ [key: string]: any }> {
+        const [syncOptions, localOptions] = await Promise.all([
+            chrome.storage.sync.get(null),
+            chrome.storage.local.get(Utils.LOCAL_KEYS),
+        ]);
+        return { ...syncOptions, ...localOptions };
+    }
+
+    /**
+     * オプションをキーごとに local / sync に振り分けて保存する。
+     * 容量超過などの失敗は例外として呼び出し側に伝わる（呼び出し側で catch すること）。
+     */
+    static async setOptions(options: { [key: string]: any }): Promise<void> {
+        const localOptions: { [key: string]: any } = {};
+        const syncOptions: { [key: string]: any } = {};
+        for (const key of Object.keys(options)) {
+            (Utils.isLocalKey(key) ? localOptions : syncOptions)[key] = options[key];
+        }
+
+        const tasks: Promise<void>[] = [];
+        if (Object.keys(localOptions).length > 0) {
+            tasks.push(chrome.storage.local.set(localOptions));
+        }
+        if (Object.keys(syncOptions).length > 0) {
+            tasks.push(chrome.storage.sync.set(syncOptions));
+        }
+        await Promise.all(tasks);
+    }
+
+    /**
+     * 旧バージョンで sync に保存されていたテンプレート系データを local へ移行する。
+     * local に同じキーが既にある場合はそちらを優先（上書きしない）。
+     * 移行後は sync 側の旧データを削除して sync の容量を解放する。
+     */
+    static async migrateTemplatesToLocal(): Promise<void> {
+        const syncData = await chrome.storage.sync.get(Utils.LOCAL_KEYS);
+        const syncKeys = Object.keys(syncData);
+        if (syncKeys.length === 0) {
+            return;
+        }
+
+        const localData = await chrome.storage.local.get(Utils.LOCAL_KEYS);
+        const toMove: { [key: string]: any } = {};
+        for (const key of syncKeys) {
+            if (!(key in localData)) {
+                toMove[key] = syncData[key];
+            }
+        }
+        if (Object.keys(toMove).length > 0) {
+            await chrome.storage.local.set(toMove);
+        }
+        await chrome.storage.sync.remove(syncKeys);
+    }
+
     static fillTemplate(template: string, record: { [key: string]: { value: string } }) {
         let filledTemplate = template;
         for (const key in record) {

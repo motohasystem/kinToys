@@ -96,6 +96,19 @@ import { Utils } from "./utils";
 
     });
 
+    // 一覧／集計テーブルの描画完了後にクリックイベントを再バインドする。
+    // content_script は document_start で動作するため、初回の loadPopupOptions ハンドシェイクによる
+    // deal() の時点ではまだ一覧テーブルが未描画で、クリックハンドラが張られないことがある（レース）。
+    // kintone の一覧/集計表示イベントで deal() を呼び直し、確実にハンドラを再登録する。
+    // deal() は引数なしのとき、直近に受け取ったオプション状態を保持したまま再バインドする。
+    if (typeof kintone !== 'undefined' && kintone.events) {
+        kintone.events.on(['app.record.index.show', 'app.report.show', 'app.record.detail.show'], (event: any) => {
+            console.log('kintone list/report/detail shown: rebind click handlers')
+            eventDealer.deal()
+            return event
+        })
+    }
+
     //
     // ここから下はプラグイン画面用のスクリプト
     //

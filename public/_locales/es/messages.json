@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "No mostrar de nuevo"
+  },
+  "options_label_template_manager": {
+    "message": "Gestionar plantillas"
+  },
+  "options_template_sync_note": {
+    "message": "Las plantillas se guardan solo en este dispositivo y no se sincronizan entre dispositivos. Para moverlas a otro dispositivo, usa los botones de importar / exportar del gestor de plantillas."
+  },
+  "options_template_manager_empty": {
+    "message": "Aún no hay plantillas guardadas."
+  },
+  "options_template_manager_up": {
+    "message": "Subir"
+  },
+  "options_template_manager_down": {
+    "message": "Bajar"
+  },
+  "options_template_manager_delete": {
+    "message": "Eliminar"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "¿Eliminar la plantilla \"{name}\"?"
   }
 }

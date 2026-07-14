@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "もう表示しない"
+  },
+  "options_label_template_manager": {
+    "message": "テンプレート管理"
+  },
+  "options_template_sync_note": {
+    "message": "テンプレートはこの端末にのみ保存され、端末間で同期されません。別の端末へ移すときは、テンプレート管理内のインポート／エクスポート機能をご利用ください。"
+  },
+  "options_template_manager_empty": {
+    "message": "保存されたテンプレートはありません。"
+  },
+  "options_template_manager_up": {
+    "message": "上へ移動"
+  },
+  "options_template_manager_down": {
+    "message": "下へ移動"
+  },
+  "options_template_manager_delete": {
+    "message": "削除"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "テンプレート「{name}」を削除しますか?"
   }
 }

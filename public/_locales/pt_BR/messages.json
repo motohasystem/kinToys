@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "Não mostrar novamente"
+  },
+  "options_label_template_manager": {
+    "message": "Gerenciar modelos"
+  },
+  "options_template_sync_note": {
+    "message": "Os modelos são salvos apenas neste dispositivo e não são sincronizados entre dispositivos. Para movê-los para outro dispositivo, use os botões de importar / exportar no gerenciador de modelos."
+  },
+  "options_template_manager_empty": {
+    "message": "Ainda não há modelos salvos."
+  },
+  "options_template_manager_up": {
+    "message": "Mover para cima"
+  },
+  "options_template_manager_down": {
+    "message": "Mover para baixo"
+  },
+  "options_template_manager_delete": {
+    "message": "Excluir"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "Excluir o modelo \"{name}\"?"
   }
 }

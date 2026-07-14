@@ -40,7 +40,10 @@ export type Options = { [key: string]: string | {} };
         updateButtonLabel();
 
         // 保存された値を読み込む
-        chrome.storage.sync.get(null, (options: Options) => {
+        // 旧バージョンで sync に保存されたテンプレートを local へ移行してから、両者をマージして読む
+        await Utils.migrateTemplatesToLocal();
+        const options = await Utils.getAllOptions() as Options;
+        {
             console.log({ options });
 
             Utils.loadOption(options, Ids.id_fillin_template, null);
@@ -52,29 +55,21 @@ export type Options = { [key: string]: string | {} };
                 input_template_name.value = options[Ids.id_input_template_name] as string;
             }
 
-            // テンプレート履歴を読み込む
-            let templateHistory: { [key: string]: string } = options[CONST.key_template_history] as { [key: string]: string };
-            console.log({ templateHistory });
-            if (templateHistory == undefined) {
-                templateHistory = {}
+            // テンプレート履歴を読み込み、ドロップダウンと管理リストを描画
+            if (options[CONST.key_template_history] == undefined) {
+                options[CONST.key_template_history] = {};
             }
+            renderTemplateUI(options);
 
-            const select = document.getElementById(Ids.id_select_template_history) as HTMLSelectElement;
-            // 初期値を設定
-            [CONST.key_default_option, CONST.key_export_options].forEach((key) => {
-                const option = document.createElement("option");
-                option.text = key;
-                option.value = "";
-                select.add(option);
-            });
-
-            // 読み込んだ履歴を反映
-            if (select) {
-                Object.keys(templateHistory).forEach((key) => {
-                    const option = document.createElement("option");
-                    option.text = key;
-                    option.value = templateHistory[key];
-                    select.add(option);
+            // テンプレート管理パネルの開閉状態を localStorage に記憶（保存時のリロードでも維持）
+            const tmDetails = document.getElementById("template_manager_details") as HTMLDetailsElement | null;
+            if (tmDetails) {
+                const stored = localStorage.getItem("kintoys_template_manager_open");
+                if (stored !== null) {
+                    tmDetails.open = stored === "true";
+                }
+                tmDetails.addEventListener("toggle", () => {
+                    localStorage.setItem("kintoys_template_manager_open", String(tmDetails.open));
                 });
             }
 
@@ -121,7 +116,7 @@ export type Options = { [key: string]: string | {} };
                 .getElementById("input_import_file")
                 ?.addEventListener("change", handleFileImport);
 
-        });
+        }
     });
 
     // ファイル選択ダイアログを開く
@@ -141,10 +136,15 @@ export type Options = { [key: string]: string | {} };
             try {
                 const content = e.target?.result as string;
                 const options = JSON.parse(content);
-                chrome.storage.sync.set(options, () => {
-                    alert(t("options_alert_import_success"));
-                    location.reload();
-                });
+                // テンプレートは local、その他は sync に振り分けて保存
+                Utils.setOptions(options)
+                    .then(() => {
+                        alert(t("options_alert_import_success"));
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        alert(t("options_alert_import_failed", { error: String(err) }));
+                    });
             } catch (err) {
                 alert(t("options_alert_import_failed", { error: String(err) }));
             }
@@ -197,7 +197,7 @@ export type Options = { [key: string]: string | {} };
     }
 
     // 保存ボタンのクリックイベント
-    function saveTemplate(options: Options) {
+    async function saveTemplate(options: Options) {
         console.log('clicked save button')
         // 見出しのインプット要素
         const template_name = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
@@ -212,7 +212,7 @@ export type Options = { [key: string]: string | {} };
 
             try {
                 const options = JSON.parse(textarea.value);
-                chrome.storage.sync.set(options);
+                await Utils.setOptions(options);
                 alert(t("options_alert_import_success"))
             }
             catch (e) {
@@ -253,12 +253,19 @@ export type Options = { [key: string]: string | {} };
             const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
             options[Ids.id_enable_subtable_importer] = el_subtable.checked ? "true" : "false";
 
-            // オプションを保存
-            chrome.storage.sync.set(options);
-            console.log({ options });
-            alert(t("options_alert_saved"))
-            // リロード
-            location.reload();
+            // オプションを保存（テンプレートは local、その他は sync に振り分け）
+            try {
+                await Utils.setOptions(options);
+                console.log({ options });
+                alert(t("options_alert_saved"))
+                // リロード
+                location.reload();
+            }
+            catch (e) {
+                const msg = t("options_alert_save_failed", { error: String(e) })
+                console.error(msg);
+                alert(msg);
+            }
         }
     }
 
@@ -303,6 +310,150 @@ export type Options = { [key: string]: string | {} };
 
     }
 
+    // テンプレート履歴のドロップダウンと管理リストを再描画する
+    function renderTemplateUI(options: Options) {
+        const templateHistory = (options[CONST.key_template_history] as { [key: string]: string }) ?? {};
+
+        // 履歴ドロップダウンを再構築
+        const select = document.getElementById(Ids.id_select_template_history) as HTMLSelectElement;
+        if (select) {
+            select.innerHTML = "";
+            [CONST.key_default_option, CONST.key_export_options].forEach((key) => {
+                const option = document.createElement("option");
+                option.text = key;
+                option.value = "";
+                select.add(option);
+            });
+            Object.keys(templateHistory).forEach((name) => {
+                const option = document.createElement("option");
+                option.text = name;
+                option.value = templateHistory[name];
+                select.add(option);
+            });
+        }
+
+        // 管理リストを再構築
+        renderTemplateManager(options);
+    }
+
+    // テンプレート管理リスト（並べ替え・個別削除）を描画する
+    function renderTemplateManager(options: Options) {
+        const list = document.getElementById("template_manager_list") as HTMLUListElement | null;
+        if (!list) return;
+
+        const templateHistory = (options[CONST.key_template_history] as { [key: string]: string }) ?? {};
+        const names = Object.keys(templateHistory);
+
+        list.innerHTML = "";
+
+        if (names.length === 0) {
+            const empty = document.createElement("li");
+            empty.className = "template-manager-empty";
+            empty.textContent = t("options_template_manager_empty");
+            list.appendChild(empty);
+            return;
+        }
+
+        names.forEach((name, index) => {
+            const li = document.createElement("li");
+            li.className = "template-manager-item";
+
+            // 名前をクリックするとエディタに読み込む
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "template-manager-name";
+            nameSpan.textContent = name;
+            nameSpan.title = name;
+            nameSpan.addEventListener("click", () => loadTemplateIntoEditor(name, templateHistory[name]));
+            li.appendChild(nameSpan);
+
+            const actions = document.createElement("div");
+            actions.className = "template-manager-actions";
+
+            const upBtn = document.createElement("button");
+            upBtn.type = "button";
+            upBtn.className = "tm-btn tm-up";
+            upBtn.textContent = "↑";
+            upBtn.title = t("options_template_manager_up");
+            upBtn.disabled = index === 0;
+            upBtn.addEventListener("click", () => moveTemplate(options, name, -1));
+            actions.appendChild(upBtn);
+
+            const downBtn = document.createElement("button");
+            downBtn.type = "button";
+            downBtn.className = "tm-btn tm-down";
+            downBtn.textContent = "↓";
+            downBtn.title = t("options_template_manager_down");
+            downBtn.disabled = index === names.length - 1;
+            downBtn.addEventListener("click", () => moveTemplate(options, name, 1));
+            actions.appendChild(downBtn);
+
+            const delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "tm-btn tm-delete";
+            delBtn.textContent = "🗑";
+            delBtn.title = t("options_template_manager_delete");
+            delBtn.addEventListener("click", () => deleteTemplate(options, name));
+            actions.appendChild(delBtn);
+
+            li.appendChild(actions);
+            list.appendChild(li);
+        });
+    }
+
+    // テンプレートをエディタ（名前欄・本文欄）に読み込む
+    function loadTemplateIntoEditor(name: string, body: string) {
+        const input = document.getElementById(Ids.id_input_template_name) as HTMLInputElement;
+        const textarea = document.getElementById(Ids.id_fillin_template) as HTMLTextAreaElement;
+        if (input) input.value = name;
+        if (textarea) textarea.value = body;
+        updateButtonLabel(name);
+    }
+
+    // テンプレートの表示順を1つ上／下へ移動する（direction: -1=上, 1=下）
+    async function moveTemplate(options: Options, name: string, direction: -1 | 1) {
+        const templateHistory = (options[CONST.key_template_history] as { [key: string]: string }) ?? {};
+        const names = Object.keys(templateHistory);
+        const index = names.indexOf(name);
+        const target = index + direction;
+        if (index < 0 || target < 0 || target >= names.length) {
+            return;
+        }
+
+        // 順序を入れ替えてオブジェクトを再構築（挿入順がそのまま表示順になる）
+        [names[index], names[target]] = [names[target], names[index]];
+        const reordered: { [key: string]: string } = {};
+        names.forEach((key) => { reordered[key] = templateHistory[key]; });
+        options[CONST.key_template_history] = reordered;
+
+        await persistTemplateHistory(options);
+        renderTemplateUI(options);
+    }
+
+    // テンプレートを個別に削除する
+    async function deleteTemplate(options: Options, name: string) {
+        if (!confirm(t("options_template_manager_delete_confirm", { name }))) {
+            return;
+        }
+
+        const templateHistory = (options[CONST.key_template_history] as { [key: string]: string }) ?? {};
+        delete templateHistory[name];
+        options[CONST.key_template_history] = templateHistory;
+
+        await persistTemplateHistory(options);
+        renderTemplateUI(options);
+    }
+
+    // テンプレート履歴（local）だけを保存する
+    async function persistTemplateHistory(options: Options) {
+        try {
+            await Utils.setOptions({ [CONST.key_template_history]: options[CONST.key_template_history] });
+        } catch (e) {
+            const msg = t("options_alert_save_failed", { error: String(e) });
+            console.error(msg);
+            alert(msg);
+        }
+    }
+
     function disable_export_button() {
         const btn_export = document.getElementById("button_export_options")
         if (btn_export) {
@@ -329,6 +480,12 @@ export type Options = { [key: string]: string | {} };
         if (btn_export) {
             btn_export.addEventListener("click", export_function.bind(null, options));
             btn_export.style.display = "block";
+        }
+
+        // ダウンロードボタンは折りたたみ式のテンプレート管理内にあるため、パネルを開いて見えるようにする
+        const tmDetails = document.getElementById("template_manager_details") as HTMLDetailsElement | null;
+        if (tmDetails && !tmDetails.open) {
+            tmDetails.open = true;
         }
     }
 

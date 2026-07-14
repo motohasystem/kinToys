@@ -172,5 +172,26 @@
   },
   "review_dialog_button_never": {
     "message": "不再显示"
+  },
+  "options_label_template_manager": {
+    "message": "模板管理"
+  },
+  "options_template_sync_note": {
+    "message": "模板仅保存在本设备上，不会在设备间同步。如需迁移到其他设备，请使用模板管理中的导入／导出功能。"
+  },
+  "options_template_manager_empty": {
+    "message": "尚无已保存的模板。"
+  },
+  "options_template_manager_up": {
+    "message": "上移"
+  },
+  "options_template_manager_down": {
+    "message": "下移"
+  },
+  "options_template_manager_delete": {
+    "message": "删除"
+  },
+  "options_template_manager_delete_confirm": {
+    "message": "要删除模板“{name}”吗？"
   }
 }

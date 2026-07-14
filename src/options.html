@@ -57,6 +57,26 @@
                         placeholder="fill in template for kintone record."
                         data-i18n-placeholder="options_textarea_template_placeholder"></textarea>
                 </div>
+
+                <div class="template-manager">
+                    <details id="template_manager_details" class="template-manager-details">
+                        <summary class="template-manager-summary">
+                            <svg class="tm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span data-i18n="options_label_template_manager">Manage templates</span>
+                        </summary>
+                        <ul id="template_manager_list" class="template-manager-list"></ul>
+                        <div class="template-manager-io">
+                            <input type="file" id="input_import_file" accept=".json,application/json" style="display:none;">
+                            <button id="button_import_options" class="btn btn-secondary" data-i18n="options_button_import">import</button>
+                            <button id="button_export_options" class="btn btn-secondary" style="display:none;" data-i18n="options_button_download">download</button>
+                        </div>
+                    </details>
+                    <p class="template-sync-note" data-i18n="options_template_sync_note">
+                        Templates are saved on this device only and are not synced across devices. To move them to another device, use the import / export buttons in the template manager above.
+                    </p>
+                </div>
             </section>
 
             <section class="section-card options-section">
@@ -118,9 +138,6 @@
         </main>
 
         <div class="action-bar">
-            <input type="file" id="input_import_file" accept=".json,application/json" style="display:none;">
-            <button id="button_import_options" class="btn btn-secondary" data-i18n="options_button_import">import</button>
-            <button id="button_export_options" class="btn btn-secondary" style="display:none;" data-i18n="options_button_download">download</button>
             <button id="button_save_options" class="btn btn-primary" data-i18n="options_button_save">save</button>
         </div>
 
