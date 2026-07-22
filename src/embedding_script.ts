@@ -6,6 +6,11 @@ import { TemplateEmbedder } from "./lib/template_embedder";
 import { Utils } from "./utils";
 
 (() => {
+    // 詳細画面で「表示どおりの文字列」に置き換えるフィールドタイプ（数値・計算）
+    // これらは桁区切り・単位（前置/後置）・小数桁などの表示設定を持つため、
+    // 生値ではなく getFieldElement で取得した表示文字列をテンプレートに差し込む。
+    const DISPLAY_VALUE_TYPES = new Set(["NUMBER", "CALC"]);
+
     // 各所のDOMにクリックイベントを配布する
     const eventDealer = new ClickEventDealer()
     const embedder = new TemplateEmbedder("")
@@ -62,7 +67,9 @@ import { Utils } from "./utils";
                     if (alignment == 'csv' || alignment == 'tsv') {
                         response = embedder.alignment(record.record, alignment)
                     } else if (alignment == 'template') {
-                        response = embedder.embed(record.record, template)
+                        // 詳細画面では、数値/計算フィールドを画面表示どおりの文字列（桁区切り・単位など）に置き換えて差し込む
+                        const displayRecord = buildDetailDisplayRecord(record.record)
+                        response = embedder.embed(displayRecord as any, template)
                     } else if (alignment == 'json') {
                         response = JSON.stringify(record.record, null, 2)
                     }
@@ -113,6 +120,32 @@ import { Utils } from "./utils";
     // ここから下はプラグイン画面用のスクリプト
     //
 
+
+    // 詳細画面で、数値/計算フィールドの値を「画面表示どおりの文字列」に置き換えたレコードを作る。
+    // getFieldElement で描画済みの表示テキスト（桁区切り・単位の前置/後置など）を取得する。
+    // 取得できない場合や、サブテーブル等の配列値は生値のままにする。
+    function buildDetailDisplayRecord(record: { [key: string]: { type?: string; value: any } }) {
+        const displayRecord: { [key: string]: { type?: string; value: any } } = {};
+        for (const code in record) {
+            const field = record[code];
+            if (field && !Array.isArray(field.value) && field.type && DISPLAY_VALUE_TYPES.has(field.type)) {
+                let displayValue = field.value;
+                try {
+                    const el = kintone.app.record.getFieldElement(code);
+                    const text = el && el.textContent != null ? el.textContent.trim() : "";
+                    if (text !== "") {
+                        displayValue = text;
+                    }
+                } catch (e) {
+                    console.warn(`getFieldElement failed for ${code}`, e);
+                }
+                displayRecord[code] = { ...field, value: displayValue };
+            } else {
+                displayRecord[code] = field;
+            }
+        }
+        return displayRecord;
+    }
 
     function insertScriptButtons() {
         const here = Utils.whereAmI(location.href)
