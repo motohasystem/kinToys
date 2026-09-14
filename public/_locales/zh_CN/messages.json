@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "多行/单行文本换行显示（列表页面）"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "以格式化的JSON复制字段设置"
+  },
   "options_option_subtable_importer": {
     "message": "启用子表格导入器"
   },

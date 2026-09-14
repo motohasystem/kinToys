@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "แสดงการขึ้นบรรทัดใหม่ในข้อความหลายบรรทัด/บรรทัดเดียว (มุมมองรายการ)"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "คัดลอกการตั้งค่าฟิลด์เป็น JSON ที่จัดรูปแบบ"
+  },
   "options_option_subtable_importer": {
     "message": "เปิดใช้งานตัวนำเข้าตารางย่อย"
   },

@@ -91,6 +91,12 @@ export type Options = { [key: string]: string | {} };
                 el_subtable.checked = options[Ids.id_enable_subtable_importer] === "true" ? true : false;
             }
 
+            // フィールド設定を整形JSONでコピーするオプションを読み込む（未設定時は整形ON）
+            const el_pretty = document.getElementById(Ids.id_field_setting_copy_pretty) as HTMLInputElement;
+            if (el_pretty) {
+                el_pretty.checked = options[Ids.id_field_setting_copy_pretty] !== "false";
+            }
+
 
             // テンプレート履歴の選択イベント
             document
@@ -252,6 +258,10 @@ export type Options = { [key: string]: string | {} };
             // サブテーブルのインポート機能を有効にするかどうかのオプションを保存
             const el_subtable = document.getElementById(Ids.id_enable_subtable_importer) as HTMLInputElement;
             options[Ids.id_enable_subtable_importer] = el_subtable.checked ? "true" : "false";
+
+            // フィールド設定を整形JSONでコピーするオプションを保存
+            const el_pretty = document.getElementById(Ids.id_field_setting_copy_pretty) as HTMLInputElement;
+            options[Ids.id_field_setting_copy_pretty] = el_pretty.checked ? "true" : "false";
 
             // オプションを保存（テンプレートは local、その他は sync に振り分け）
             try {

@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "Hiển thị ngắt dòng trong văn bản nhiều dòng/một dòng (chế độ xem danh sách)"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "Sao chép cài đặt trường dưới dạng JSON đã định dạng"
+  },
   "options_option_subtable_importer": {
     "message": "Bật trình nhập bảng con"
   },

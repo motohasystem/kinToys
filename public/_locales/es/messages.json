@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "Mostrar saltos de línea en texto multilínea/línea única (vista de lista)"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "Copiar la configuración de campos como JSON con formato"
+  },
   "options_option_subtable_importer": {
     "message": "Habilitar importador de subtablas"
   },

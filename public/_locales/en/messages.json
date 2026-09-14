@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "Break multi-line and single-line text (list view)"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "Copy field settings as formatted JSON"
+  },
   "options_option_subtable_importer": {
     "message": "Enable Subtable Importer"
   },

@@ -29,6 +29,9 @@
   "options_option_break_multiline": {
     "message": "複数行・単一行テキストを改行表示（一覧画面）"
   },
+  "options_option_field_setting_copy_pretty": {
+    "message": "フィールド設定を整形JSONでコピー"
+  },
   "options_option_subtable_importer": {
     "message": "サブテーブルインポーターを有効化"
   },
