@@ -1,6 +1,7 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
 // import { Names } from "./lib/Names";
-import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
+import { FieldSettingDuplicator } from "./lib/field_setting_duplicator";
+import { FilterDialogDuplicator } from "./lib/filter_dialog_duplicator";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
@@ -16,9 +17,13 @@ import { Utils } from "./utils";
     const embedder = new TemplateEmbedder("")
     eventDealer.setTemplateEmbedder(embedder)
 
-    // ダイアログ表示を監視する
-    const duplicator = new SettingDialogDuplicator()
+    // フィールド設定ダイアログ（React刷新後の新DOM）の表示を監視する
+    const duplicator = new FieldSettingDuplicator()
     duplicator.watchDialogSpawn()
+
+    // 一覧画面の「絞り込む」ダイアログの表示を監視する
+    const filterDuplicator = new FilterDialogDuplicator()
+    filterDuplicator.watchDialogSpawn()
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
@@ -86,6 +91,8 @@ import { Utils } from "./utils";
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
+            // フィールド設定コピーの整形JSONオプションを反映する
+            duplicator.setOptions(options)
 
             const template = options.textarea_fillin_template
             if (template != null) {
