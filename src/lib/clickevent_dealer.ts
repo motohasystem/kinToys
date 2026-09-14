@@ -1,6 +1,14 @@
 import { Utils } from "../utils";
 import { TemplateEmbedder } from "./template_embedder";
 
+// 詳細画面のフィールド値コピーで対象外にするフィールドタイプ（値が無い/別扱い）
+// link・file はクリック遷移やダウンロードを優先するため除外（今回のスコープ A+B+E）
+const DETAIL_EXCLUDE_TYPES = new Set(["label", "hr", "spacer", "file", "link", "reference_table", "subtable"]);
+// 複数値フィールド（各値を区切って結合する必要がある）
+const DETAIL_MULTI_VALUE_TYPES = new Set(["check_box", "multiple_select", "user_select", "organization_select", "group_select"]);
+// 詳細画面のフィールドタイプをラッパのクラス名から判定する（例: control-single_line_text-field-gaia → single_line_text）
+const DETAIL_FIELD_TYPE_RE = /control-([a-z_]+)-field-gaia/;
+
 // 画面内のDOMにクリックイベントを配布するクラス
 export class ClickEventDealer {
     copyTarget: string;
@@ -17,6 +25,7 @@ export class ClickEventDealer {
 
     embedder: TemplateEmbedder | undefined;
     previousFunction: ((event: HTMLElement) => void) | undefined;
+    detailFieldClickHandler: ((event: MouseEvent) => void) | undefined;   // 詳細画面フィールド値コピーのリスナー
 
     clickTimer: number | null = null;
 
@@ -31,7 +40,8 @@ export class ClickEventDealer {
         this.setOptions(options)
         // this.options = options
 
-        this.dealClicknCopyFunction()   // クリックイベントの配布
+        this.dealClicknCopyFunction()   // クリックイベントの配布（一覧/詳細のテーブル）
+        this.dealDetailFieldClick()     // 詳細画面のテーブル外フィールド値コピー
         this.dealBreakMultilineStyle()  // マルチラインのセルのスタイルを変更
     }
 
@@ -76,12 +86,16 @@ export class ClickEventDealer {
             return;
         }
 
-        const table = document.querySelector("table");
-        if (!table) return;
+        // クリックイベントは document.body に委譲する。
+        // 初期表示後に非同期でレンダリングされるテーブル（関連レコード一覧など）にも、
+        // 再バインドなしで対応できる（テーブルが存在するタイミングに依存しない）。
+        const container = document.body;
+        if (!container) return;
 
-        // すでにイベントリスナーが設定されている場合は削除する
+        // すでに登録済みのリスナーがあれば外す
         if (this.previousFunction !== undefined) {
-            table.removeEventListener("click", this.previousFunction as unknown as EventListener);
+            container.removeEventListener("click", this.previousFunction as unknown as EventListener);
+            this.previousFunction = undefined;
         }
 
         // 機能オンオフチェックボックスがオフの場合はクリックイベントを配布せずに終了する
@@ -108,6 +122,9 @@ export class ClickEventDealer {
             let target = event.target as HTMLElement | null;
             // console.log({ target })
             if (target == null) return;
+
+            // body への委譲のため、テーブル外のクリックは対象外とする
+            if (target.closest("table") == null) return;
 
             // カーソル形状を取得する
             var computedStyle = window.getComputedStyle(target);
@@ -176,10 +193,129 @@ export class ClickEventDealer {
             }
 
         };
-        table.addEventListener("click", clicknCopyEvent);
 
+        container.addEventListener("click", clicknCopyEvent);
         this.previousFunction = clicknCopyEvent;
         console.log({ prev: this.previousFunction });
+    }
+
+    // 詳細画面で、テーブル外のフィールドをクリックしたら値をそのままコピーする
+    dealDetailFieldClick = () => {
+        const container = document.body;
+
+        // すでに登録済みのリスナーがあれば外す（再バインドのため）
+        if (this.detailFieldClickHandler) {
+            container.removeEventListener("click", this.detailFieldClickHandler);
+            this.detailFieldClickHandler = undefined;
+        }
+
+        // 詳細画面以外、または機能オフのときは登録しない
+        if (Utils.whereAmI(location.href) !== Utils.PageCategory.detail) return;
+        if (this.checkbox_on_off === "disabled") return;
+
+        const handler = (event: MouseEvent) => {
+            const target = event.target as HTMLElement | null;
+            if (target == null) return;
+
+            // テーブル内（サブテーブル/関連レコード一覧）のクリックはテーブル用ハンドラに任せる
+            if (target.closest("table")) return;
+
+            // フィールドの値コンテナを特定する
+            const valueEl = target.closest(".control-value-gaia") as HTMLElement | null;
+            if (valueEl == null) return;
+
+            // リンク・ボタン等の操作要素は遷移/操作を優先し、コピー対象外とする
+            if (target.closest("a, button, input, textarea, select")) return;
+            if (window.getComputedStyle(target).cursor === "pointer") return;
+
+            // フィールドラッパのクラス名から型を判定
+            const wrapper = valueEl.closest(".control-gaia") as HTMLElement | null;
+            const fieldType = this._detectDetailFieldType(wrapper);
+
+            // 値の無い型・別扱いの型は対象外
+            if (fieldType && DETAIL_EXCLUDE_TYPES.has(fieldType)) return;
+
+            const text = this._extractDetailFieldValue(valueEl, fieldType);
+            if (text == null || text === "") return;
+
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    this._flashElement(valueEl);
+                    console.log(`Copied field value! [${text}]`);
+                })
+                .catch((err) => {
+                    console.error("Failed to copy: ", err);
+                });
+        };
+
+        container.addEventListener("click", handler);
+        this.detailFieldClickHandler = handler;
+    }
+
+    // フィールドラッパのクラス名（control-<type>-field-gaia）から型名を取り出す
+    _detectDetailFieldType(wrapper: HTMLElement | null): string | undefined {
+        if (wrapper == null) return undefined;
+        const matched = wrapper.className.match(DETAIL_FIELD_TYPE_RE);
+        return matched ? matched[1] : undefined;
+    }
+
+    // フィールドの値コンテナから、型に応じて文字列値を取り出す（DOMのtextContentベース）
+    _extractDetailFieldValue(valueEl: HTMLElement, fieldType: string | undefined): string {
+        // 複数値フィールドは各値要素を区切って結合する
+        if (fieldType && DETAIL_MULTI_VALUE_TYPES.has(fieldType)) {
+            const items = Array.from(valueEl.children)
+                .map((el) => (el.textContent ?? "").trim())
+                .filter((t) => t !== "");
+            if (items.length > 0) {
+                return items.join(", ");
+            }
+        }
+        // 単一値・複数行・リッチテキスト等は textContent をそのまま（改行は保持）
+        return (valueEl.textContent ?? "").trim();
+    }
+
+    // コピー時に要素の背景をアクセントカラーにして、フィールド本来の背景色へフェードさせる。
+    // 詳細画面のフィールドは白以外の背景色を持つため、透明へフェードすると本来の色との差でちぐはぐに見える。
+    // そこで実際に見えている背景色（透明なら親を遡って取得）を終端色として補間する。
+    _flashElement = (el: HTMLElement) => {
+        const originalInline = el.style.backgroundColor;
+        const [ar, ag, ab] = Utils.CONST.accent_color_dec.split(",").map((n) => parseInt(n.trim(), 10));
+        const base = this._effectiveBackgroundColor(el);
+
+        let t = 0; // 0 = アクセントカラー, 1 = 本来の背景色
+        el.style.backgroundColor = `rgb(${ar}, ${ag}, ${ab})`;
+        const timer = setInterval(() => {
+            t += 0.1;
+            if (t >= 1) {
+                clearInterval(timer);
+                el.style.backgroundColor = originalInline; // インライン指定を戻し、CSS本来の背景へ復帰
+            } else {
+                const r = Math.round(ar + (base.r - ar) * t);
+                const g = Math.round(ag + (base.g - ag) * t);
+                const b = Math.round(ab + (base.b - ab) * t);
+                el.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            }
+        }, 50);
+    }
+
+    // 要素に実際に見えている背景色を返す。透明な場合は親を遡り、見つからなければ白を返す。
+    _effectiveBackgroundColor(el: HTMLElement | null): { r: number; g: number; b: number } {
+        let node: HTMLElement | null = el;
+        while (node) {
+            const parsed = this._parseRgb(window.getComputedStyle(node).backgroundColor);
+            if (parsed && parsed.a > 0) {
+                return { r: parsed.r, g: parsed.g, b: parsed.b };
+            }
+            node = node.parentElement;
+        }
+        return { r: 255, g: 255, b: 255 };
+    }
+
+    // "rgb(r, g, b)" / "rgba(r, g, b, a)" 形式の文字列をパースする
+    _parseRgb(color: string): { r: number; g: number; b: number; a: number } | null {
+        const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)/);
+        if (!m) return null;
+        return { r: +m[1], g: +m[2], b: +m[3], a: m[4] !== undefined ? +m[4] : 1 };
     }
 
     _copyClickedCell = (td: HTMLElement) => {

@@ -67,8 +67,13 @@ import { Options } from "./options";
 
 
 
-    chrome.storage.sync.get(null, (options) => {
-        // console.log({ 'chrome.storage.sync.get': options });
+    // テンプレートは local、その他設定は sync に分かれているためマージして読む
+    Promise.all([
+        chrome.storage.sync.get(null),
+        chrome.storage.local.get(Names.LOCAL_KEYS),
+    ]).then(([syncOptions, localOptions]) => {
+        const options = { ...syncOptions, ...localOptions };
+        // console.log({ 'merged storage options': options });
 
         if (options.hasOwnProperty(CONST.id_enable_subtable_importer) && options[CONST.id_enable_subtable_importer] == "true") {
 

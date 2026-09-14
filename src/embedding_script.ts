@@ -1,19 +1,29 @@
 import { ClickEventDealer } from "./lib/clickevent_dealer";
 // import { Names } from "./lib/Names";
-import { SettingDialogDuplicator } from "./lib/setting_dialog_dupulicator";
+import { FieldSettingDuplicator } from "./lib/field_setting_duplicator";
+import { FilterDialogDuplicator } from "./lib/filter_dialog_duplicator";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
 
 (() => {
+    // 詳細画面で「表示どおりの文字列」に置き換えるフィールドタイプ（数値・計算）
+    // これらは桁区切り・単位（前置/後置）・小数桁などの表示設定を持つため、
+    // 生値ではなく getFieldElement で取得した表示文字列をテンプレートに差し込む。
+    const DISPLAY_VALUE_TYPES = new Set(["NUMBER", "CALC"]);
+
     // 各所のDOMにクリックイベントを配布する
     const eventDealer = new ClickEventDealer()
     const embedder = new TemplateEmbedder("")
     eventDealer.setTemplateEmbedder(embedder)
 
-    // ダイアログ表示を監視する
-    const duplicator = new SettingDialogDuplicator()
+    // フィールド設定ダイアログ（React刷新後の新DOM）の表示を監視する
+    const duplicator = new FieldSettingDuplicator()
     duplicator.watchDialogSpawn()
+
+    // 一覧画面の「絞り込む」ダイアログの表示を監視する
+    const filterDuplicator = new FilterDialogDuplicator()
+    filterDuplicator.watchDialogSpawn()
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
@@ -62,7 +72,9 @@ import { Utils } from "./utils";
                     if (alignment == 'csv' || alignment == 'tsv') {
                         response = embedder.alignment(record.record, alignment)
                     } else if (alignment == 'template') {
-                        response = embedder.embed(record.record, template)
+                        // 詳細画面では、数値/計算フィールドを画面表示どおりの文字列（桁区切り・単位など）に置き換えて差し込む
+                        const displayRecord = buildDetailDisplayRecord(record.record)
+                        response = embedder.embed(displayRecord as any, template)
                     } else if (alignment == 'json') {
                         response = JSON.stringify(record.record, null, 2)
                     }
@@ -79,6 +91,8 @@ import { Utils } from "./utils";
             const options = event.data.data;
             console.log({ changePopupOptions: options })
             eventDealer.deal(options)
+            // フィールド設定コピーの整形JSONオプションを反映する
+            duplicator.setOptions(options)
 
             const template = options.textarea_fillin_template
             if (template != null) {
@@ -96,10 +110,49 @@ import { Utils } from "./utils";
 
     });
 
+    // 一覧／集計テーブルの描画完了後にクリックイベントを再バインドする。
+    // content_script は document_start で動作するため、初回の loadPopupOptions ハンドシェイクによる
+    // deal() の時点ではまだ一覧テーブルが未描画で、クリックハンドラが張られないことがある（レース）。
+    // kintone の一覧/集計表示イベントで deal() を呼び直し、確実にハンドラを再登録する。
+    // deal() は引数なしのとき、直近に受け取ったオプション状態を保持したまま再バインドする。
+    if (typeof kintone !== 'undefined' && kintone.events) {
+        kintone.events.on(['app.record.index.show', 'app.report.show', 'app.record.detail.show'], (event: any) => {
+            console.log('kintone list/report/detail shown: rebind click handlers')
+            eventDealer.deal()
+            return event
+        })
+    }
+
     //
     // ここから下はプラグイン画面用のスクリプト
     //
 
+
+    // 詳細画面で、数値/計算フィールドの値を「画面表示どおりの文字列」に置き換えたレコードを作る。
+    // getFieldElement で描画済みの表示テキスト（桁区切り・単位の前置/後置など）を取得する。
+    // 取得できない場合や、サブテーブル等の配列値は生値のままにする。
+    function buildDetailDisplayRecord(record: { [key: string]: { type?: string; value: any } }) {
+        const displayRecord: { [key: string]: { type?: string; value: any } } = {};
+        for (const code in record) {
+            const field = record[code];
+            if (field && !Array.isArray(field.value) && field.type && DISPLAY_VALUE_TYPES.has(field.type)) {
+                let displayValue = field.value;
+                try {
+                    const el = kintone.app.record.getFieldElement(code);
+                    const text = el && el.textContent != null ? el.textContent.trim() : "";
+                    if (text !== "") {
+                        displayValue = text;
+                    }
+                } catch (e) {
+                    console.warn(`getFieldElement failed for ${code}`, e);
+                }
+                displayRecord[code] = { ...field, value: displayValue };
+            } else {
+                displayRecord[code] = field;
+            }
+        }
+        return displayRecord;
+    }
 
     function insertScriptButtons() {
         const here = Utils.whereAmI(location.href)

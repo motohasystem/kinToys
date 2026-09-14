@@ -206,7 +206,7 @@ import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog"
             if (pageCategory === Utils.PageCategory.index && radioStatus[Ids.id_radio_data_template] === 'template') {
                 // 一覧画面かつテンプレート形式コピーの場合
                 const tab_id = tab.id
-                chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
+                Utils.getAllOptions().then((options: { [key: string]: string }) => {
                     console.log({ options });
                     const template = options[Ids.id_fillin_template]
 
@@ -271,7 +271,7 @@ import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog"
             // 詳細画面の判定
             else if (pageCategory === Utils.PageCategory.detail) {
                 const tab_id = tab.id
-                chrome.storage.sync.get(null, (options: { [key: string]: string }) => {
+                Utils.getAllOptions().then((options: { [key: string]: string }) => {
                     console.log({ options });
 
                     const csv_or_tsv = radioStatus[Ids.id_radio_csv_tsv] == undefined ? options[Ids.id_radio_csv_tsv] : radioStatus[Ids.id_radio_csv_tsv]

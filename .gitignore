@@ -27,4 +27,5 @@ plans/*
 *.sln
 *.sw?
 dist.zip
-/.claude
+plans/i18n-plan.md
+.claude/settings.local.json

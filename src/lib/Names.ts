@@ -27,9 +27,14 @@ export class Names {
         id_paste_button: "paste_button",  // コピペアイコンのID
 
         id_checkbox_imagecopy_button: "enable_imagecopy_button",  // 画像コピーのチェックボックスID
-        id_enable_subtable_importer: "enable_subtable_importer"  // サブテーブルインポータのチェックボックスID
+        id_enable_subtable_importer: "enable_subtable_importer",  // サブテーブルインポータのチェックボックスID
+
+        id_field_setting_copy_pretty: "field_setting_copy_pretty"  // フィールド設定を整形JSONでコピーするチェックボックスID
 
     };
+
+    // chrome.storage.local に格納するキー（utils.ts の Utils.LOCAL_KEYS と一致させること）
+    static readonly LOCAL_KEYS = ["template_history", "textarea_fillin_template"];
 
     static readonly Messages = {
         changeBreaklineOption: "changeBreaklineOption",
