@@ -37,6 +37,11 @@ interface FieldDialogJson {
     // リンク
     protocol?: string;        // 入力値の種類（"WEB" / "CALL" / "MAIL"）
 
+    // 計算
+    expression?: string;          // 計算式
+    hideCalcExpression?: boolean; // 計算式を表示しない
+    expressionFormat?: string;    // 書式（NUMBER / NUMBER_DIGIT / DATETIME / DATE / TIME / HOUR_MINUTE / DAY_HOUR_MINUTE）
+
     // 日付/時刻/日時
     dateDefault?: { current: boolean; values: string[] };  // 初期値（登録時の日時にする + 手動値）
 
@@ -61,13 +66,27 @@ interface FieldDialogJson {
     lookup?: LookupJson;
 }
 
+// 絞り込み条件（さらに絞り込む条件 / 絞り込みの初期設定）。関連レコード・ルックアップ共通。
+interface FilterCondition {
+    field: string;          // 条件フィールド
+    operator: string;       // 演算子（DropdownButton の表示ラベル）
+    value?: string;         // テキストの値
+    values?: string[];      // ドロップダウン/チェック等（複数選択）の選択値
+    dateMode?: string;      // 日付/日時の指定方法（例: "日時を指定"）
+    dateValues?: string[];  // 日付/日時の入力値（日付 + 時 + 分）
+}
+interface FilterCondJson {
+    conditions: FilterCondition[];
+    junction?: string;      // "AND" / "OR"
+}
+
 interface ReferenceTableJson {
     relatedApp?: string;          // 参照するアプリ（表示名。設定はピッカーのため自動適用しない）
     condition?: { field: string; relatedField: string };  // 表示するレコードの条件
     displayFields?: string[];     // 表示するフィールド
+    filterCond?: FilterCondJson;  // さらに絞り込む条件
     sort?: Array<{ field: string; order: string }>;       // レコードのソート（複数可）
     maxRecords?: string;          // 一度に表示する最大レコード数
-    // さらに絞り込む条件（filterCond）は複雑なため現時点では対象外
 }
 
 interface LookupJson {
@@ -76,6 +95,7 @@ interface LookupJson {
     recordSearchType?: boolean;   // レコード取得時の検索方式
     fieldMappings?: Array<{ field: string; relatedField: string }>;  // ほかのフィールドのコピー（コピー先 ← コピー元）
     displayFields?: string[];     // コピー元のレコードの選択時に表示するフィールド
+    filterCond?: FilterCondJson;  // 絞り込みの初期設定
     sort?: Array<{ field: string; order: string }>;       // ソートの初期設定
 }
 
@@ -248,6 +268,12 @@ export class FieldSettingDuplicator {
         // リンク
         put("protocol", this._readRadioInFieldset(dlg, "入力値の種類"));
 
+        // 計算
+        const exprEl = dlg.querySelector('[data-testid="calcExpression"] textarea') as HTMLTextAreaElement | null;
+        if (exprEl) put("expression", exprEl.value);
+        put("hideCalcExpression", this._readCheckboxByName(dlg, "hideCalcExpression"));
+        put("expressionFormat", this._readRadioByName(dlg, "expressionFormat"));
+
         // 日付/時刻/日時の初期値
         const dateDef = this._readDateDefault(dlg);
         if (dateDef) json.dateDefault = dateDef;
@@ -326,9 +352,125 @@ export class FieldSettingDuplicator {
             relatedApp,
             condition: { field: condField, relatedField: condRelated },
             displayFields,
+            filterCond: this._readFilterCond(dlg, "さらに絞り込む条件") ?? undefined,
             sort,
             maxRecords
         };
+    }
+
+    // ===== 絞り込み条件（filterCond。関連レコード・ルックアップ共通） =====
+
+    _filterCondFieldset(dlg: HTMLElement, legendText: string): HTMLElement | null {
+        const legend = Array.from(dlg.querySelectorAll("legend")).find((l) => (l.textContent ?? "").includes(legendText));
+        return legend ? (legend.closest("fieldset") as HTMLElement | null) : null;
+    }
+
+    _readFilterCondRow(li: Element): FilterCondition {
+        const field = this._fieldSelectText(li.querySelector('[data-testid="fieldConditions-field"]'));
+        const operator = this._dropdownText(li);   // 行内の最初の DropdownButton = 演算子
+        const cond: FilterCondition = { field, operator };
+
+        // 値ウィジェットの型判定。日付/日時は shared-forms-InputDate の有無で判定（日付型は dateTimeOperand が無い）。
+        const inputDate = li.querySelector('[data-testid="shared-forms-InputDate"]');
+        const listbox = li.querySelector('[class*="MultipleSelectOperandInput"] [role="listbox"]');
+        const textInput = li.querySelector('[class*="textOperandInput"] input') as HTMLInputElement | null;
+        if (inputDate) {
+            // 演算子以外の2つ目の DropdownButton が「指定方法」（日付を指定 / 日時を指定 等）
+            const ddLabels = Array.from(li.querySelectorAll('[data-testid="shared-forms-Dropdown-DropdownButton-selectedLabel"]'));
+            if (ddLabels.length >= 2) cond.dateMode = (ddLabels[1].textContent ?? "").trim();
+            const dInput = inputDate.querySelector('input[type="text"]') as HTMLInputElement | null;
+            const spins = Array.from(li.querySelectorAll('input[role="spinbutton"]')) as HTMLInputElement[];
+            cond.dateValues = [dInput ? dInput.value : "", ...spins.map((s) => s.value)];
+        } else if (listbox) {
+            cond.values = Array.from(listbox.querySelectorAll('[role="option"]'))
+                .filter((o) => o.getAttribute("aria-selected") === "true")
+                .map((o) => (o.getAttribute("title") || o.textContent || "").trim())
+                .filter((t) => t !== "");
+        } else if (textInput) {
+            cond.value = textInput.value;
+        }
+        return cond;
+    }
+
+    _readFilterCond(dlg: HTMLElement, legendText: string): FilterCondJson | null {
+        const fs = this._filterCondFieldset(dlg, legendText);
+        if (fs == null) return null;
+        const rows = Array.from(fs.querySelectorAll('li[class*="dynamicList-container"]'));
+        const conditions = rows.map((li) => this._readFilterCondRow(li)).filter((c) => c.field !== "");
+        if (conditions.length === 0) return null;
+        const junctionEl = fs.querySelector('input[name="logical-operator"]:checked') as HTMLInputElement | null;
+        return { conditions, junction: junctionEl ? junctionEl.value : undefined };
+    }
+
+    async _writeFilterCondRow(li: Element, cond: FilterCondition) {
+        // フィールド（選択で演算子・値ウィジェットが切り替わる）
+        await this._pickFromListboxButton(li.querySelector('[data-testid="fieldConditions-field"] button[aria-expanded]'), cond.field);
+        await this._wait(160);
+        // 演算子（行内の最初の DropdownButton）
+        if (cond.operator) {
+            const opBtn = li.querySelector('[data-testid="shared-forms-Dropdown-DropdownButton"]');
+            await this._pickFromListboxButton(opBtn, cond.operator);
+            await this._wait(120);
+        }
+        // 値（コピー元JSONの内容で分岐）
+        if (cond.dateValues != null || cond.dateMode != null) {
+            // 日付/日時: 指定方法（2つ目のDropdownButton）→ 日付input + 時/分スピンボタン
+            if (cond.dateMode) {
+                const ddBtns = Array.from(li.querySelectorAll('[data-testid="shared-forms-Dropdown-DropdownButton"]'));
+                if (ddBtns[1]) { await this._pickFromListboxButton(ddBtns[1], cond.dateMode); await this._wait(120); }
+            }
+            if (cond.dateValues) {
+                const dInput = li.querySelector('[data-testid="shared-forms-InputDate"] input[type="text"]') as HTMLInputElement | null;
+                const spins = Array.from(li.querySelectorAll('input[role="spinbutton"]')) as HTMLInputElement[];
+                if (dInput && cond.dateValues[0] != null) this._setReactInput(dInput, cond.dateValues[0]);
+                spins.forEach((s, i) => { const v = cond.dateValues![i + 1]; if (v != null) this._setReactInput(s, v); });
+            }
+        } else if (cond.values != null) {
+            const listbox = li.querySelector('[class*="MultipleSelectOperandInput"] [role="listbox"]');
+            if (listbox) {
+                const desired = new Set(cond.values);
+                for (const opt of Array.from(listbox.querySelectorAll('[role="option"]'))) {
+                    const text = (opt.getAttribute("title") || opt.textContent || "").trim();
+                    if (text === "") continue;
+                    const sel = opt.getAttribute("aria-selected") === "true";
+                    if (sel !== desired.has(text)) {
+                        (opt as HTMLElement).click();
+                        await this._wait(30);
+                    }
+                }
+            }
+        } else if (cond.value != null) {
+            const textInput = li.querySelector('[class*="textOperandInput"] input') as HTMLInputElement | null;
+            if (textInput) this._setReactInput(textInput, cond.value);
+        }
+    }
+
+    async _writeFilterCond(dlg: HTMLElement, legendText: string, data: FilterCondJson) {
+        const fs = this._filterCondFieldset(dlg, legendText);
+        if (fs == null || !data.conditions || data.conditions.length === 0) return;
+
+        // 既存条件が残っていると状態が干渉するため、先に「すべてクリア」でリセットする
+        const clearBtn = Array.from(fs.querySelectorAll("button")).find((b) =>
+            (b.getAttribute("title") ?? "") === "すべてクリア" || (b.textContent ?? "").trim() === "すべてクリア") as HTMLElement | undefined;
+        if (clearBtn) {
+            clearBtn.click();
+            await this._wait(160);
+        }
+
+        const rowSel = 'li[class*="dynamicList-container"]';
+        await this._adjustDynamicRows(fs, rowSel, data.conditions.length);
+        const rows = fs.querySelectorAll(rowSel);
+        for (let i = 0; i < data.conditions.length; i++) {
+            const li = rows[i];
+            if (li == null) continue;
+            await this._writeFilterCondRow(li, data.conditions[i]);
+        }
+
+        // AND/OR
+        if (data.junction) {
+            const radio = (Array.from(fs.querySelectorAll('input[name="logical-operator"]')) as HTMLInputElement[]).find((r) => r.value === data.junction);
+            if (radio && !radio.checked) radio.click();
+        }
     }
 
     // フィールド選択ボタン/ドロップダウンボタンを開き、ポップアップ（role=listbox の role=option）から
@@ -422,6 +564,11 @@ export class FieldSettingDuplicator {
             }
         }
 
+        // さらに絞り込む条件
+        if (data.filterCond) {
+            await this._writeFilterCond(dlg, "さらに絞り込む条件", data.filterCond);
+        }
+
         // レコードのソート（フィールド + 昇順/降順）
         if (data.sort && data.sort.length > 0) {
             await this._adjustDynamicRows(dlg, '[data-testid="fieldSettingDialog-order"] li', data.sort.length);
@@ -500,6 +647,7 @@ export class FieldSettingDuplicator {
             recordSearchType: recordSearchTypeCb ? recordSearchTypeCb.checked : undefined,
             fieldMappings,
             displayFields,
+            filterCond: this._readFilterCond(dlg, "絞り込みの初期設定") ?? undefined,
             sort
         };
     }
@@ -555,6 +703,11 @@ export class FieldSettingDuplicator {
             }
         }
 
+        // 絞り込みの初期設定
+        if (data.filterCond) {
+            await this._writeFilterCond(dlg, "絞り込みの初期設定", data.filterCond);
+        }
+
         // ソート
         if (data.sort && data.sort.length > 0) {
             await this._adjustDynamicRows(dlg, '[data-testid="fieldSettingDialog-order"] li', data.sort.length);
@@ -592,6 +745,13 @@ export class FieldSettingDuplicator {
         if (data.unitPosition != null) this._writeRadioByName(dlg, "unitPosition", data.unitPosition);
         // リンク
         if (data.protocol != null) this._writeRadioInFieldset(dlg, "入力値の種類", data.protocol);
+        // 計算
+        if (data.expression != null) {
+            const el = dlg.querySelector('[data-testid="calcExpression"] textarea') as HTMLTextAreaElement | null;
+            if (el) this._setReactInput(el, data.expression);
+        }
+        if (data.hideCalcExpression != null) this._writeCheckboxByName(dlg, "hideCalcExpression", data.hideCalcExpression);
+        if (data.expressionFormat != null) this._writeRadioByName(dlg, "expressionFormat", data.expressionFormat);
         // 日付/時刻/日時
         if (data.dateDefault != null) this._writeDateDefault(dlg, data.dateDefault);
         // リッチエディター
