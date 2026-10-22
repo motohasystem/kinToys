@@ -98,6 +98,79 @@
             /* テキストの色を変更 */
         }
 
+        /* 追加/編集画面ではプレビュー欄を貼り付け欄として使う */
+        #textarea_clipboard_preview.paste_mode {
+            background-color: #fff;
+            cursor: text;
+            color: #333;
+            white-space: pre;
+        }
+
+        .copy_button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #paste_status {
+            white-space: pre-wrap;
+        }
+
+        .chip_row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            white-space: normal;
+        }
+
+        .chip_row_label {
+            margin-right: 2px;
+        }
+
+        /* フィールドコードのチップ（タイプごとに色分け） */
+        .field_chip {
+            display: inline-block;
+            padding: 1px 7px;
+            border: 1px solid;
+            border-radius: 10px;
+            font-size: 11px;
+            line-height: 1.5;
+            cursor: default;
+        }
+
+        .chip_text     { color: #1d4f91; background-color: #e3eefc; border-color: #9cbfeb; }
+        .chip_number   { color: #23683a; background-color: #e2f4e7; border-color: #94cfa6; }
+        .chip_datetime { color: #5d3a94; background-color: #efe7fb; border-color: #c2a9e8; }
+        .chip_choice   { color: #8a4b00; background-color: #fdeedb; border-color: #f0bf80; }
+        .chip_entity   { color: #0e6461; background-color: #dff3f2; border-color: #8fd0cc; }
+        .chip_table    { color: #6b3f2a; background-color: #f3e8e1; border-color: #cfae9b; }
+        .chip_other    { color: #555;    background-color: #eeeeee; border-color: #c4c4c4; }
+
+        button.field_chip {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        button.field_chip:hover {
+            filter: brightness(0.95);
+        }
+
+        /* チップのクリックで貼り付けから外したフィールド */
+        .field_chip.chip_excluded {
+            color: #999;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            text-decoration: line-through;
+        }
+
+        /* 貼り付けないフィールドは淡く・破線で表示 */
+        .chip_skipped {
+            opacity: 0.6;
+            border-style: dashed;
+        }
+
         .icon {
             float: left;
             padding: 0px 20px;
@@ -375,6 +448,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- レコードJSON貼り付けの対象表示（追加/編集画面のみ。ポップアップ幅いっぱいに表示） -->
+    <div class="body">
+        <div id="paste_status" class="information" hidden></div>
     </div>
 
     <!-- <div class="links">

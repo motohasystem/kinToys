@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "適用中のテンプレート: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "貼り付け"
+  },
+  "popup_paste_placeholder": {
+    "message": "詳細画面で json 形式でコピーしたレコードを、ここに Ctrl+V で貼り付けてください"
+  },
+  "popup_paste_preview": {
+    "message": "{count} 件のフィールドを上書きします。"
+  },
+  "popup_paste_label_pasted": {
+    "message": "貼り付け:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "クリックで貼り付けから除外／戻す"
+  },
+  "popup_paste_label_skipped": {
+    "message": "スキップ:"
+  },
+  "popup_paste_done": {
+    "message": "{count} 件のフィールドを貼り付けました。"
+  },
+  "popup_paste_invalid_json": {
+    "message": "kintoneレコードのJSONではありません。\n詳細画面で json 形式でコピーしてください。"
+  },
+  "popup_paste_no_match": {
+    "message": "フィールドコードとフィールドタイプが一致するフィールドがありません。"
+  },
+  "popup_paste_not_form_page": {
+    "message": "レコードの追加画面または編集画面で実行してください。"
+  },
+  "popup_paste_error": {
+    "message": "貼り付けに失敗しました。({error})"
+  },
   "popup_error_invalid_url": {
     "message": "無効なURLが検出されました。\nkintoneの画面で実行してください。"
   },

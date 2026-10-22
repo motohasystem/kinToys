@@ -123,6 +123,10 @@ export class ClickEventDealer {
             // console.log({ target })
             if (target == null) return;
 
+            // 追加/編集画面では入力操作を優先し、コピーしない
+            // （詳細→編集はページ遷移せず URL の hash だけが変わるため、クリック時点で判定する）
+            if (Utils.isRecordFormPage(location.href)) return;
+
             // body への委譲のため、テーブル外のクリックは対象外とする
             if (target.closest("table") == null) return;
 
@@ -216,6 +220,9 @@ export class ClickEventDealer {
         const handler = (event: MouseEvent) => {
             const target = event.target as HTMLElement | null;
             if (target == null) return;
+
+            // 編集画面（/show#...&mode=edit）は詳細画面と同じパスで、詳細→編集では再登録されないためクリック時点で判定する
+            if (Utils.isRecordFormPage(location.href)) return;
 
             // テーブル内（サブテーブル/関連レコード一覧）のクリックはテーブル用ハンドラに任せる
             if (target.closest("table")) return;

@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "Plantilla aplicada: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "Pegar"
+  },
+  "popup_paste_placeholder": {
+    "message": "Copie un registro en formato json en la pantalla de detalles y pulse Ctrl+V aquí"
+  },
+  "popup_paste_preview": {
+    "message": "Se sobrescribirán {count} campo(s)."
+  },
+  "popup_paste_label_pasted": {
+    "message": "Pegar:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "Haga clic para excluir o volver a incluir en el pegado"
+  },
+  "popup_paste_label_skipped": {
+    "message": "Omitir:"
+  },
+  "popup_paste_done": {
+    "message": "Se pegaron {count} campo(s)."
+  },
+  "popup_paste_invalid_json": {
+    "message": "No es un JSON de registro de kintone.\nCopie un registro en formato json en la pantalla de detalles."
+  },
+  "popup_paste_no_match": {
+    "message": "No hay campos cuyo código y tipo coincidan."
+  },
+  "popup_paste_not_form_page": {
+    "message": "Ejecútelo en la pantalla de creación o edición de registros."
+  },
+  "popup_paste_error": {
+    "message": "No se pudo pegar. ({error})"
+  },
   "popup_error_invalid_url": {
     "message": "URL no válida detectada.\nEjecute esto en una página de kintone."
   },

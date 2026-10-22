@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "Applied template: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "Paste"
+  },
+  "popup_paste_placeholder": {
+    "message": "On the detail screen, copy a record in json format, then press Ctrl+V here"
+  },
+  "popup_paste_preview": {
+    "message": "{count} field(s) will be overwritten."
+  },
+  "popup_paste_label_pasted": {
+    "message": "Paste:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "Click to exclude from / include in the paste"
+  },
+  "popup_paste_label_skipped": {
+    "message": "Skip:"
+  },
+  "popup_paste_done": {
+    "message": "Pasted {count} field(s)."
+  },
+  "popup_paste_invalid_json": {
+    "message": "This is not kintone record JSON.\nCopy a record in json format on the detail screen."
+  },
+  "popup_paste_no_match": {
+    "message": "No fields match in both field code and field type."
+  },
+  "popup_paste_not_form_page": {
+    "message": "Run this on the record create or edit screen."
+  },
+  "popup_paste_error": {
+    "message": "Failed to paste. ({error})"
+  },
   "popup_error_invalid_url": {
     "message": "Invalid URL detected.\nPlease run this on a kintone page."
   },

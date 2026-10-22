@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "目前範本: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "貼上"
+  },
+  "popup_paste_placeholder": {
+    "message": "請在詳細頁面以 json 格式複製記錄，然後在此處按 Ctrl+V 貼上"
+  },
+  "popup_paste_preview": {
+    "message": "將覆蓋 {count} 個欄位。"
+  },
+  "popup_paste_label_pasted": {
+    "message": "貼上:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "點擊可從貼上中排除／恢復"
+  },
+  "popup_paste_label_skipped": {
+    "message": "略過:"
+  },
+  "popup_paste_done": {
+    "message": "已貼上 {count} 個欄位。"
+  },
+  "popup_paste_invalid_json": {
+    "message": "不是 kintone 記錄的 JSON。\n請在詳細頁面以 json 格式複製。"
+  },
+  "popup_paste_no_match": {
+    "message": "沒有欄位代碼和欄位類型都一致的欄位。"
+  },
+  "popup_paste_not_form_page": {
+    "message": "請在記錄的新增或編輯頁面執行。"
+  },
+  "popup_paste_error": {
+    "message": "貼上失敗。({error})"
+  },
   "popup_error_invalid_url": {
     "message": "偵測到無效URL。\n請在kintone頁面上執行。"
   },

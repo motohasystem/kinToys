@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "当前模板: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "粘贴"
+  },
+  "popup_paste_placeholder": {
+    "message": "请在详情页面以 json 格式复制记录，然后在此处按 Ctrl+V 粘贴"
+  },
+  "popup_paste_preview": {
+    "message": "将覆盖 {count} 个字段。"
+  },
+  "popup_paste_label_pasted": {
+    "message": "粘贴:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "点击可从粘贴中排除／恢复"
+  },
+  "popup_paste_label_skipped": {
+    "message": "跳过:"
+  },
+  "popup_paste_done": {
+    "message": "已粘贴 {count} 个字段。"
+  },
+  "popup_paste_invalid_json": {
+    "message": "不是 kintone 记录的 JSON。\n请在详情页面以 json 格式复制。"
+  },
+  "popup_paste_no_match": {
+    "message": "没有字段代码和字段类型都一致的字段。"
+  },
+  "popup_paste_not_form_page": {
+    "message": "请在记录的新增或编辑页面执行。"
+  },
+  "popup_paste_error": {
+    "message": "粘贴失败。({error})"
+  },
   "popup_error_invalid_url": {
     "message": "检测到无效URL。\n请在kintone页面上运行。"
   },

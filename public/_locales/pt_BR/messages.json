@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "Modelo aplicado: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "Colar"
+  },
+  "popup_paste_placeholder": {
+    "message": "Copie um registro no formato json na tela de detalhes e pressione Ctrl+V aqui"
+  },
+  "popup_paste_preview": {
+    "message": "{count} campo(s) serão sobrescritos."
+  },
+  "popup_paste_label_pasted": {
+    "message": "Colar:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "Clique para excluir ou incluir novamente na colagem"
+  },
+  "popup_paste_label_skipped": {
+    "message": "Ignorar:"
+  },
+  "popup_paste_done": {
+    "message": "{count} campo(s) colados."
+  },
+  "popup_paste_invalid_json": {
+    "message": "Não é um JSON de registro do kintone.\nCopie um registro no formato json na tela de detalhes."
+  },
+  "popup_paste_no_match": {
+    "message": "Nenhum campo com código e tipo correspondentes."
+  },
+  "popup_paste_not_form_page": {
+    "message": "Execute na tela de criação ou edição de registros."
+  },
+  "popup_paste_error": {
+    "message": "Falha ao colar. ({error})"
+  },
   "popup_error_invalid_url": {
     "message": "URL inválida detectada.\nExecute isso em uma página do kintone."
   },

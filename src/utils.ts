@@ -59,7 +59,10 @@ export class Utils {
     static readonly Events = {
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+        record_json_paste_preview: "recordJsonPastePreview",    // レコードJSON貼り付けの対象確認
+        record_json_paste_apply: "recordJsonPasteApply",    // レコードJSON貼り付けの反映
+        record_json_paste_result: "recordJsonPasteResult"    // レコードJSON貼り付けの結果（embedding_script → content_script）
     };
 
     static readonly Labels = {
@@ -477,6 +480,15 @@ export class Utils {
 
         // それ以外は一覧画面
         return this.PageCategory.index;
+    }
+
+    // レコード追加画面（/k/{appId}/edit）または編集画面（/show#...&mode=edit）かどうか
+    static isRecordFormPage(url: string) {
+        const category = this.whereAmI(url)
+        if (category === this.PageCategory.edit) return true
+        if (category !== this.PageCategory.detail) return false
+        const hashParams = new URLSearchParams(new URL(url).hash.substring(1))
+        return hashParams.get("mode") === "edit"
     }
 
     // 渡した文字列を二重引用符で囲む

@@ -2,6 +2,7 @@ import { ClickEventDealer } from "./lib/clickevent_dealer";
 // import { Names } from "./lib/Names";
 import { FieldSettingDuplicator } from "./lib/field_setting_duplicator";
 import { FilterDialogDuplicator } from "./lib/filter_dialog_duplicator";
+import { RecordJsonPaster } from "./lib/record_json_paster";
 import { TemplateEmbedder } from "./lib/template_embedder";
 // import { Options } from "./options";
 import { Utils } from "./utils";
@@ -24,6 +25,9 @@ import { Utils } from "./utils";
     // 一覧画面の「絞り込む」ダイアログの表示を監視する
     const filterDuplicator = new FilterDialogDuplicator()
     filterDuplicator.watchDialogSpawn()
+
+    // ポップアップから受け取ったレコードJSONを、追加/編集画面に貼り付ける
+    const jsonPaster = new RecordJsonPaster()
 
     // kintone.events.on とは別のタイミングで実行しておく必要がある
     window.postMessage({ type: Utils.Messages.requestPopupOptions }, "*")
@@ -100,6 +104,19 @@ import { Utils } from "./utils";
                 console.log({ 'set template by message': template })
                 eventDealer.setTemplateEmbedder(embedder)
             }
+        }
+        else if (event.data.type === Utils.Events.record_json_paste_preview || event.data.type === Utils.Events.record_json_paste_apply) {
+            // ポップアップで貼り付けたレコードJSONの対象確認／反映
+            const text: string = event.data.data
+            const requestId = event.data.requestId
+            const task = event.data.type === Utils.Events.record_json_paste_apply ? jsonPaster.apply(text, event.data.excluded ?? []) : jsonPaster.preview(text)
+            task.then((result) => {
+                window.postMessage({ type: Utils.Events.record_json_paste_result, requestId, data: result }, "*")
+            }).catch((error) => {
+                console.error(error)
+                const message = error instanceof Error ? error.message : JSON.stringify(error)
+                window.postMessage({ type: Utils.Events.record_json_paste_result, requestId, error: message }, "*")
+            })
         }
         else if (event.data.type === Utils.Messages.changeBreaklineOption) {
             // ブレークラインオプションが変更された

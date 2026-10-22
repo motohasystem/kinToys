@@ -1,6 +1,7 @@
 import { I18n, I18nMessages } from "./i18n";
 import { Utils } from "./utils";
 import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog";
+import type { PasteField } from "./lib/record_json_paster";
 
 (() => {
     const { Ids, Labels, Events } = Utils;
@@ -73,9 +74,13 @@ import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog"
             }
         });
 
-        // テーブル抽出ボタンの動作
+        // テーブル抽出ボタンの動作（追加/編集画面ではレコードJSONの貼り付けボタンにする）
         const tableCopyButton = document.getElementById("button_table_copy") as HTMLButtonElement
-        if (tableCopyButton) {
+        const activeTab = await getActiveTab();
+        if (tableCopyButton && activeTab?.id != undefined && activeTab.url != undefined && Utils.isRecordFormPage(activeTab.url)) {
+            setupPasteMode(tableCopyButton, activeTab.id);
+        }
+        else if (tableCopyButton) {
             // イメージコピー機能の設定を取得
             chrome.storage.sync.get(null, (options) => {
                 const flag_imagecopy = options[Ids.id_checkbox_imagecopy_button] === "true" ? true : false;
@@ -182,6 +187,145 @@ import { tryShowReviewDialog, forceShowReviewDialog } from "./lib/review_dialog"
         });
     }
 
+
+    function getActiveTab(): Promise<chrome.tabs.Tab | undefined> {
+        return new Promise((resolve) => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => resolve(tabs[0]));
+        });
+    }
+
+    // 追加/編集画面: プレビュー欄に Ctrl+V で貼り付けたレコードJSONを、ボタンで画面に反映する
+    // （ポップアップ表示中はページにフォーカスが無くクリップボードを読めないため、貼り付け操作で受け取る）
+    function setupPasteMode(button: HTMLButtonElement, tabId: number) {
+        const textarea = document.getElementById(Ids.id_popup_preview) as HTMLTextAreaElement;
+        const status = document.getElementById("paste_status") as HTMLDivElement;
+
+        button.value = t("popup_button_paste");
+        button.disabled = true;
+        textarea.classList.add("paste_mode");
+        textarea.placeholder = t("popup_paste_placeholder");
+        textarea.focus();
+
+        // チップのクリックで貼り付けから外したフィールドコード（貼り付け内容が変わったらリセット）
+        const excluded = new Set<string>();
+        let previewFields: { pasted: PasteField[]; skipped: PasteField[] } | null = null;
+
+        const showStatus = (message: string) => {
+            status.textContent = message;
+            status.hidden = message === "";
+        };
+
+        // 貼り付け対象の確認結果を表示する（除外の切り替えのたびに描き直す）
+        const renderPreview = () => {
+            if (previewFields == null) return;
+            const count = previewFields.pasted.filter((f) => !excluded.has(f.code)).length;
+            showStatus(t("popup_paste_preview", { count: String(count) }));
+            status.appendChild(makeChipRow(t("popup_paste_label_pasted"), previewFields.pasted, false, excluded, (code) => {
+                if (excluded.has(code)) excluded.delete(code); else excluded.add(code);
+                renderPreview();
+            }));
+            if (previewFields.skipped.length > 0) {
+                status.appendChild(makeChipRow(t("popup_paste_label_skipped"), previewFields.skipped, true));
+            }
+            button.disabled = count === 0;
+        };
+
+        const send = (name: string, json: string): Promise<any> => new Promise((resolve) => {
+            chrome.tabs.sendMessage(tabId, { name, json, excluded: [...excluded] }, (response) => resolve(response));
+        });
+
+        // 結果をメッセージにする。貼り付け可能なときだけ true を返す。
+        const describe = (response: any, applied: boolean): boolean => {
+            if (response == undefined) {
+                showStatus(t("popup_error_invalid_url"));
+                return false;
+            }
+            if (response.error) {
+                showStatus(t("popup_paste_error", { error: response.error }));
+                return false;
+            }
+            const result = response.data;
+            previewFields = null;
+            if (result.status === "invalid_json") {
+                showStatus(t("popup_paste_invalid_json"));
+            } else if (result.status === "not_form_page") {
+                showStatus(t("popup_paste_not_form_page"));
+            } else if (result.status === "no_match") {
+                showStatus(t("popup_paste_no_match"));
+            } else if (applied) {
+                showStatus(t("popup_paste_done", { count: String(result.pasted.length) }));
+            } else {
+                previewFields = result;
+                renderPreview();
+                return !button.disabled;
+            }
+            return result.status === "ok";
+        };
+
+        // 入力のたびに貼り付け対象を確認する（連続入力はまとめる）
+        let timer: number | null = null;
+        textarea.addEventListener("input", () => {
+            if (timer) clearTimeout(timer);
+            button.disabled = true;
+            excluded.clear();
+            timer = window.setTimeout(async () => {
+                const json = textarea.value;
+                if (json.trim() === "") {
+                    showStatus("");
+                    return;
+                }
+                const response = await send(Events.record_json_paste_preview, json);
+                if (json !== textarea.value) return;  // 確認中に書き換えられた
+                button.disabled = !describe(response, false);
+            }, 300);
+        });
+
+        button.addEventListener("click", async () => {
+            button.disabled = true;
+            const response = await send(Events.record_json_paste_apply, textarea.value);
+            if (describe(response, true)) {
+                tryShowReviewDialog(document.body, i18nMessages);
+            }
+        });
+    }
+
+    // フィールドタイプごとの色分けグループ（popup.html の .field_chip.chip_* と対応）
+    const FIELD_TYPE_GROUPS: { [type: string]: string } = {
+        SINGLE_LINE_TEXT: "text", MULTI_LINE_TEXT: "text", RICH_TEXT: "text", LINK: "text",
+        NUMBER: "number", CALC: "number",
+        DATE: "datetime", TIME: "datetime", DATETIME: "datetime",
+        DROP_DOWN: "choice", RADIO_BUTTON: "choice", CHECK_BOX: "choice", MULTI_SELECT: "choice",
+        USER_SELECT: "entity", ORGANIZATION_SELECT: "entity", GROUP_SELECT: "entity",
+        SUBTABLE: "table",
+    };
+
+    // 「貼り付け: [code] [code] …」の1行を作る。フィールドコードをタイプ別の色のチップで並べる。
+    // onToggle を渡すとチップがボタンになり、クリックで除外（excluded）を切り替えられる。
+    function makeChipRow(label: string, fields: PasteField[], skipped: boolean, excluded?: Set<string>, onToggle?: (code: string) => void) {
+        const row = document.createElement("div");
+        row.className = "chip_row";
+        const head = document.createElement("span");
+        head.className = "chip_row_label";
+        head.textContent = label;
+        row.appendChild(head);
+        for (const field of fields) {
+            const chip = document.createElement(onToggle ? "button" : "span");
+            const group = FIELD_TYPE_GROUPS[field.type] ?? "other";
+            const isExcluded = excluded?.has(field.code) ?? false;
+            chip.className = `field_chip chip_${group}${skipped ? " chip_skipped" : ""}${isExcluded ? " chip_excluded" : ""}`;
+            chip.textContent = field.code;
+            chip.title = field.type;
+            if (onToggle) {
+                const button = chip as HTMLButtonElement;
+                button.type = "button";
+                button.title = `${field.type} - ${t("popup_paste_chip_toggle")}`;
+                button.setAttribute("aria-pressed", String(!isExcluded));
+                button.addEventListener("click", () => onToggle(field.code));
+            }
+            row.appendChild(chip);
+        }
+        return row;
+    }
 
     // コンテンツ抽出ボタンの動作 / グラブコピー
     // flag_imagecopy: 詳細画面のテンプレートコピーを画像コピーにする

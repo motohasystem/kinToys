@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "Mẫu đang dùng: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "Dán"
+  },
+  "popup_paste_placeholder": {
+    "message": "Sao chép bản ghi ở định dạng json trên màn hình chi tiết, rồi nhấn Ctrl+V tại đây"
+  },
+  "popup_paste_preview": {
+    "message": "Sẽ ghi đè {count} trường."
+  },
+  "popup_paste_label_pasted": {
+    "message": "Dán:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "Nhấp để loại khỏi / đưa lại vào lần dán"
+  },
+  "popup_paste_label_skipped": {
+    "message": "Bỏ qua:"
+  },
+  "popup_paste_done": {
+    "message": "Đã dán {count} trường."
+  },
+  "popup_paste_invalid_json": {
+    "message": "Đây không phải JSON bản ghi kintone.\nHãy sao chép ở định dạng json trên màn hình chi tiết."
+  },
+  "popup_paste_no_match": {
+    "message": "Không có trường nào trùng cả mã trường và loại trường."
+  },
+  "popup_paste_not_form_page": {
+    "message": "Hãy thực hiện trên màn hình thêm hoặc chỉnh sửa bản ghi."
+  },
+  "popup_paste_error": {
+    "message": "Dán thất bại. ({error})"
+  },
   "popup_error_invalid_url": {
     "message": "Phát hiện URL không hợp lệ.\nVui lòng chạy trên trang kintone."
   },
