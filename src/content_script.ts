@@ -105,10 +105,13 @@ import { Options } from "./options";
             }, "*")
         });
 
-        insertScript("./embedding_script.js");
-        insertStyleSheet("./embedding.css");
-
-        console.log('scripts inserted')
+        // document_start で動くため、ハードリロード（Ctrl+Shift+R）等で HTML の取得が遅いと
+        // この時点で body がまだ無いことがある。body ができてから差し込む。
+        whenBodyReady(() => {
+            insertScript("./embedding_script.js");
+            insertStyleSheet("./embedding.css");
+            console.log('scripts inserted')
+        });
     });
 
     // ポップアップ側でオプションを変更したイベントを受け取ってembedの動作を変更する
@@ -242,6 +245,19 @@ import { Options } from "./options";
 
         return true
     });
+
+    function whenBodyReady(callback: () => void) {
+        if (document.body) {
+            callback();
+            return;
+        }
+        const observer = new MutationObserver((_mutations, obs) => {
+            if (!document.body) return;
+            obs.disconnect();
+            callback();
+        });
+        observer.observe(document.documentElement, { childList: true });
+    }
 
     function insertScript(file: string) {
         const url = (window as any).chrome.runtime.getURL(file);

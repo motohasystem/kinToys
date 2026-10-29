@@ -171,23 +171,50 @@ import { Utils } from "./utils";
         return displayRecord;
     }
 
+    const ID_PLUGIN_EXPORT_BUTTON = "kintoys-plugin-export-button";
+    const ID_PLUGIN_IMPORT_BUTTON = "kintoys-plugin-import-button";
+
+    // プラグイン設定画面ならエクスポート/インポートボタンを置き、それ以外の画面なら外す。
+    // 何度呼んでもボタンは重複しない。
     function insertScriptButtons() {
         const here = Utils.whereAmI(location.href)
         console.log({ where: here })
-        // 一覧画面
 
-        // プラグイン設定画面
-        if (here == Utils.PageCategory.plugin_setting) {
-            // エクスポートボタンの設置
+        if (here != Utils.PageCategory.plugin_setting) {
+            document.getElementById(ID_PLUGIN_EXPORT_BUTTON)?.remove();
+            document.getElementById(ID_PLUGIN_IMPORT_BUTTON)?.remove();
+            return;
+        }
+
+        // エクスポートボタンの設置
+        if (!document.getElementById(ID_PLUGIN_EXPORT_BUTTON)) {
             const export_button = make_export_button("⇩ download");
+            export_button.id = ID_PLUGIN_EXPORT_BUTTON;
             document.body.appendChild(export_button);
+        }
 
-            // インポートボタンの設置
+        // インポートボタンの設置
+        if (!document.getElementById(ID_PLUGIN_IMPORT_BUTTON)) {
             const import_button = make_import_button("⇧ upload");
             if (import_button) {
+                import_button.id = ID_PLUGIN_IMPORT_BUTTON;
                 document.body.appendChild(import_button);
             }
         }
+    }
+
+    // アプリ設定画面はページを再読み込みせずに画面遷移するため、
+    // URLの変化を監視してプラグイン設定画面に入った/離れたタイミングでボタンを付け外しする
+    function watchUrlForScriptButtons() {
+        let lastHref = location.href;
+        const onChange = () => {
+            if (location.href === lastHref) return;
+            lastHref = location.href;
+            insertScriptButtons();
+        };
+        new MutationObserver(onChange).observe(document, { childList: true, subtree: true });
+        window.addEventListener("popstate", onChange);
+        window.addEventListener("hashchange", onChange);
     }
 
     // 現在のURLが渡した正規表現とマッチするかどうかを返す
@@ -233,7 +260,7 @@ import { Utils } from "./utils";
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = pluginId + ".json";
+        a.download = make_export_filename(pluginId);
 
         // aタグをDOMに追加してクリックイベントを発火
         document.body.appendChild(a);
@@ -241,6 +268,16 @@ import { Utils } from "./utils";
 
         // 使用したURLオブジェクトを解放
         window.URL.revokeObjectURL(url);
+    }
+
+    // エクスポートファイル名: {プラグインIDの先頭8文字}-{kintoneのサブドメイン}-{アプリID}.json
+    // 例: https://example.cybozu.com/k/admin/app/123/plugin/config?pluginId=abcdefghijk... → abcdefgh-example-123.json
+    function make_export_filename(pluginId: string) {
+        const subdomain = location.hostname.split(".")[0];
+        const appId = location.pathname.match(/\/admin\/app\/(\d+)\//)?.[1]
+            ?? new URLSearchParams(location.search).get("app")
+            ?? String(kintone.app.getId() ?? "unknown");
+        return `${pluginId.substring(0, 8)}-${subdomain}-${appId}.json`;
     }
 
     function make_import_button(textContent: string) {
@@ -316,6 +353,7 @@ import { Utils } from "./utils";
     }
 
     insertScriptButtons();
+    watchUrlForScriptButtons();
 
 
 
