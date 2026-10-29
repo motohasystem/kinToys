@@ -46,7 +46,10 @@ export class Names {
     static readonly Events = {
 
         table_copy_button_clicked: "tableCopyButtonClicked",    // テーブル抽出ボタン
-        template_copy_button_clicked: "templateCopyButtonClicked"    // テンプレートコピーボタン
+        template_copy_button_clicked: "templateCopyButtonClicked",    // テンプレートコピーボタン
+        record_json_paste_preview: "recordJsonPastePreview",    // レコードJSON貼り付けの対象確認
+        record_json_paste_apply: "recordJsonPasteApply",    // レコードJSON貼り付けの反映
+        record_json_paste_result: "recordJsonPasteResult"    // レコードJSON貼り付けの結果（embedding_script → content_script）
     };
 
     static readonly Labels = {

@@ -123,6 +123,10 @@ export class ClickEventDealer {
             // console.log({ target })
             if (target == null) return;
 
+            // 追加/編集画面では入力操作を優先し、コピーしない
+            // （詳細→編集はページ遷移せず URL の hash だけが変わるため、クリック時点で判定する）
+            if (Utils.isRecordFormPage(location.href)) return;
+
             // body への委譲のため、テーブル外のクリックは対象外とする
             if (target.closest("table") == null) return;
 
@@ -217,6 +221,9 @@ export class ClickEventDealer {
             const target = event.target as HTMLElement | null;
             if (target == null) return;
 
+            // 編集画面（/show#...&mode=edit）は詳細画面と同じパスで、詳細→編集では再登録されないためクリック時点で判定する
+            if (Utils.isRecordFormPage(location.href)) return;
+
             // テーブル内（サブテーブル/関連レコード一覧）のクリックはテーブル用ハンドラに任せる
             if (target.closest("table")) return;
 
@@ -259,7 +266,7 @@ export class ClickEventDealer {
         return matched ? matched[1] : undefined;
     }
 
-    // フィールドの値コンテナから、型に応じて文字列値を取り出す（DOMのtextContentベース）
+    // フィールドの値コンテナから、型に応じて文字列値を取り出す（DOMの表示テキストベース）
     _extractDetailFieldValue(valueEl: HTMLElement, fieldType: string | undefined): string {
         // 複数値フィールドは各値要素を区切って結合する
         if (fieldType && DETAIL_MULTI_VALUE_TYPES.has(fieldType)) {
@@ -270,8 +277,15 @@ export class ClickEventDealer {
                 return items.join(", ");
             }
         }
-        // 単一値・複数行・リッチテキスト等は textContent をそのまま（改行は保持）
-        return (valueEl.textContent ?? "").trim();
+        // 単一値・複数行・リッチテキスト等は表示どおりのテキストを返す
+        return this._visibleText(valueEl).trim();
+    }
+
+    // 要素の表示どおりのテキストを返す。
+    // 複数行文字列は改行を <br> で描画しており、textContent では改行が消えるため innerText を使う。
+    _visibleText(el: HTMLElement): string {
+        const text = el.innerText ?? el.textContent ?? "";
+        return text.replace(/\r\n?/g, "\n");
     }
 
     // コピー時に要素の背景をアクセントカラーにして、フィールド本来の背景色へフェードさせる。
@@ -321,8 +335,8 @@ export class ClickEventDealer {
     _copyClickedCell = (td: HTMLElement) => {
         // const td = event.currentTarget as HTMLTableCellElement;
         // クリップボードにコピーする
-        const text = td.textContent;
-        if (text === null) return;
+        // 複数行文字列の改行（<br>）を保持するため表示テキストで取得する
+        const text = this._visibleText(td);
         navigator.clipboard
             .writeText(text)
             .then(() => {

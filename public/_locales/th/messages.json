@@ -137,6 +137,39 @@
   "popup_applied_template": {
     "message": "เทมเพลตที่ใช้: [ {name} ]"
   },
+  "popup_button_paste": {
+    "message": "วาง"
+  },
+  "popup_paste_placeholder": {
+    "message": "คัดลอกเรคคอร์ดในรูปแบบ json ที่หน้าจอรายละเอียด แล้วกด Ctrl+V ที่นี่"
+  },
+  "popup_paste_preview": {
+    "message": "จะเขียนทับ {count} ฟิลด์"
+  },
+  "popup_paste_label_pasted": {
+    "message": "วาง:"
+  },
+  "popup_paste_chip_toggle": {
+    "message": "คลิกเพื่อยกเว้นจากการวาง / นำกลับมา"
+  },
+  "popup_paste_label_skipped": {
+    "message": "ข้าม:"
+  },
+  "popup_paste_done": {
+    "message": "วางแล้ว {count} ฟิลด์"
+  },
+  "popup_paste_invalid_json": {
+    "message": "ไม่ใช่ JSON ของเรคคอร์ด kintone\nกรุณาคัดลอกในรูปแบบ json ที่หน้าจอรายละเอียด"
+  },
+  "popup_paste_no_match": {
+    "message": "ไม่มีฟิลด์ที่รหัสฟิลด์และประเภทฟิลด์ตรงกัน"
+  },
+  "popup_paste_not_form_page": {
+    "message": "กรุณาใช้งานที่หน้าจอเพิ่มหรือแก้ไขเรคคอร์ด"
+  },
+  "popup_paste_error": {
+    "message": "วางไม่สำเร็จ ({error})"
+  },
   "popup_error_invalid_url": {
     "message": "ตรวจพบ URL ที่ไม่ถูกต้อง\nกรุณาเรียกใช้บนหน้า kintone"
   },

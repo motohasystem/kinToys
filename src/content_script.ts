@@ -105,10 +105,13 @@ import { Options } from "./options";
             }, "*")
         });
 
-        insertScript("./embedding_script.js");
-        insertStyleSheet("./embedding.css");
-
-        console.log('scripts inserted')
+        // document_start で動くため、ハードリロード（Ctrl+Shift+R）等で HTML の取得が遅いと
+        // この時点で body がまだ無いことがある。body ができてから差し込む。
+        whenBodyReady(() => {
+            insertScript("./embedding_script.js");
+            insertStyleSheet("./embedding.css");
+            console.log('scripts inserted')
+        });
     });
 
     // ポップアップ側でオプションを変更したイベントを受け取ってembedの動作を変更する
@@ -197,6 +200,18 @@ import { Options } from "./options";
             // 埋め込みリクエストを embedding_scripts.ts に送信する
             window.postMessage({ type: Events.template_copy_button_clicked, data: template, alignment: alignment }, "*")
         }
+        // ポップアップで貼り付けたレコードJSONを embedding_script.ts に中継する
+        else if (request.name === Events.record_json_paste_preview || request.name === Events.record_json_paste_apply) {
+            const requestId = `${Date.now()}-${Math.random()}`
+            const onResult = (event: MessageEvent) => {
+                if (event.source !== window) return;
+                if (event.data.type !== Events.record_json_paste_result || event.data.requestId !== requestId) return;
+                window.removeEventListener("message", onResult);
+                sendResponse({ action: request.name, data: event.data.data, error: event.data.error });
+            };
+            window.addEventListener("message", onResult);
+            window.postMessage({ type: request.name, data: request.json, excluded: request.excluded, requestId }, "*")
+        }
         else if (request.name === Messages.changeBreaklineOption) {
             // ここで改行表示メッセージを受け取る
             // // 改行表示設定を変更する
@@ -230,6 +245,19 @@ import { Options } from "./options";
 
         return true
     });
+
+    function whenBodyReady(callback: () => void) {
+        if (document.body) {
+            callback();
+            return;
+        }
+        const observer = new MutationObserver((_mutations, obs) => {
+            if (!document.body) return;
+            obs.disconnect();
+            callback();
+        });
+        observer.observe(document.documentElement, { childList: true });
+    }
 
     function insertScript(file: string) {
         const url = (window as any).chrome.runtime.getURL(file);
